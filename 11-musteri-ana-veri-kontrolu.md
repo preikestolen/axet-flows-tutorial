@@ -211,7 +211,15 @@ Konteyner portu `172.17.0.1`'e bağlanıyor; Windows `localhost`'u ise
 wsl.exe -d aXet-flows_WSL -- socat TCP-LISTEN:4352,bind=127.0.0.1,reuseaddr,fork TCP:172.17.0.1:4352
 ```
 
-Bu süreç açık kaldıkça çalışır; Production her başladığında port değişir.
+Production her başladığında port değişir; bu yüzden hazır betik var.
+Her **Run Flow**'dan sonra bir kez:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File kaynaklar\production-portu-ac.ps1
+```
+
+Betik köprüyü `setsid -f` ile başlatır — `nohup ... &` ile başlatılan süreç
+`wsl.exe` kapanınca WSL tarafından öldürülür.
 
 ## 11.10 Tuzak 5 — Tasarımcı ve Production aynı anda olmaz
 

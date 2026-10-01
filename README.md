@@ -152,6 +152,7 @@ axet-flows-egitim/
     ├── demo-cikti-formlu/               formdan metin ile tetiklenen koşu
     ├── demo-cikti-ekli/                 formdan dosya eki ile tetiklenen koşu
     ├── demo-cikti-kalici/               kalıcı yol denemesinin çıktısı
+    ├── production-portu-ac.ps1          her Run Flow'dan sonra: Production'ı localhost'a açar
     ├── demo-cikti-rapor/                Ders 10: üretilen Excel + koşu geçmişi
     └── musteri-kontrol/                 Ders 11: 10 function, akış üretici, yerel test
 ```

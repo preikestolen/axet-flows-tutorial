@@ -1002,11 +1002,23 @@ wsl.exe -d aXet-flows_WSL -- ss -ltn | grep <port>
 # 172.17.0.1:<port>  -> sadece Docker koprusunde dinliyor
 ```
 
-**Çözüm:** WSL içinde köprü (süreç açık kaldıkça çalışır):
+**Çözüm:** Her **Run Flow**'dan sonra (port her seferinde değişir) betiği
+çalıştırın — çalışan Production konteynerlerini bulur, eski köprüleri
+kapatır, yenisini kurar ve adresi yazar:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File kaynaklar\production-portu-ac.ps1
+# HAZIR: http://localhost:<port>
+```
+
+Elle yapmak isterseniz köprüyü **`setsid -f`** ile başlatın:
 
 ```bash
-wsl.exe -d aXet-flows_WSL -- socat TCP-LISTEN:<port>,bind=127.0.0.1,reuseaddr,fork TCP:172.17.0.1:<port>
+wsl.exe -d aXet-flows_WSL -- sh -c "setsid -f socat TCP-LISTEN:<port>,bind=127.0.0.1,reuseaddr,fork TCP:172.17.0.1:<port> >/dev/null 2>&1 < /dev/null"
 ```
+
+> `nohup socat ... &` **çalışmaz**: `wsl.exe` çağrısı bitince WSL o
+> oturumun süreçlerini öldürür, köprü bir saniye sonra kaybolur.
 
 ### `Other instance of this Axet Flow is running yet in production mode!`
 

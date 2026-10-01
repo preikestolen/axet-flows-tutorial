@@ -66,7 +66,8 @@ Son güncelleme: 2026-10-01 · Platform: aXet.flows v6.5.4 (Node-RED v4.1.1)
 | Hata / belirti | Sebep | Çözüm |
 |---|---|---|
 | Tasarımcı portunda uygulama yok (404) | Uygulama sadece Production'da yayınlanır | Run Flow → Local access URL |
-| Production `localhost:<port>` zaman aşımı | Port sadece `172.17.0.1`'de dinliyor | WSL'de `socat TCP-LISTEN:<p>,bind=127.0.0.1,reuseaddr,fork TCP:172.17.0.1:<p>` |
+| Production `localhost:<port>` zaman aşımı (her Run Flow'da yeni port) | Port sadece `172.17.0.1`'de dinliyor | Her Run Flow'dan sonra **`kaynaklar\production-portu-ac.ps1`** (köprüyü kurar, eskileri kapatır) |
+| Köprü kuruldu ama hemen kayboldu | `nohup ... &` ile başlatılan süreç `wsl.exe` bitince WSL tarafından öldürülür | `setsid -f socat ...` kullan (betik bunu yapar) |
 | `Not found config node with id '' for auth Okta` | Okta kullanıcı tablosu yok | Sihirli değnek → **Apply Auth App** → LocalStorage → OKTA |
 | `The form '<ad>' does not exist ...` | Menü etiketi/biçimi | Etiket = form adı; v6.5.4'te `{type:"form", data:{form_id}}` |
 | Menü ve karşılama sayfası import'ta boş | Import bu ayarları taşımayabilir | `application` → Welcome Page + Menu |
@@ -86,6 +87,7 @@ Son güncelleme: 2026-10-01 · Platform: aXet.flows v6.5.4 (Node-RED v4.1.1)
 | Sayfa açılırken veri yükleme | Form düğümünün **son çıkışı** = `onInitForm` → function → view action |
 | Seçim kutusunu doldurma | `msg.onInitPopulateFormStructure = { <key>: [{label, value}] }` |
 | xlsx okuma (kütüphanesiz) | `kaynaklar/musteri-kontrol/02-xlsx-oku.js` (zip + inflate + XML) |
+| Production'a Windows'tan erişim | `powershell -ExecutionPolicy Bypass -File kaynaklar\production-portu-ac.ps1` |
 | Tarayıcısız çalıştırma | Admin API: `GET/POST /flows`, `PUT /flow/<tabId>`, `POST /inject/<id>` (import'ta ID'ler değişebilir) |
 | Okta + roller | Apply Auth App asistanı; boş tabloda ilk giren `ROLE_ADMIN` |
 | Akışı kodla üretmek | `.js` dosyaları + üretici betik (`akis-uret.py`) + yerel sandbox testi (`test/calistir.js`) |

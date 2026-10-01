@@ -91,8 +91,9 @@ tuttuğunu ve her `func`'un sözdizimini (`new Function(...)`) kontrol et.
 1. Deploy et → alt araç çubuğu **bulut+ok** → alias (`v1`, `v2`...) + açıklama → Save
 2. Tasarımcıyı durdur (In Design → kafatası)
 3. Versiyon satırı **… → Run Flow → Regular Deployment**
-4. Port Windows'tan açılmıyorsa WSL köprüsü:
-   `wsl.exe -d aXet-flows_WSL -- socat TCP-LISTEN:<p>,bind=127.0.0.1,reuseaddr,fork TCP:172.17.0.1:<p>`
+4. Port Windows'tan açılmaz (sadece `172.17.0.1`'de dinler) ve her Run Flow'da değişir:
+   `powershell -ExecutionPolicy Bypass -File kaynaklar\production-portu-ac.ps1`
+   (köprüyü `setsid -f socat ...` ile kurar; `nohup ... &` WSL'de ölür)
 5. `http://localhost:<p>/credentials/activate.html` (AI düğümleri için)
 6. Uygulamayı aç, kabul kriterlerini **gerçek arayüzden** doğrula
 
