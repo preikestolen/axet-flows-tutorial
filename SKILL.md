@@ -76,6 +76,7 @@ tuttuğunu ve her `func`'un sözdizimini (`new Function(...)`) kontrol et.
 
 ### 5. Tasarımcıda kur
 
+0. Tasarımcı zaten açıksa ve akışlar üretildiyse: `python kaynaklar/tasarimciya-yukle.py` (portu bulur, sekmeleri yükler, Okta'yı korur) — 2. adımın yerine geçer
 1. Portal → **Catalog** → (yoksa **+ Add Flow**: ad, proje, kategori, use case)
    → **+ New Version → Regular Deployment**
 2. **☰ → Import** (ya da tasarımcı açıkken Admin API: `PUT /flow/<tabId>`)
@@ -113,6 +114,8 @@ ayrıntılı madde (tam hata metni + sebep + çözüm) ekle.
 | `axetflows-view-action` | Form msg'si (dokunulmamış) | `action:"update"`; `msg.messages` → mesajdaki `<%= k %>`; `msg.downloadFileSubmission = {data, fileName, inputType:"buffer"\|"base64"\|"path"}`; onInit'te `msg.onInitPopulateFormStructure = {key: [{label,value}]}` |
 | Dosya indirme | Okta korumalı form işlemi | **`downloadFileSubmission` kullanma** (Edge'de `.tmp`). `kaynaklar/ortak/indirme-bagi-olustur.js` → view action mesajında `<a href="data:<%= tur %>;base64,<%= veri %>" download="<%= dosya %>">`. Okta'lı uygulamada tarayıcıdan `http in` çağırma (aXet REST auth çöküyor) |
 | Tablo sayfası | form onInit | `msg.submission = { tablo: [ {kolon: "deger"} ] }` → view action (update); bileşen datagrid (`disabled`, `disableAddingRemovingRows`); görünüm için `ortak/uygulama.css` |
+| Kalıcı sayfa kutusu | — | view action mesajı 10 sn'de silinir. Sonuç/bağlantı/hata için formda `hidden <alan>` + `htmlelement` (`content: "{{ data.<alan> || '' }}"`, `refreshOnChange: true`); akış `msg.submission.<alan>` = escape'li HTML (`kaynaklar/ortak/form_bilesenleri.py`) |
+| Çok ajanlı akış | — | Ses = ajanın Instructions'ı (sabit), görev = prompt; tek bir çok çıkışlı "sıra yöneticisi" function; her ajanın hata çıkışı → delay → aynı prompt'la yeniden (en çok 3); Output Schema + kodla doğrulama (enum, aralık, escape) |
 | Menü bölümü | — | `{type:"section", text, children:[{type:"form", text: <form adı>, data:{form_id}}]}`; etiket = form adı |
 | Form msg alanları | — | `msg.__deptAppsFormioButtonClicked`, `msg.__deptAppsFormioButtons`, `msg.submission` — **silme** |
 | `axet-agents-execute` | `msg.payload` (metin/nesne) | Çıkış 1: `msg.payload.response` (şemasız) veya şema nesnesi; çıkış 2: `msg.error`. Diğer `msg` alanları korunur |

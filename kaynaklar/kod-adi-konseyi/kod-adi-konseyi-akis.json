@@ -1,0 +1,905 @@
+[
+ {
+  "id": "kk_tab0000000001",
+  "type": "tab",
+  "label": "Gun 3 - Kod Adi Konseyi",
+  "disabled": false,
+  "info": "Proje -> Alayci Muhendis -> Abartili Pazarlamaci -> Dramatik Sair -> Baskan -> Isim Panosu.\nKalici: /internal-storage-files/konsey/pano.jsonl"
+ },
+ {
+  "id": "kk_form_konsey",
+  "type": "axetflows-form",
+  "z": "kk_tab0000000001",
+  "name": "Konsey",
+  "onDocumentReadyButtonAction": "",
+  "formStructure": {
+   "components": [
+    {
+     "type": "htmlelement",
+     "key": "giris",
+     "id": "kkgiris1",
+     "input": false,
+     "tag": "div",
+     "className": "konsey-giris",
+     "attrs": [
+      {
+       "attr": "",
+       "value": ""
+      }
+     ],
+     "refreshOnChange": false,
+     "content": "<div class=\"konsey-giris-baslik\">Kod Adi Konseyi</div><div class=\"konsey-giris-metin\">Projeni iki cumleyle anlat. Uc konsey uyesi sirayla bir kod adi onerip savunacak, Baskan kazanani secip puanlayacak. Kazanan Isim Panosu'na yazilir.</div><div class=\"konsey-uyeler\"><span>🛠️ Alayci Muhendis</span><span>📣 Abartili Pazarlamaci</span><span>🎭 Dramatik Sair</span><span>⚖️ Baskan</span></div>"
+    },
+    {
+     "type": "textarea",
+     "key": "proje",
+     "id": "kkproje1",
+     "input": true,
+     "label": "Projen (iki cumle)",
+     "placeholder": "Orn: Depodaki kritik stoklari her sabah kontrol edip satin almaya e-postayla bildiren bir otomasyon. Excel'le ugrasan planlamacilarin isini yarim saate indiriyor.",
+     "rows": 4,
+     "autoExpand": false,
+     "tableView": true,
+     "persistent": false,
+     "hidden": false,
+     "validate": {
+      "required": true,
+      "minLength": 15,
+      "maxLength": 400
+     },
+     "conditional": {
+      "show": null,
+      "when": null,
+      "eq": ""
+     }
+    },
+    {
+     "type": "button",
+     "label": "Konseyi topla",
+     "key": "topla",
+     "size": "md",
+     "block": false,
+     "action": "submit",
+     "disableOnInvalid": true,
+     "theme": "primary",
+     "input": true,
+     "placeholder": "",
+     "prefix": "",
+     "customClass": "",
+     "suffix": "",
+     "multiple": false,
+     "defaultValue": null,
+     "protected": false,
+     "unique": false,
+     "persistent": false,
+     "hidden": false,
+     "clearOnHide": true,
+     "refreshOn": "",
+     "redrawOn": "",
+     "tableView": false,
+     "modalEdit": false,
+     "labelPosition": "top",
+     "description": "",
+     "errorLabel": "",
+     "tooltip": "",
+     "hideLabel": false,
+     "tabindex": "",
+     "disabled": false,
+     "autofocus": false,
+     "dbIndex": false,
+     "customDefaultValue": "",
+     "calculateValue": "",
+     "widget": {
+      "type": "input"
+     },
+     "attributes": {},
+     "validateOn": "change",
+     "validate": {
+      "required": false,
+      "custom": "",
+      "customPrivate": false,
+      "strictDateValidation": false,
+      "unique": false,
+      "multiple": false
+     },
+     "conditional": {
+      "show": null,
+      "when": null,
+      "eq": ""
+     },
+     "overlay": {
+      "style": "",
+      "left": "",
+      "top": "",
+      "width": "",
+      "height": ""
+     },
+     "allowCalculateOverride": false,
+     "encrypted": false,
+     "showCharCount": false,
+     "showWordCount": false,
+     "properties": {},
+     "allowMultipleMasks": false,
+     "leftIcon": "fa fa-gavel",
+     "rightIcon": "",
+     "dataGridLabel": true,
+     "id": "kktopla1"
+    },
+    {
+     "type": "hidden",
+     "key": "sahne",
+     "id": "gzsahne",
+     "input": true,
+     "persistent": false,
+     "tableView": false,
+     "clearOnHide": false
+    },
+    {
+     "type": "htmlelement",
+     "key": "sahneGoster",
+     "id": "gssahne",
+     "input": false,
+     "tag": "div",
+     "className": "konsey-sahne-alani",
+     "content": "{{ data.sahne || '' }}",
+     "refreshOnChange": true,
+     "attrs": [
+      {
+       "attr": "",
+       "value": ""
+      }
+     ]
+    }
+   ]
+  },
+  "associatedEntityMetamodel": null,
+  "associatedEntityFormType": null,
+  "associatedContractModelMetamodel": null,
+  "associatedPersistantFormId": null,
+  "associatedLocalStorageDatabaseId": null,
+  "buttons": [
+   {
+    "type": "button",
+    "label": "Konseyi topla",
+    "key": "topla",
+    "size": "md",
+    "block": false,
+    "action": "submit",
+    "disableOnInvalid": true,
+    "theme": "primary",
+    "input": true,
+    "placeholder": "",
+    "prefix": "",
+    "customClass": "",
+    "suffix": "",
+    "multiple": false,
+    "defaultValue": null,
+    "protected": false,
+    "unique": false,
+    "persistent": false,
+    "hidden": false,
+    "clearOnHide": true,
+    "refreshOn": "",
+    "redrawOn": "",
+    "tableView": false,
+    "modalEdit": false,
+    "labelPosition": "top",
+    "description": "",
+    "errorLabel": "",
+    "tooltip": "",
+    "hideLabel": false,
+    "tabindex": "",
+    "disabled": false,
+    "autofocus": false,
+    "dbIndex": false,
+    "customDefaultValue": "",
+    "calculateValue": "",
+    "widget": {
+     "type": "input"
+    },
+    "attributes": {},
+    "validateOn": "change",
+    "validate": {
+     "required": false,
+     "custom": "",
+     "customPrivate": false,
+     "strictDateValidation": false,
+     "unique": false,
+     "multiple": false
+    },
+    "conditional": {
+     "show": null,
+     "when": null,
+     "eq": ""
+    },
+    "overlay": {
+     "style": "",
+     "left": "",
+     "top": "",
+     "width": "",
+     "height": ""
+    },
+    "allowCalculateOverride": false,
+    "encrypted": false,
+    "showCharCount": false,
+    "showWordCount": false,
+    "properties": {},
+    "allowMultipleMasks": false,
+    "leftIcon": "fa fa-gavel",
+    "rightIcon": "",
+    "dataGridLabel": true,
+    "id": "kktopla1"
+   }
+  ],
+  "outputs": 2,
+  "x": 150,
+  "y": 100,
+  "wires": [
+   [
+    "kk_al"
+   ],
+   []
+  ]
+ },
+ {
+  "id": "kk_al",
+  "type": "function",
+  "z": "kk_tab0000000001",
+  "name": "proje al",
+  "func": "// \"Konsey\" sayfasindaki \"Konseyi topla\" dugmesi. Proje metnini dogrular.\n// Cikis 1 -> pano (onceki isimler) okunur, konsey toplanir\n// Cikis 2 -> girdi gecersiz: dogrudan uyari (view action) -- AI'a gitmez\n\nconst veri = (msg.payload && msg.payload.data) || (msg.submission && msg.submission.data) || msg.submission || {};\nconst proje = String(veri.proje || \"\").replace(/\\s+/g, \" \").trim();\n\nfunction uyar(metin) {\n  msg.messages = { mesaj: metin };\n  msg.submission = { proje: proje, sahne: '<div class=\"konsey-uyari\">\\u26A0\\uFE0F ' + metin + '</div>' };\n  return [null, msg];\n}\nif (proje.length < 15) return uyar(\"Konsey bos bir dosyayla toplanmaz. Projeni en az bir-iki cumleyle anlat.\");\nif (proje.length > 400) return uyar(\"Konsey sabirsizdir: projeni en fazla 400 karakterde, iki cumleyle anlat (\" + proje.length + \" karakter yazdin).\");\n\nmsg.proje = proje;\nnode.status({ fill: \"blue\", shape: \"dot\", text: proje.slice(0, 30) + \"...\" });\nreturn [msg, null];\n",
+  "outputs": 2,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 340,
+  "y": 100,
+  "wires": [
+   [
+    "kk_pano_oku"
+   ],
+   [
+    "kk_view_uyari"
+   ]
+  ]
+ },
+ {
+  "id": "kk_view_uyari",
+  "type": "axetflows-view-action",
+  "z": "kk_tab0000000001",
+  "name": "gecersiz proje",
+  "action": "update",
+  "redirectPage": null,
+  "downloadFile": false,
+  "fileName": "",
+  "inputType": "buffer",
+  "message": "<%= mesaj %>",
+  "messageType": "warning",
+  "x": 560,
+  "y": 160,
+  "wires": []
+ },
+ {
+  "id": "kk_pano_oku",
+  "type": "file in",
+  "z": "kk_tab0000000001",
+  "name": "panoyu oku",
+  "filename": "/internal-storage-files/konsey/pano.jsonl",
+  "filenameType": "str",
+  "format": "utf8",
+  "chunk": false,
+  "sendError": false,
+  "encoding": "utf8",
+  "allProps": true,
+  "x": 540,
+  "y": 100,
+  "wires": [
+   [
+    "kk_hazirla"
+   ]
+  ]
+ },
+ {
+  "id": "kk_catch_pano",
+  "type": "catch",
+  "z": "kk_tab0000000001",
+  "name": "pano yok (ilk kullanim)",
+  "scope": [
+   "kk_pano_oku"
+  ],
+  "uncaught": false,
+  "x": 540,
+  "y": 40,
+  "wires": [
+   [
+    "kk_pano_bos"
+   ]
+  ]
+ },
+ {
+  "id": "kk_pano_bos",
+  "type": "function",
+  "z": "kk_tab0000000001",
+  "name": "pano yok -> bos",
+  "func": "delete msg.error;\nmsg.payload = \"\";\nreturn msg;\n",
+  "outputs": 1,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 740,
+  "y": 40,
+  "wires": [
+   [
+    "kk_hazirla"
+   ]
+  ]
+ },
+ {
+  "id": "kk_hazirla",
+  "type": "function",
+  "z": "kk_tab0000000001",
+  "name": "konseyi kur",
+  "func": "// Konseyi kurar: oturuma ozel ilham konulari secer, panodaki isimleri\n// \"yasakli\" listesine alir. Sonra 03-sonraki-konusmaci.js ilk konusmaciyi cagirir.\n//\n// Neden ilham + yasak liste: ayni proje icin bile her oturum farkli tonda\n// isim ciksin, panoda ayni isim iki kez olmasin. Bicim ise ajanlarin\n// Output Schema'si ile sabit kalir.\n//\n// Girdi: msg.payload = pano.jsonl icerigi (file in) ya da \"\" (ilk kullanim)\n\nconst ILHAM = {\n  muhendis: [\"eski hata kodlari\", \"COBOL ve ana bilgisayarlar\", \"bitmeyen toplantilar\", \"Unix komutlari\", \"kahve makinesi\",\n             \"uretimde cuma deploy'u\", \"yari kalmis dokumantasyon\", \"legacy kod arkeolojisi\", \"ag kablosu karmasasi\"],\n  pazarlamaci: [\"uzay yarisi\", \"luks otomobil reklamlari\", \"spor finali spikerligi\", \"Silikon Vadisi lansmanlari\",\n                \"superkahraman filmleri\", \"moda haftasi\", \"teleshopping\", \"olimpiyat tores\", \"rock konseri\"],\n  sair: [\"deniz ve fener\", \"kuzey yildizi\", \"Anadolu masallari\", \"sonbahar yapraklari\", \"kayip mektuplar\",\n         \"eski Istanbul vapurlari\", \"col ve serap\", \"ay tutulmasi\", \"goc eden kuslar\"]\n};\nconst sec = (a) => a[Math.floor(Math.random() * a.length)];\n\nconst pano = [];\nfor (const satir of String(msg.payload || \"\").split(/\\r?\\n/)) {\n  if (!satir.trim()) continue;\n  try { pano.push(JSON.parse(satir)); } catch (e) {}\n}\n\nmsg.konsey = {\n  proje: msg.proje,\n  ilham: { muhendis: sec(ILHAM.muhendis), pazarlamaci: sec(ILHAM.pazarlamaci), sair: sec(ILHAM.sair) },\n  yasakli: pano.map(p => p.kodAdi).filter(Boolean).slice(-30),\n  konusmalar: [],          // [{ karakter, kodAdi, gerekce }]\n  bekleyen: null\n};\nmsg.panoKayitlari = pano;   // 04-karar-isle.js kazananin sirasini bununla hesaplar\nmsg.payload = null;\nnode.status({ fill: \"blue\", shape: \"dot\", text: \"konsey toplaniyor (\" + pano.length + \" isim panoda)\" });\nreturn msg;\n",
+  "outputs": 1,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 740,
+  "y": 100,
+  "wires": [
+   [
+    "kk_sira"
+   ]
+  ]
+ },
+ {
+  "id": "kk_sira",
+  "type": "function",
+  "z": "kk_tab0000000001",
+  "name": "sira yoneticisi",
+  "func": "// Konseyin \"sira yoneticisi\". Her ajan cevabindan sonra buraya donulur:\n//   1) az once konusanin cevabini kaydeder (Output Schema: { kodAdi, gerekce })\n//   2) siradaki konusmacinin prompt'unu kurar ve dogru cikisa yollar\n//\n// Cikislar: 1 muhendis | 2 pazarlamaci | 3 sair | 4 baskan | 5 hata\n//\n// Karakterlerin KISILIGI ajan dugumunun Instructions alaninda (akis-uret.py);\n// burada sadece o oturumun gorevi ve baglami var. Boylece ses ajan basina\n// sabit, icerik her oturumda farkli.\n\nconst SIRA = [\"muhendis\", \"pazarlamaci\", \"sair\"];\nconst AD = { muhendis: \"Alayci Muhendis\", pazarlamaci: \"Abartili Pazarlamaci\", sair: \"Dramatik Sair\" };\nconst k = msg.konsey;\nconst NL = String.fromCharCode(10);\n\nfunction temiz(s, enfazla) { return String(s || \"\").replace(/\\s+/g, \" \").trim().slice(0, enfazla); }\n\n// 1) az once konusani kaydet\nif (k.bekleyen) {\n  const p = msg.payload || {};\n  const kodAdi = temiz(p.kodAdi, 40);\n  const gerekce = temiz(p.gerekce, 600);\n  if (!kodAdi || !gerekce) {\n    msg.hata = AD[k.bekleyen] + \" anlasilmaz bir sey mirildandi (bos isim/gerekce).\";\n    return [null, null, null, null, msg];\n  }\n  k.konusmalar.push({ karakter: k.bekleyen, kodAdi: kodAdi, gerekce: gerekce });\n  k.bekleyen = null;\n}\n\n// 2) siradaki\nconst siradaki = SIRA[k.konusmalar.length];\nconst onceki = k.konusmalar.map(x => \"- \" + AD[x.karakter] + \": \\\"\" + x.kodAdi + \"\\\" -- \" + x.gerekce).join(NL);\n\nif (siradaki) {\n  k.bekleyen = siradaki;\n  msg.payload = [\n    \"Kod Adi Konseyi toplandi. Bir proje icin KOD ADI oneriyorsun.\",\n    \"\",\n    \"PROJE: \" + k.proje,\n    \"\",\n    \"Bu oturumdaki ilham kaynagin: \" + k.ilham[siradaki] + \" (istersen kullan, zorunlu degil).\",\n    onceki ? \"Senden once konusanlar:\" + NL + onceki + NL + \"Onlardan FARKLI bir isim oner; istersen onlara kendi uslubunla laf at.\" : \"Ilk sen konusuyorsun.\",\n    k.yasakli.length ? \"Bu isimler panoda zaten var, KULLANMA: \" + k.yasakli.join(\", \") : \"\",\n    \"\",\n    \"Kurallar:\",\n    \"- kodAdi: 1-3 kelime, en fazla 24 karakter. Turkce ya da Ingilizce olabilir.\",\n    \"- gerekce: 2-3 cumle, en fazla 60 kelime, TAMAMEN kendi karakterinin sesiyle.\",\n    \"- Projeyle gercek bir bag kur; sadece komik olsun diye alakasiz isim verme.\"\n  ].filter(s => s !== \"\").join(NL);\n  k.sonPrompt = msg.payload; k.sonHedef = SIRA.indexOf(siradaki); k.deneme = 1;   // 07-ajan-yeniden.js icin\n  node.status({ fill: \"blue\", shape: \"dot\", text: AD[siradaki] + \" konusuyor...\" });\n  const cikis = [null, null, null, null, null];\n  cikis[SIRA.indexOf(siradaki)] = msg;\n  return cikis;\n}\n\n// 3) uc uye de konustu -> Baskan\nmsg.payload = [\n  \"Kod Adi Konseyi'nin baskanisin. Uc uyeyi dinledin, simdi karar veriyorsun.\",\n  \"\",\n  \"PROJE: \" + k.proje,\n  \"\",\n  \"ONERILER:\",\n  k.konusmalar.map(x => \"- [\" + x.karakter + \"] \" + AD[x.karakter] + \": \\\"\" + x.kodAdi + \"\\\" -- \" + x.gerekce).join(NL),\n  \"\",\n  \"Gorevin:\",\n  \"1. degerlendirmeler.muhendis / .pazarlamaci / .sair: HER UYEYE ayri ayri, onun uslubuna ve onerisine\",\n  \"   dogrudan degin (1-2 cumle, adini ya da onerdigi ismi an).\",\n  \"2. Tek bir kazanan sec. kazananKarakter alanina karakter anahtarini yaz (muhendis | pazarlamaci | sair),\",\n  \"   kazanan alanina o uyenin onerdigi ismi AYNEN yaz.\",\n  \"3. puan: kazanan isme 1-100 arasi tam sayi (akilda kalicilik, projeye uygunluk, ozgunluk).\",\n  \"4. karar: 2-3 cumlelik gerekceli karar; hafif esprili, ama adil.\"\n].join(NL);\nk.sonPrompt = msg.payload; k.sonHedef = 3; k.deneme = 1;\nnode.status({ fill: \"blue\", shape: \"dot\", text: \"Baskan karar veriyor...\" });\nreturn [null, null, null, msg, null];\n",
+  "outputs": 5,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 950,
+  "y": 100,
+  "wires": [
+   [
+    "kk_ai_muh"
+   ],
+   [
+    "kk_ai_paz"
+   ],
+   [
+    "kk_ai_sair"
+   ],
+   [
+    "kk_ai_baskan"
+   ],
+   [
+    "kk_hata"
+   ]
+  ]
+ },
+ {
+  "id": "kk_ai_muh",
+  "type": "axet-agents-execute",
+  "z": "kk_tab0000000001",
+  "name": "Alayci Muhendis",
+  "agentId": "",
+  "agentName": "",
+  "description": "Alayci Muhendis",
+  "instructions": "Sen 20 yildir sektorde olan, her seyi gormus ALAYCI bir yazilim muhendisisin. Kuru mizah, teknik gondermeler (hata kodlari, eski sistemler, gece 3'te gelen alarmlar, soguyan kahve) kullanirsin. Abartiya tahammulun yok; kisa, igneleyici ve gozunu deviren cumlelerle konusursun. Asla unlem kullanmazsin. Cevaplarini duzgun Turkce yaz (c, g, i, o, s, u harflerinin Turkce bicimleriyle: ç ğ ı ö ş ü).",
+  "model": "aws-anthropic/eu.anthropic.claude-sonnet-4-6",
+  "input": "",
+  "mcpTools": "[]",
+  "coreTools": "",
+  "customTools": "[]",
+  "temperature": 1.0,
+  "maxRetries": 2,
+  "maxSteps": 3,
+  "timeout": 120000,
+  "stream": false,
+  "outputSchema": "{\"type\": \"object\", \"properties\": {\"kodAdi\": {\"type\": \"string\", \"description\": \"Onerilen kod adi, 1-3 kelime, en fazla 24 karakter\"}, \"gerekce\": {\"type\": \"string\", \"description\": \"2-3 cumlelik savunma, karakterin kendi sesiyle\"}}, \"required\": [\"kodAdi\", \"gerekce\"]}",
+  "projectId": "33909419-e9c2-45c1-99c6-124ac059ca56",
+  "x": 1200,
+  "y": 40,
+  "wires": [
+   [
+    "kk_sira"
+   ],
+   [
+    "kk_bekle"
+   ]
+  ]
+ },
+ {
+  "id": "kk_ai_paz",
+  "type": "axet-agents-execute",
+  "z": "kk_tab0000000001",
+  "name": "Abartili Pazarlamaci",
+  "agentId": "",
+  "agentName": "",
+  "description": "Abartili Pazarlamaci",
+  "instructions": "Sen her seyi DEVRIM ilan eden ABARTILI bir pazarlamacisin. 'Oyun degistirici', 'sinerji', 'yeni nesil', 'disruptif' gibi kliseleri bilerek ve keyifle kullanirsin; BUYUK HARFLE vurgu yapar, unlem isaretini seversin!!! Her ismi bir lansman sahnesinde haykiriyormus gibi sunarsin. Cevaplarini duzgun Turkce yaz (c, g, i, o, s, u harflerinin Turkce bicimleriyle: ç ğ ı ö ş ü).",
+  "model": "aws-anthropic/eu.anthropic.claude-sonnet-4-6",
+  "input": "",
+  "mcpTools": "[]",
+  "coreTools": "",
+  "customTools": "[]",
+  "temperature": 1.0,
+  "maxRetries": 2,
+  "maxSteps": 3,
+  "timeout": 120000,
+  "stream": false,
+  "outputSchema": "{\"type\": \"object\", \"properties\": {\"kodAdi\": {\"type\": \"string\", \"description\": \"Onerilen kod adi, 1-3 kelime, en fazla 24 karakter\"}, \"gerekce\": {\"type\": \"string\", \"description\": \"2-3 cumlelik savunma, karakterin kendi sesiyle\"}}, \"required\": [\"kodAdi\", \"gerekce\"]}",
+  "projectId": "33909419-e9c2-45c1-99c6-124ac059ca56",
+  "x": 1200,
+  "y": 100,
+  "wires": [
+   [
+    "kk_sira"
+   ],
+   [
+    "kk_bekle"
+   ]
+  ]
+ },
+ {
+  "id": "kk_ai_sair",
+  "type": "axet-agents-execute",
+  "z": "kk_tab0000000001",
+  "name": "Dramatik Sair",
+  "agentId": "",
+  "agentName": "",
+  "description": "Dramatik Sair",
+  "instructions": "Sen DRAMATIK, melankolik bir sairsin. Her projede kaderi, denizi, yildizlari, gurbeti gorursun. Benzetmeler, ic cekisler ('ah...'), eski kelimeler (gonul, huzun, sevda, firak) kullanirsin; cumlelerin agirbasli, teatral ve bir parca huzunludur. Gerekce bir siir gibi akar. Cevaplarini duzgun Turkce yaz (c, g, i, o, s, u harflerinin Turkce bicimleriyle: ç ğ ı ö ş ü).",
+  "model": "aws-anthropic/eu.anthropic.claude-sonnet-4-6",
+  "input": "",
+  "mcpTools": "[]",
+  "coreTools": "",
+  "customTools": "[]",
+  "temperature": 1.0,
+  "maxRetries": 2,
+  "maxSteps": 3,
+  "timeout": 120000,
+  "stream": false,
+  "outputSchema": "{\"type\": \"object\", \"properties\": {\"kodAdi\": {\"type\": \"string\", \"description\": \"Onerilen kod adi, 1-3 kelime, en fazla 24 karakter\"}, \"gerekce\": {\"type\": \"string\", \"description\": \"2-3 cumlelik savunma, karakterin kendi sesiyle\"}}, \"required\": [\"kodAdi\", \"gerekce\"]}",
+  "projectId": "33909419-e9c2-45c1-99c6-124ac059ca56",
+  "x": 1200,
+  "y": 160,
+  "wires": [
+   [
+    "kk_sira"
+   ],
+   [
+    "kk_bekle"
+   ]
+  ]
+ },
+ {
+  "id": "kk_ai_baskan",
+  "type": "axet-agents-execute",
+  "z": "kk_tab0000000001",
+  "name": "Baskan",
+  "agentId": "",
+  "agentName": "",
+  "description": "Baskan",
+  "instructions": "Sen Kod Adi Konseyi'nin bilge ve hafif esprili BASKANISIN. Uc uyeyi de adil dinlersin ve her birine ayri ayri, onun tarzina gondermeyle seslenirsin. Sonra tek bir kazanan secer, gerekcesini netce aciklarsin. Puani isim kalitesine gore verirsin: akilda kalicilik, projeye uygunluk, ozgunluk. Cevaplarini duzgun Turkce yaz (c, g, i, o, s, u harflerinin Turkce bicimleriyle: ç ğ ı ö ş ü).",
+  "model": "aws-anthropic/eu.anthropic.claude-sonnet-4-6",
+  "input": "",
+  "mcpTools": "[]",
+  "coreTools": "",
+  "customTools": "[]",
+  "temperature": 0.4,
+  "maxRetries": 2,
+  "maxSteps": 3,
+  "timeout": 120000,
+  "stream": false,
+  "outputSchema": "{\"type\": \"object\", \"properties\": {\"degerlendirmeler\": {\"type\": \"object\", \"description\": \"Her uyeye ayri, ona dogrudan hitap eden 1-2 cumle\", \"properties\": {\"muhendis\": {\"type\": \"string\"}, \"pazarlamaci\": {\"type\": \"string\"}, \"sair\": {\"type\": \"string\"}}, \"required\": [\"muhendis\", \"pazarlamaci\", \"sair\"]}, \"kazananKarakter\": {\"type\": \"string\", \"enum\": [\"muhendis\", \"pazarlamaci\", \"sair\"]}, \"kazanan\": {\"type\": \"string\", \"description\": \"Kazanan uyenin onerdigi ismin AYNISI\"}, \"puan\": {\"type\": \"integer\", \"description\": \"Kazanan isme 1-100 arasi puan\"}, \"karar\": {\"type\": \"string\", \"description\": \"2-3 cumlelik gerekceli karar\"}}, \"required\": [\"degerlendirmeler\", \"kazananKarakter\", \"kazanan\", \"puan\", \"karar\"]}",
+  "projectId": "33909419-e9c2-45c1-99c6-124ac059ca56",
+  "x": 1200,
+  "y": 240,
+  "wires": [
+   [
+    "kk_karar"
+   ],
+   [
+    "kk_bekle"
+   ]
+  ]
+ },
+ {
+  "id": "kk_karar",
+  "type": "function",
+  "z": "kk_tab0000000001",
+  "name": "karari isle",
+  "func": "// Baskanin kararini (Output Schema) dogrular, panoya eklenecek kaydi ve\n// \"Konsey\" sayfasinda gosterilecek sahneyi (HTML) uretir.\n//\n// Model ciktisina guvenmiyoruz: kazananKarakter gecersizse isimden buluruz,\n// puan araliga sikistirilir, eksik degerlendirme \"(sessiz kaldi)\" olur.\n// Gorunum bozulmasin diye butun metinler HTML-escape edilir.\n//\n// Cikis 1 -> pano.jsonl'e eklenecek satir (file, append)\n// Cikis 2 -> view action: sahne msg.submission.sahne'ye (sayfada kalici kutu),\n//            uyari kutusuna kisa ozet (aXet uyarilari 10 sn'de siliniyor)\n\nconst AD = { muhendis: \"Alayci Muhendis\", pazarlamaci: \"Abartili Pazarlamaci\", sair: \"Dramatik Sair\" };\nconst IKON = { muhendis: \"\\u{1F6E0}\\u{FE0F}\", pazarlamaci: \"\\u{1F4E3}\", sair: \"\\u{1F3AD}\", baskan: \"⚖\\u{FE0F}\" };\nconst k = msg.konsey;\nconst b = msg.payload || {};\nconst esc = (s) => String(s === undefined || s === null ? \"\" : s)\n  .replace(/&/g, \"&amp;\").replace(/</g, \"&lt;\").replace(/>/g, \"&gt;\").replace(/\"/g, \"&quot;\").replace(/'/g, \"&#39;\");\nconst sade = (s) => String(s || \"\").toLowerCase().replace(/[^a-z0-9]/g, \"\");\n\n// --- kazanan: once karakter anahtari, olmazsa isim eslesmesi, olmazsa ilk oneri\nlet kazanan = k.konusmalar.find(x => x.karakter === b.kazananKarakter);\nif (!kazanan) kazanan = k.konusmalar.find(x => sade(x.kodAdi) === sade(b.kazanan));\nif (!kazanan) kazanan = k.konusmalar.find(x => sade(b.kazanan).includes(sade(x.kodAdi)) && sade(x.kodAdi));\nif (!kazanan) { kazanan = k.konusmalar[0]; node.warn(\"Baskan gecerli bir kazanan vermedi, ilk oneri secildi: \" + JSON.stringify(b).slice(0, 200)); }\n\nlet puan = Math.round(Number(b.puan));\nif (!isFinite(puan)) puan = 50;\npuan = Math.max(1, Math.min(100, puan));\n\nconst deg = b.degerlendirmeler || {};\nconst karar = String(b.karar || \"Konsey karar verdi.\").trim();\n\nconst kayit = {\n  zaman: new Date().toISOString(),\n  kodAdi: kazanan.kodAdi,\n  puan: puan,\n  karakter: kazanan.karakter,\n  proje: k.proje.slice(0, 160),\n  karar: karar.slice(0, 500),\n  oneriler: k.konusmalar.map(x => ({ karakter: x.karakter, kodAdi: x.kodAdi }))\n};\n\n// --- panodaki sira (bu kayit dahil)\nconst pano = (msg.panoKayitlari || []).concat([kayit]);\npano.sort((x, y) => y.puan - x.puan || x.zaman.localeCompare(y.zaman));\nconst sira = pano.indexOf(kayit) + 1;\n\n// --- sahne\nconst kart = (x) =>\n  '<div class=\"konsey-kart konsey-' + x.karakter + (x === kazanan ? ' konsey-kazanan' : '') + '\">' +\n    '<div class=\"konsey-kim\">' + IKON[x.karakter] + ' ' + esc(AD[x.karakter]) + '</div>' +\n    '<div class=\"konsey-isim\">&laquo;' + esc(x.kodAdi) + '&raquo;</div>' +\n    '<div class=\"konsey-gerekce\">' + esc(x.gerekce) + '</div>' +\n    '<div class=\"konsey-baskan-notu\">' + IKON.baskan + ' ' + esc(deg[x.karakter] || \"(Baskan bu uyeye bir sey demedi.)\") + '</div>' +\n  '</div>';\n\nconst sahne =\n    '<div class=\"konsey-sahne\">' +\n      '<div class=\"konsey-baslik\">Kod Adi Konseyi toplandi</div>' +\n      '<div class=\"konsey-proje\">' + esc(k.proje) + '</div>' +\n      '<div class=\"konsey-kartlar\">' + k.konusmalar.map(kart).join(\"\") + '</div>' +\n      '<div class=\"konsey-karar\">' +\n        '<div class=\"konsey-karar-ust\">' + IKON.baskan + ' Baskanin karari</div>' +\n        '<div class=\"konsey-karar-isim\">&laquo;' + esc(kazanan.kodAdi) + '&raquo; <span class=\"konsey-puan\">' + puan + '/100</span></div>' +\n        '<div class=\"konsey-karar-metin\">' + esc(karar) + '</div>' +\n        '<div class=\"konsey-pano-notu\">Isim Panosu\\'na eklendi: <b>' + sira + '. sira</b> (' + pano.length + ' isim arasinda).</div>' +\n      '</div>' +\n    '</div>';\nmsg.submission = { proje: k.proje, sahne: sahne };\nmsg.messages = { ozet: \"Konsey karar verdi: \\u00AB\" + kazanan.kodAdi + \"\\u00BB \" + puan + \"/100 -- panoda \" + sira + \". sira.\" };\n\nconst satir = { filename: \"/internal-storage-files/konsey/pano.jsonl\", payload: JSON.stringify(kayit) };\nnode.status({ fill: \"green\", shape: \"dot\", text: kazanan.kodAdi + \" \" + puan + \"/100 -> #\" + sira });\nreturn [satir, msg];\n",
+  "outputs": 2,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 1400,
+  "y": 240,
+  "wires": [
+   [
+    "kk_pano_yaz"
+   ],
+   [
+    "kk_view_sonuc"
+   ]
+  ]
+ },
+ {
+  "id": "kk_pano_yaz",
+  "type": "file",
+  "z": "kk_tab0000000001",
+  "name": "pano.jsonl (ekle)",
+  "filename": "filename",
+  "filenameType": "msg",
+  "appendNewline": true,
+  "createDir": true,
+  "overwriteFile": "false",
+  "encoding": "utf8",
+  "x": 1620,
+  "y": 200,
+  "wires": [
+   []
+  ]
+ },
+ {
+  "id": "kk_view_sonuc",
+  "type": "axetflows-view-action",
+  "z": "kk_tab0000000001",
+  "name": "konsey sahnesi",
+  "action": "update",
+  "redirectPage": null,
+  "downloadFile": false,
+  "fileName": "",
+  "inputType": "buffer",
+  "message": "<%= ozet %>",
+  "messageType": "success",
+  "x": 1620,
+  "y": 260,
+  "wires": []
+ },
+ {
+  "id": "kk_bekle",
+  "type": "delay",
+  "z": "kk_tab0000000001",
+  "name": "3 sn bekle",
+  "pauseType": "delay",
+  "timeout": "3",
+  "timeoutUnits": "seconds",
+  "rate": "1",
+  "nbRateUnits": "1",
+  "rateUnits": "second",
+  "randomFirst": "1",
+  "randomLast": "5",
+  "randomUnits": "seconds",
+  "drop": false,
+  "allowrate": false,
+  "outputs": 1,
+  "x": 1400,
+  "y": 420,
+  "wires": [
+   [
+    "kk_yeniden"
+   ]
+  ]
+ },
+ {
+  "id": "kk_yeniden",
+  "type": "function",
+  "z": "kk_tab0000000001",
+  "name": "ajan yeniden",
+  "func": "// Bir konsey ajani hata verirse (ajan dugumunun 2. cikisi -> 3 sn bekle -> burasi).\n//\n// Ajan hatalari cogu zaman gecici: gercek kosuda \"Mastra API error 500:\n// Agent execution failed - Bad Gateway\" geldi (Ders 8.7). Ayni prompt'u ayni\n// ajana en fazla 2 kez daha gonderiyoruz; olmazsa konsey dagilir.\n//\n// Cikislar (03 ile ayni): 1 muhendis | 2 pazarlamaci | 3 sair | 4 baskan | 5 hata\n\nconst ENFAZLA = 3;   // toplam deneme (ilk + 2 yeniden)\nconst k = msg.konsey || {};\nconst metin = (msg.error && (msg.error.message || msg.error.code)) || \"bilinmeyen ajan hatasi\";\n\nk.deneme = (k.deneme || 1) + 1;\nif (k.sonPrompt && k.sonHedef !== undefined && k.deneme <= ENFAZLA) {\n  node.warn(\"Konsey ajani hata verdi, yeniden deneniyor (\" + k.deneme + \"/\" + ENFAZLA + \"): \" + metin);\n  delete msg.error;\n  msg.payload = k.sonPrompt;\n  node.status({ fill: \"yellow\", shape: \"ring\", text: \"yeniden \" + k.deneme + \"/\" + ENFAZLA });\n  const cikis = [null, null, null, null, null];\n  cikis[k.sonHedef] = msg;\n  return cikis;\n}\n\nmsg.hata = metin + \" (\" + ENFAZLA + \" deneme)\";\nnode.status({ fill: \"red\", shape: \"dot\", text: \"vazgecildi\" });\nreturn [null, null, null, null, msg];\n",
+  "outputs": 5,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 1600,
+  "y": 420,
+  "wires": [
+   [
+    "kk_ai_muh"
+   ],
+   [
+    "kk_ai_paz"
+   ],
+   [
+    "kk_ai_sair"
+   ],
+   [
+    "kk_ai_baskan"
+   ],
+   [
+    "kk_hata"
+   ]
+  ]
+ },
+ {
+  "id": "kk_catch",
+  "type": "catch",
+  "z": "kk_tab0000000001",
+  "name": "konsey hatalari",
+  "scope": [
+   "kk_al",
+   "kk_hazirla",
+   "kk_sira",
+   "kk_karar",
+   "kk_pano_yaz",
+   "kk_pano_bos",
+   "kk_yeniden"
+  ],
+  "uncaught": false,
+  "x": 150,
+  "y": 340,
+  "wires": [
+   [
+    "kk_hata"
+   ]
+  ]
+ },
+ {
+  "id": "kk_hata",
+  "type": "function",
+  "z": "kk_tab0000000001",
+  "name": "konsey dagildi",
+  "func": "// Konsey dagilirsa (ajan hatasi, bos cevap, dosya hatasi) Submit donup\n// kalmasin: kullaniciya ne oldugunu soyle.\n\nconst m = msg.hata ||\n  (msg.error && (msg.error.message || msg.error.code)) ||\n  (msg.payload && msg.payload.error) || \"bilinmeyen sebep\";\nconst metin = \"Konsey dagildi: \" + String(m).slice(0, 250) + \" -- Birazdan tekrar dene.\";\nconst esc = (s) => String(s).replace(/&/g, \"&amp;\").replace(/</g, \"&lt;\").replace(/>/g, \"&gt;\");\nmsg.messages = { mesaj: metin };\nmsg.submission = { proje: (msg.konsey && msg.konsey.proje) || msg.proje || \"\", sahne: '<div class=\"konsey-hata\">\\u{1F4A5} ' + esc(metin) + '</div>' };\ndelete msg.error;\nreturn msg;\n",
+  "outputs": 1,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 950,
+  "y": 340,
+  "wires": [
+   [
+    "kk_view_hata"
+   ]
+  ]
+ },
+ {
+  "id": "kk_view_hata",
+  "type": "axetflows-view-action",
+  "z": "kk_tab0000000001",
+  "name": "hatayi goster",
+  "action": "update",
+  "redirectPage": null,
+  "downloadFile": false,
+  "fileName": "",
+  "inputType": "buffer",
+  "message": "<%= mesaj %>",
+  "messageType": "danger",
+  "x": 1160,
+  "y": 340,
+  "wires": []
+ },
+ {
+  "id": "kk_form_pano",
+  "type": "axetflows-form",
+  "z": "kk_tab0000000001",
+  "name": "Isim Panosu",
+  "onDocumentReadyButtonAction": "",
+  "formStructure": {
+   "components": [
+    {
+     "type": "datagrid",
+     "key": "tablo",
+     "label": "",
+     "hideLabel": true,
+     "id": "kktablo1",
+     "input": true,
+     "disabled": true,
+     "disableAddingRemovingRows": true,
+     "reorder": false,
+     "initEmpty": true,
+     "tableView": false,
+     "persistent": false,
+     "customClass": "konsey-pano",
+     "description": "Konseyin sectigi isimler; en yuksek puan en ustte. Esitlikte once kazanan ustte.",
+     "conditional": {
+      "show": null,
+      "when": null,
+      "eq": ""
+     },
+     "components": [
+      {
+       "type": "textfield",
+       "key": "sira",
+       "label": "Sira",
+       "id": "kksira",
+       "input": true,
+       "disabled": true,
+       "tableView": true
+      },
+      {
+       "type": "textfield",
+       "key": "kodAdi",
+       "label": "Kod adi",
+       "id": "kkkodAdi",
+       "input": true,
+       "disabled": true,
+       "tableView": true
+      },
+      {
+       "type": "textfield",
+       "key": "puan",
+       "label": "Puan",
+       "id": "kkpuan",
+       "input": true,
+       "disabled": true,
+       "tableView": true
+      },
+      {
+       "type": "textfield",
+       "key": "karakter",
+       "label": "Oneren",
+       "id": "kkkarakter",
+       "input": true,
+       "disabled": true,
+       "tableView": true
+      },
+      {
+       "type": "textfield",
+       "key": "proje",
+       "label": "Proje",
+       "id": "kkproje",
+       "input": true,
+       "disabled": true,
+       "tableView": true
+      },
+      {
+       "type": "textfield",
+       "key": "zaman",
+       "label": "Tarih",
+       "id": "kkzaman",
+       "input": true,
+       "disabled": true,
+       "tableView": true
+      }
+     ]
+    }
+   ]
+  },
+  "associatedEntityMetamodel": null,
+  "associatedEntityFormType": null,
+  "associatedContractModelMetamodel": null,
+  "associatedPersistantFormId": null,
+  "associatedLocalStorageDatabaseId": null,
+  "buttons": [],
+  "outputs": 1,
+  "x": 150,
+  "y": 600,
+  "wires": [
+   [
+    "kk_pano_oku2"
+   ]
+  ]
+ },
+ {
+  "id": "kk_pano_oku2",
+  "type": "file in",
+  "z": "kk_tab0000000001",
+  "name": "panoyu oku",
+  "filename": "/internal-storage-files/konsey/pano.jsonl",
+  "filenameType": "str",
+  "format": "utf8",
+  "chunk": false,
+  "sendError": false,
+  "encoding": "utf8",
+  "allProps": true,
+  "x": 360,
+  "y": 600,
+  "wires": [
+   [
+    "kk_pano"
+   ]
+  ]
+ },
+ {
+  "id": "kk_catch_pano2",
+  "type": "catch",
+  "z": "kk_tab0000000001",
+  "name": "pano yok",
+  "scope": [
+   "kk_pano_oku2"
+  ],
+  "uncaught": false,
+  "x": 360,
+  "y": 660,
+  "wires": [
+   [
+    "kk_pano_bos2"
+   ]
+  ]
+ },
+ {
+  "id": "kk_pano_bos2",
+  "type": "function",
+  "z": "kk_tab0000000001",
+  "name": "pano yok -> bos",
+  "func": "delete msg.error;\nmsg.payload = \"\";\nreturn msg;\n",
+  "outputs": 1,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 560,
+  "y": 660,
+  "wires": [
+   [
+    "kk_pano"
+   ]
+  ]
+ },
+ {
+  "id": "kk_pano",
+  "type": "function",
+  "z": "kk_tab0000000001",
+  "name": "panoyu sirala",
+  "func": "// \"Isim Panosu\" sayfasi acilirken: pano.jsonl'i okur, puana gore siralar\n// (esitlikte once gelen ustte), datagrid'e basar.\n\nconst kayitlar = [];\nfor (const satir of String(msg.payload || \"\").split(/\\r?\\n/)) {\n  if (!satir.trim()) continue;\n  try { const k = JSON.parse(satir); if (k && k.kodAdi) kayitlar.push(k); } catch (e) {}\n}\nkayitlar.sort((x, y) => (y.puan - x.puan) || String(x.zaman).localeCompare(String(y.zaman)));\n\nconst AD = { muhendis: \"Alayci Muhendis\", pazarlamaci: \"Abartili Pazarlamaci\", sair: \"Dramatik Sair\" };\nconst MADALYA = [\"\\u{1F947}\", \"\\u{1F948}\", \"\\u{1F949}\"];\n\nfunction yerel(iso) {\n  try { return new Date(iso).toLocaleString(\"tr-TR\", { timeZone: \"Europe/Istanbul\", day: \"2-digit\", month: \"2-digit\", year: \"numeric\", hour: \"2-digit\", minute: \"2-digit\" }); }\n  catch (e) { return iso; }\n}\n\nlet tablo = kayitlar.map((k, i) => ({\n  sira: (MADALYA[i] ? MADALYA[i] + \" \" : \"\") + (i + 1),\n  kodAdi: k.kodAdi,\n  puan: String(k.puan),\n  karakter: AD[k.karakter] || k.karakter,\n  proje: k.proje,\n  zaman: yerel(k.zaman)\n}));\nif (!tablo.length) tablo = [{ sira: \"\", kodAdi: \"Pano bos -- ilk ismi Konsey sayfasindan sen al!\", puan: \"\", karakter: \"\", proje: \"\", zaman: \"\" }];\n\nmsg.submission = { tablo: tablo };\nnode.status({ fill: \"blue\", shape: \"dot\", text: kayitlar.length + \" isim\" });\nreturn msg;\n",
+  "outputs": 1,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 560,
+  "y": 600,
+  "wires": [
+   [
+    "kk_view_pano"
+   ]
+  ]
+ },
+ {
+  "id": "kk_view_pano",
+  "type": "axetflows-view-action",
+  "z": "kk_tab0000000001",
+  "name": "panoyu goster",
+  "action": "update",
+  "redirectPage": null,
+  "downloadFile": false,
+  "fileName": "",
+  "inputType": "buffer",
+  "message": null,
+  "messageType": "info",
+  "x": 760,
+  "y": 600,
+  "wires": []
+ }
+]

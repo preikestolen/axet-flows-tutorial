@@ -9,7 +9,11 @@ yeniden calistirin:
 import base64
 import copy
 import json
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent.parent / "ortak"))
+from form_bilesenleri import kalici_kutu  # noqa: E402
 
 BURASI = Path(__file__).parent
 KAYNAK = BURASI.parent
@@ -25,8 +29,7 @@ def js(ad):
 
 
 ORTAK = KAYNAK / "ortak"
-LINK = ('<a href="data:<%= tur %>;base64,<%= veri %>" download="<%= dosya %>"><b><%= dosya %></b></a> '
-        '-- indirmek icin tiklayin.')
+# Indirme baglantisi uyari kutusunda DEGIL, sayfadaki kalici kutuda (ortak/indirme-bagi-olustur.js)
 # Uygulama geneli Custom CSS: salt okunur tablolari duz metin gibi goster (Ders 9.9)
 UYGULAMA_CSS = (KAYNAK / "ortak" / "uygulama.css").read_text(encoding="utf-8")
 
@@ -69,6 +72,7 @@ dosya_bileseni.update({
     "fileMaxSize": "5MB",
     "id": "mkexcel1",
 })
+form["formStructure"]["components"] += kalici_kutu("indirme", "indirme-alani")
 form.update({"id": "mk_form", "z": TAB, "name": FORM_ADI, "x": 150, "y": 160, "wires": [["mk_buffer"], []]})
 
 # --- ikinci sayfa: Raporlar (secim kutusu + Indir dugmesi)
@@ -83,7 +87,7 @@ secim = {
     "validate": {"required": True}, "conditional": {"show": None, "when": None, "eq": ""},
 }
 form2 = copy.deepcopy(form)
-form2["formStructure"]["components"] = [secim, buton]
+form2["formStructure"]["components"] = [secim, buton] + kalici_kutu("indirme", "indirme-alani")
 form2.update({"id": "mk_form2", "name": RAPOR_SAYFASI, "buttons": [buton],
               "x": 150, "y": 600, "wires": [["mk_indir"], ["mk_liste"]]})   # son cikis: onInitForm
 
@@ -111,6 +115,13 @@ app["menu"][0]["children"] = [{
                                        ("hv_form_okuma", "Okumalar", "fa fa-thermometer-half"),
                                        ("hv_form_uyari", "Uyarilar", "fa fa-exclamation-triangle"),
                                        ("hv_form_hata", "Hatalar", "fa fa-bug")]],
+}, {
+    # Gun 3 -- dugumleri ayri sekmede: ../kod-adi-konseyi/akis-uret.py
+    "id": "kk_bolum", "text": "Kod Adi Konseyi", "icon": "fa fa-gavel", "data": {}, "type": "section",
+    "children": [{"id": "kk_sayfa1", "text": "Konsey", "icon": "fa fa-users", "type": "form",
+                  "data": {"form_id": "kk_form_konsey"}, "children": []},
+                 {"id": "kk_sayfa2", "text": "Isim Panosu", "icon": "fa fa-trophy", "type": "form",
+                  "data": {"form_id": "kk_form_pano"}, "children": []}],
 }]
 
 # ------------------------------------------------ test girisi (tasarimcida formsuz deneme)
@@ -166,7 +177,7 @@ akis = [
     fn("mk_kaydet", "rapora kaydet", js("07-rapora-kaydet.js"), 960, 320, [["mk_bag"], ["mk_bitti"]], outputs=2),
     fn("mk_bag", "indirme baglantisi", (ORTAK / "indirme-bagi-olustur.js").read_text(encoding="utf-8"), 1160, 300, [["mk_view"]]),
     view_action("mk_view", "sonucu goster + baglanti", 1360, 300, "success", False,
-                "Kontrol tamamlandi: <%= toplam %> satirin <%= hatali %> tanesi hatali (<%= hata %> hata). " + LINK),
+                "<%= mesaj %> Indirme baglantisi asagida."),
     debug("mk_bitti", "RAPOR HAZIR", 1180, 360, alan="payload", status=True),
 
     # --- Raporlar sayfasi
@@ -175,7 +186,7 @@ akis = [
     view_action("mk_view_liste", "listeyi goster", 600, 640, "info", False, None),
     fn("mk_indir", "rapor indir", js("09-rapor-indir.js"), 380, 580, [["mk_bag2"], ["mk_view_yok"]], outputs=2),
     fn("mk_bag2", "indirme baglantisi", (ORTAK / "indirme-bagi-olustur.js").read_text(encoding="utf-8"), 600, 560, [["mk_view_indir"]]),
-    view_action("mk_view_indir", "baglantiyi goster", 820, 560, "success", False, "<%= mesaj %> " + LINK),
+    view_action("mk_view_indir", "baglantiyi goster", 820, 560, "success", False, "<%= mesaj %> Indirme baglantisi asagida."),
     view_action("mk_view_yok", "rapor yok", 600, 620, "warning", False, "<%= mesaj %>"),
 
 

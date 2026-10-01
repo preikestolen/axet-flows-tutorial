@@ -41,6 +41,7 @@ if (!formdanMi(msg)) {
 
 msg.indirilecek = { data: rapor.icerik, ad: rapor.ad };      // -> ortak/indirme-bagi-olustur.js
 msg.messages = {
+  mesaj: "Kontrol tamamlandi: " + (ist.toplamSatir || 0) + " satirin " + (ist.hataliSatir || 0) + " tanesi hatali (" + (ist.toplamHata || 0) + " hata). Rapor:",
   dosya: String(rapor.dosya),
   toplam: String(ist.toplamSatir || 0),
   hatali: String(ist.hataliSatir || 0),

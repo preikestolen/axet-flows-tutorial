@@ -1128,6 +1128,32 @@ Node-RED yeni sekmeye **yeni bir ID** verir (düğüm ID'leri korunur).
 Tasarımcı yeni sürümü yüklüyor; 1-2 dakika sonra kendiliğinden açılıyor.
 
 
+### Mesaj (yeşil/kırmızı kutu) birkaç saniye sonra kayboluyor
+
+aXet'in ön yüzünde `if (alert !== 'danger')` nesneyi metinle karşılaştırıyor;
+**bütün uyarılar 10 sn sonra silinir.** Kalıcı gösterilmesi gereken içerik
+(sonuç, indirme bağlantısı, hata) için formda gizli alan + htmlelement
+(`{{ data.<alan> || '' }}`) kullanın; akış HTML'i `msg.submission.<alan>`'a
+yazar. Bkz. `kaynaklar/ortak/form_bilesenleri.py`, Ders 13.4.
+
+### `Mastra API error 500: Agent execution failed - Bad Gateway`
+
+Platform tarafında geçici ajan hatası. Ajan düğümünün hata çıkışını kısa bir
+`delay` + aynı prompt'la yeniden denemeye bağlayın (en çok 3) —
+`kaynaklar/kod-adi-konseyi/07-ajan-yeniden.js`.
+
+### Tasarımcı Admin API'si artık 52333'te değil
+
+Tasarımcı portu yeni süreçle değişebilir (52333 → 56553 görüldü).
+`python kaynaklar/tasarimciya-yukle.py` portu kendisi bulur; elle:
+`Get-NetTCPConnection -State Listen` → `aXet.flows` sürecinin portları.
+
+### Menüde etiketler küçük harfle görünüyor
+
+Uygulama menü etiketini ilk harf hariç küçültür ("Isim Panosu" →
+"Isim panosu"). Sadece görünüm; eşleştirme form adıyla yapılır.
+
+
 ## Katkı
 
 Yeni bir hatayla karşılaştıysanız bu dosyaya şu şablonla ekleyin:

@@ -150,7 +150,7 @@ msg.indirilecek = { data: buffer, ad: "hava-nobetcisi.xlsx" };   // sonra indirm
 // <%= mesaj %> <a href="data:<%= tur %>;base64,<%= veri %>" download="<%= dosya %>"><b><%= dosya %></b></a>
 ```
 
-Bağlantı sayfanın içinde duruyor, MIME türü ve adı belli; kullanıcı tıklayınca
+Bağlantı sayfanın içinde duruyor (uyarı kutusunda değil, formdaki kalıcı kutuda — aXet uyarıları 10 sn'de siliniyor, Ders 13.4), MIME türü ve adı belli; kullanıcı tıklayınca
 tarayıcı `.xlsx` olarak kaydeder. Ek uç nokta yok, sunucuda dosya bekletme
 yok. Dosyalar küçük (8-15 KB) olduğu için mesaja rahat sığar; birkaç MB'lık
 dosyalar için bu yöntem uygun değildir. Aynı yöntem Gün 2'nin rapor
@@ -185,4 +185,5 @@ indirmelerine de uygulandı.
 ---
 
 **Önceki:** [11. Müşteri Ana Verisi Kontrolcüsü](11-musteri-ana-veri-kontrolu.md) ·
+**Sonraki:** [13. Kod Adı Konseyi](13-kod-adi-konseyi.md) ·
 **Takıldınız mı?** → [Sorun Giderme](SORUN-GIDERME.md)

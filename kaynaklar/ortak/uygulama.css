@@ -30,5 +30,93 @@
   cursor: default;
 }
 
-/* Indirme baglantisi uyari kutusunda belirgin olsun */
-.alert a[download] { text-decoration: underline; }
+/* Indirme kutusu (sayfadaki kalici kutu: hidden "indirme" + htmlelement) */
+.indirme-kutu {
+  margin-top: 14px; padding: 12px 16px; border-radius: 10px;
+  background: #eaf6ee; border: 1px solid #b9dfc6; color: #1d5b33;
+}
+.indirme-bag {
+  display: inline-block; margin-left: 6px; padding: 4px 12px; border-radius: 999px;
+  background: #1d7a46; color: #fff !important; font-weight: 700; text-decoration: none !important;
+}
+.indirme-bag:hover { background: #155c34; }
+
+/* ============================================================
+   Gun 3 -- Kod Adi Konseyi
+   Sahne HTML'i 04-karar-isle.js'de uretilir ve view action
+   mesajinda (yesil uyari kutusu) gosterilir.
+   ============================================================ */
+
+:root {
+  --konsey-lacivert: #1b1f3b;
+  --konsey-altin: #e0a526;
+  --konsey-muhendis: #2f6f8f;
+  --konsey-pazarlamaci: #d94f2b;
+  --konsey-sair: #7a4bb5;
+}
+
+/* Giris karti (Konsey sayfasi ustu) */
+.konsey-giris {
+  background: linear-gradient(135deg, var(--konsey-lacivert), #3a2f6b);
+  color: #fff; border-radius: 14px; padding: 22px 26px; margin-bottom: 18px;
+  box-shadow: 0 6px 18px rgba(27, 31, 59, .25);
+}
+.konsey-giris-baslik { font-size: 1.6rem; font-weight: 700; letter-spacing: .5px; }
+.konsey-giris-baslik::before { content: "\2696\FE0F  "; }
+.konsey-giris-metin { opacity: .9; margin: 6px 0 12px; }
+.konsey-uyeler span {
+  display: inline-block; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25);
+  border-radius: 999px; padding: 4px 12px; margin: 0 6px 6px 0; font-size: .9rem;
+}
+
+/* Sonuc sahnesi (sayfadaki kalici kutu: hidden "sahne" + htmlelement) */
+.konsey-sahne {
+  background: #faf7f0; border: 1px solid #e8dfc8; color: #222;
+  border-radius: 14px; padding: 20px 22px; margin-top: 18px;
+}
+.konsey-uyari, .konsey-hata {
+  margin-top: 16px; padding: 14px 18px; border-radius: 12px; font-weight: 600;
+}
+.konsey-uyari { background: #fff6e0; border: 1px solid #f1d38a; color: #7a5600; }
+.konsey-hata  { background: #fdecea; border: 1px solid #f5b5ad; color: #8a1c10; }
+.konsey-baslik { font-size: 1.3rem; font-weight: 700; color: var(--konsey-lacivert); }
+.konsey-proje { font-style: italic; color: #555; margin: 4px 0 14px; }
+.konsey-kartlar { display: flex; flex-wrap: wrap; gap: 14px; }
+.konsey-kart {
+  flex: 1 1 240px; background: #fff; border-radius: 12px; padding: 14px 16px;
+  border-top: 5px solid #999; box-shadow: 0 3px 10px rgba(0,0,0,.06); position: relative;
+}
+.konsey-muhendis    { border-top-color: var(--konsey-muhendis); }
+.konsey-pazarlamaci { border-top-color: var(--konsey-pazarlamaci); }
+.konsey-sair        { border-top-color: var(--konsey-sair); }
+.konsey-kim { font-size: .85rem; text-transform: uppercase; letter-spacing: .6px; color: #666; font-weight: 600; }
+.konsey-isim { font-size: 1.35rem; font-weight: 700; margin: 6px 0; color: var(--konsey-lacivert); }
+.konsey-muhendis .konsey-gerekce    { font-family: Consolas, "Courier New", monospace; font-size: .9rem; }
+.konsey-pazarlamaci .konsey-gerekce { font-weight: 600; }
+.konsey-sair .konsey-gerekce        { font-family: Georgia, "Times New Roman", serif; font-style: italic; }
+.konsey-baskan-notu {
+  margin-top: 10px; padding-top: 8px; border-top: 1px dashed #ddd; font-size: .88rem; color: #444;
+}
+.konsey-kazanan { box-shadow: 0 0 0 3px var(--konsey-altin), 0 6px 18px rgba(224,165,38,.35); }
+.konsey-kazanan::after {
+  content: "\1F451  KAZANAN"; position: absolute; top: -12px; right: 12px;
+  background: var(--konsey-altin); color: #fff; font-size: .75rem; font-weight: 700;
+  padding: 3px 10px; border-radius: 999px;
+}
+.konsey-karar {
+  margin-top: 18px; background: var(--konsey-lacivert); color: #fff; border-radius: 12px; padding: 16px 20px;
+}
+.konsey-karar-ust { font-size: .85rem; letter-spacing: .6px; text-transform: uppercase; opacity: .8; }
+.konsey-karar-isim { font-size: 1.7rem; font-weight: 800; color: var(--konsey-altin); margin: 4px 0; }
+.konsey-puan {
+  font-size: 1rem; background: var(--konsey-altin); color: var(--konsey-lacivert);
+  padding: 2px 10px; border-radius: 999px; vertical-align: middle; margin-left: 6px;
+}
+.konsey-karar-metin { margin: 6px 0 10px; }
+.konsey-pano-notu { font-size: .9rem; opacity: .85; }
+
+/* Isim Panosu: ilk uc satir */
+.konsey-pano tbody tr:nth-child(1) td { background: #fff7dd; }
+.konsey-pano tbody tr:nth-child(2) td { background: #f3f4f6; }
+.konsey-pano tbody tr:nth-child(3) td { background: #fbefe6; }
+.konsey-pano tbody tr:nth-child(-n+3) input { font-weight: 700 !important; }

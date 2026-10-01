@@ -14,6 +14,6 @@ if (!r) {
 }
 
 msg.indirilecek = { data: r.icerik, ad: r.ad };                // -> ortak/indirme-bagi-olustur.js
-msg.messages = { mesaj: r.ozet + "." };
+msg.messages = { mesaj: r.ozet + ". Rapor:" };
 node.status({ fill: "green", shape: "dot", text: r.ad });
 return [msg, null];                                     // -> indirme baglantisi -> view action

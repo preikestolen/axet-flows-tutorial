@@ -8,7 +8,11 @@ menudeki "Hava Nobetcisi" bolumu buradaki hv_form'a baglanir.
 """
 import copy
 import json
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent.parent / "ortak"))
+from form_bilesenleri import kalici_kutu  # noqa: E402
 
 BURASI = Path(__file__).parent
 KAYNAK = BURASI.parent
@@ -110,6 +114,7 @@ for i, (anahtar, fid, ad, kolonlar) in enumerate(SAYFALAR):
         b = copy.deepcopy(sablon["formStructure"]["components"][1])
         b.update({"label": "Excel'i indir", "key": "indir", "id": "hvindir1", "leftIcon": "fa fa-download"})
         bilesenler.append(b)
+        bilesenler += kalici_kutu("indirme", "indirme-alani")
         butonlar = [b]
     f["formStructure"]["components"] = bilesenler
     y = 500 + i * 60
@@ -180,8 +185,7 @@ akis = [
     fn("hv_indir_f", "excel indir", js("08-excel-indir.js"), 760, 740, [["hv_bag"]]),
     fn("hv_bag", "indirme baglantisi", (KAYNAK / "ortak" / "indirme-bagi-olustur.js").read_text(encoding="utf-8"), 960, 740, [["hv_view_indir"]]),
     view_action("hv_view_indir", "baglantiyi goster", 1160, 740, "success", False,
-                '<%= mesaj %> <a href="data:<%= tur %>;base64,<%= veri %>" download="<%= dosya %>"><b><%= dosya %></b></a> '
-                '-- indirmek icin tiklayin.'),
+                "<%= mesaj %> Indirme baglantisi asagida."),
 
     {"id": "hv_catch_sayfa", "type": "catch", "z": TAB, "name": "sayfa dosya hatalari",
      "scope": ["hv_sayfa_oku", "hv_sayfa", "hv_xls_oku", "hv_indir_f", "hv_bag"], "uncaught": False,

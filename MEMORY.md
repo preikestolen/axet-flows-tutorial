@@ -81,6 +81,9 @@ Son güncelleme: 2026-10-01 · Platform: aXet.flows v6.5.4 (Node-RED v4.1.1)
 | Salt okunur textarea'da satırlar tek satır | Görüntüleme satır sonunu yutuyor | Datagrid kullan |
 | Datagrid hücreleri gri, metin kesik | Disabled input stili | Custom CSS: `ortak/uygulama.css` |
 | Sayfada eski veri | Form verisi açılışta yüklenir | Menüden tekrar aç / F5 |
+| Uyarı/mesaj 10 sn sonra kayboluyor | aXet `addAlert`: `if (alert !== 'danger')` hep true | Kalıcı içerik için formda hidden + htmlelement `{{ data.x }}`; `ortak/form_bilesenleri.py` |
+| `Mastra API error 500: ... Bad Gateway` (ajan) | Platform geçici hatası | Hata çıkışı → 3 sn delay → aynı prompt'la yeniden (en çok 3): `kod-adi-konseyi/07-ajan-yeniden.js` |
+| Tasarımcı 52333'te yanıt yok / bağlantı reddedildi | Port yeni süreçle değişebilir | `python kaynaklar/tasarimciya-yukle.py` portu bulur |
 | `Other instance ... running yet in production mode!` | Production açıkken tasarımcı | Production'ı kafatasıyla durdur |
 | Üretilen dosyalar kayboldu | `/data/` altına yazıldı | `/internal-storage-files/` kullan ya da kullanıcıya indir |
 
@@ -91,6 +94,9 @@ Son güncelleme: 2026-10-01 · Platform: aXet.flows v6.5.4 (Node-RED v4.1.1)
 | Forma "bitti" mesajı | `view action` + `msg.messages = {k: "v"}`; mesajda `<%= k %>` (EJS) |
 | Kullanıcıya dosya indirme | `msg.downloadFileSubmission = { data: buffer, fileName, inputType: "buffer" }` + view action'da **Download file** |
 | Sayfa açılırken veri yükleme | Form düğümünün **son çıkışı** = `onInitForm` → function → view action |
+| Sayfada kalıcı HTML (sonuç, bağlantı, hata) | hidden alan + htmlelement `{{ data.alan \|\| '' }}`; akış `msg.submission.alan = html` (escape'li) → view action (update) |
+| Çok ajanlı sahne | Her karakter ayrı ajan (Instructions = ses, yüksek sıcaklık), tek bir 'sıra yöneticisi' function çok çıkışlı yönlendirir; Output Schema + kodla doğrulama |
+| Akışları tasarımcıya yükleme | `python kaynaklar/tasarimciya-yukle.py` (Okta config + Admin menüsü korunur) |
 | Sayfa açılışında tablo | Form son çıkışı (onInit) → function `msg.submission = { tablo: [ {...} ] }` → view action (update); bileşen datagrid, anahtarı `tablo` |
 | HTML'li mesaj / bağlantı | view action mesajı HTML olarak gösterilir (`<a href="data:…" download>` çalışır) |
 | Seçim kutusunu doldurma | `msg.onInitPopulateFormStructure = { <key>: [{label, value}] }` |

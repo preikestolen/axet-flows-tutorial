@@ -1,32 +1,49 @@
-// Indirilecek dosyayi, view action mesajinda gosterilecek bir data: baglantisina
-// cevirir:  <a href="data:<tur>;base64,<veri>" download="<dosya>">
+// Indirilecek dosyayi sayfada KALICI duran bir indirme kutusuna cevirir:
+//   <a href="data:<tur>;base64,<veri>" download="<dosya>">
 //
-// Neden:
+// Neden data: baglantisi:
 //  1. aXet'in view action indirmesi (downloadFileSubmission) tarayicida tipsiz
-//     bir Blob'u, sayfaya eklenmemis bir <a> ile tikliyor; Edge dosyayi ".tmp"
-//     olarak kaydediyor.
+//     bir Blob'u, sayfaya eklenmemis bir <a> ile tikliyor; Edge ".tmp" kaydediyor.
 //  2. Kendi "http in" ucumuz da olmuyor: aXet http in'leri uygulama oturumuyla
-//     dogruluyor ve Okta yolunda kendi kodu cokuyor
-//     ("auth-manager-rest.js ... ReferenceError: logger is not defined"), istek askida kaliyor.
-// data: baglantisi sayfanin ICINDE, turu ve adi belli; dosya Okta korumali form
-// yanitiyla geldigi icin baska bir erisim yolu da acilmiyor.
+//     dogruluyor ve Okta yolunda kendi kodu cokuyor (logger is not defined).
+// Neden uyari kutusunda degil de sayfada:
+//  3. aXet uyarilari 10 sn sonra kendiliginden siliniyor (DeptAppsAlerts.addAlert:
+//     `if (alert !== 'danger')` nesneyi metinle karsilastiriyor). Baglanti formdaki
+//     gizli bir alana (varsayilan "indirme") yazilir; ayni formdaki htmlelement
+//     onu `{{ data.indirme }}` ile gosterir.
 //
 // Girdi : msg.indirilecek = { data: Buffer, ad: "dosya.xlsx" }
-// Cikti : msg.messages.{veri, tur, dosya}  (view action mesajinda <%= %>)
+//         msg.messages.mesaj  (kutudaki aciklama, duz metin)
+//         msg.indirmeAlani    (istege bagli, formdaki gizli alanin anahtari)
+// Cikti : msg.submission[alan] = HTML kutu  (view action "update" forma basar)
 
 const k = msg.indirilecek;
 if (!k || !k.data) { node.error("indirilecek dosya yok", msg); return null; }
+
+const esc = (s) => String(s === undefined || s === null ? "" : s)
+  .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 
 const buf = Buffer.isBuffer(k.data) ? k.data : Buffer.from(k.data);
 const tur = /\.xlsx$/i.test(k.ad)
   ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
   : "application/octet-stream";
+const dosya = String(k.ad).replace(/[^A-Za-z0-9._-]/g, "_");
+const aciklama = (msg.messages && msg.messages.mesaj) || "Dosya hazir.";
 
-msg.messages = Object.assign({}, msg.messages, {
-  veri: buf.toString("base64"),
-  tur: tur,
-  dosya: String(k.ad).replace(/[^A-Za-z0-9._-]/g, "_")
-});
+const html =
+  '<div class="indirme-kutu">' +
+    '<span class="indirme-metin">' + esc(aciklama) + '</span> ' +
+    '<a class="indirme-bag" href="data:' + tur + ';base64,' + buf.toString("base64") + '" download="' + esc(dosya) + '">' +
+      '⬇️ ' + esc(dosya) + '</a>' +
+  '</div>';
+
+const alan = msg.indirmeAlani || "indirme";
+const mevcut = (msg.submission && typeof msg.submission === "object")
+  ? (msg.submission.data && typeof msg.submission.data === "object" ? msg.submission.data : msg.submission)
+  : {};
+msg.submission = Object.assign({}, mevcut);
+msg.submission[alan] = html;
+
 delete msg.indirilecek;
 delete msg.downloadFileSubmission;     // aXet'in kendi (hatali) indirmesi devre disi
 
