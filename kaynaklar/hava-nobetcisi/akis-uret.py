@@ -180,8 +180,8 @@ akis = [
     fn("hv_indir_f", "excel indir", js("08-excel-indir.js"), 760, 740, [["hv_bag"]]),
     fn("hv_bag", "indirme baglantisi", (KAYNAK / "ortak" / "indirme-bagi-olustur.js").read_text(encoding="utf-8"), 960, 740, [["hv_view_indir"]]),
     view_action("hv_view_indir", "baglantiyi goster", 1160, 740, "success", False,
-                '<%= mesaj %> <a href="/indir/<%= token %>" download="<%= dosya %>"><b><%= dosya %></b></a> '
-                '-- indirmek icin tiklayin (<%= sure %> dk gecerli).'),
+                '<%= mesaj %> <a href="data:<%= tur %>;base64,<%= veri %>" download="<%= dosya %>"><b><%= dosya %></b></a> '
+                '-- indirmek icin tiklayin.'),
 
     {"id": "hv_catch_sayfa", "type": "catch", "z": TAB, "name": "sayfa dosya hatalari",
      "scope": ["hv_sayfa_oku", "hv_sayfa", "hv_xls_oku", "hv_indir_f", "hv_bag"], "uncaught": False,

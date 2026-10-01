@@ -25,8 +25,8 @@ def js(ad):
 
 
 ORTAK = KAYNAK / "ortak"
-LINK = ('<a href="/indir/<%= token %>" download="<%= dosya %>"><b><%= dosya %></b></a> '
-        '-- indirmek icin tiklayin (<%= sure %> dk gecerli).')
+LINK = ('<a href="data:<%= tur %>;base64,<%= veri %>" download="<%= dosya %>"><b><%= dosya %></b></a> '
+        '-- indirmek icin tiklayin.')
 # Uygulama geneli Custom CSS: salt okunur tablolari duz metin gibi goster (Ders 9.9)
 UYGULAMA_CSS = (KAYNAK / "ortak" / "uygulama.css").read_text(encoding="utf-8")
 
@@ -178,12 +178,6 @@ akis = [
     view_action("mk_view_indir", "baglantiyi goster", 820, 560, "success", False, "<%= mesaj %> " + LINK),
     view_action("mk_view_yok", "rapor yok", 600, 620, "warning", False, "<%= mesaj %>"),
 
-    # --- indirme ucu: GET /indir/:token (dogru Content-Type + dosya adi)
-    {"id": "mk_http_in", "type": "http in", "z": TAB, "name": "GET /indir/:token", "url": "/indir/:token",
-     "method": "get", "upload": False, "swaggerDoc": "", "x": 170, "y": 700, "wires": [["mk_sun"]]},
-    fn("mk_sun", "dosyayi sun", (ORTAK / "indirme-sun.js").read_text(encoding="utf-8"), 380, 700, [["mk_http_out"]]),
-    {"id": "mk_http_out", "type": "http response", "z": TAB, "name": "", "statusCode": "", "headers": {},
-     "x": 560, "y": 700, "wires": []},
 
     # Kapsam bilerek SINIRLI: ajan dugumu kendi hata cikisiyla yonetiliyor; o da
     # catch'e dusseydi forma iki kez yanit gidebilirdi.

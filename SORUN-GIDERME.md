@@ -1078,10 +1078,28 @@ Desktop tasarım modunda `/internal-storage-files/` yolu doğrudan
 **Belirti:** `view action`'da *Download file* açık; dosya iniyor ama
 `xxxx.tmp` adıyla. **Sebep:** aXet'in tarayıcı kodu tipsiz bir `Blob`'u,
 sayfaya eklenmemiş bir `<a>` ile tıklıyor; sunucu yanıtı (dosya adı,
-içerik) doğru. **Çözüm:** İndirmeyi kendi ucunuzdan verin:
-`kaynaklar/ortak/indirme-bagi-olustur.js` (10 dk geçerli anahtar +
-mesajda bağlantı) ve `http in GET /indir/:token` → `indirme-sun.js`
-(`Content-Type` + `Content-Disposition: attachment`). Ayrıntı: Ders 12.6.
+içerik) doğru. **Çözüm:** Dosyayı view action **mesajında** `data:`
+bağlantısı olarak verin — `kaynaklar/ortak/indirme-bagi-olustur.js`:
+
+```html
+<a href="data:<%= tur %>;base64,<%= veri %>" download="<%= dosya %>"><%= dosya %></a>
+```
+
+Ayrıntı: Ders 12.6.
+
+### Kendi `http in` ucum: `400 Credentials are mandatory` / istek askıda kalıyor
+
+aXet `http in` uçlarını uygulamanın kimlik doğrulamasından geçiriyor.
+Oturumsuz istek `{"code":30,"message":"Credentials are mandatory to access
+this resource."}` alır. Uygulama Okta ile korunuyorsa oturumlu istekte
+aXet'in kendi kodu çöker ve yanıt hiç gelmez — Production günlüğü:
+
+```
+[FATAL] nodes/axetflows-ui/authentication/auth-manager-rest.js - Uncaught Exception ReferenceError: logger is not defined
+```
+
+Okta'lı uygulamada tarayıcıdan çağrılacak bir `http in` ucuna güvenmeyin;
+veriyi form yanıtıyla (view action) gönderin.
 
 ### Salt okunur metin alanında satırlar tek satıra diziliyor
 

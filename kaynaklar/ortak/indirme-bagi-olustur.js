@@ -1,32 +1,34 @@
-// Indirilecek dosya icin 10 dakika gecerli, tahmin edilemez bir baglanti uretir.
+// Indirilecek dosyayi, view action mesajinda gosterilecek bir data: baglantisina
+// cevirir:  <a href="data:<tur>;base64,<veri>" download="<dosya>">
 //
-// Neden: aXet'in view action indirmesi tarayicida tipsiz bir Blob'u, sayfaya
-// eklenmemis bir <a> ile tikliyor; Edge dosyayi ".tmp" olarak kaydedebiliyor.
-// Bu yuzden dosyayi kendi HTTP ucumuzdan (indirme-sun.js) dogru basliklarla
-// veriyoruz. Baglanti, Okta korumali bir form islemi sonunda uretildigi icin
-// sadece giris yapmis kullanici gorur.
+// Neden:
+//  1. aXet'in view action indirmesi (downloadFileSubmission) tarayicida tipsiz
+//     bir Blob'u, sayfaya eklenmemis bir <a> ile tikliyor; Edge dosyayi ".tmp"
+//     olarak kaydediyor.
+//  2. Kendi "http in" ucumuz da olmuyor: aXet http in'leri uygulama oturumuyla
+//     dogruluyor ve Okta yolunda kendi kodu cokuyor
+//     ("auth-manager-rest.js ... ReferenceError: logger is not defined"), istek askida kaliyor.
+// data: baglantisi sayfanin ICINDE, turu ve adi belli; dosya Okta korumali form
+// yanitiyla geldigi icin baska bir erisim yolu da acilmiyor.
 //
 // Girdi : msg.indirilecek = { data: Buffer, ad: "dosya.xlsx" }
-// Cikti : msg.messages.token / msg.messages.dosya  (view action mesajinda <%= %>)
+// Cikti : msg.messages.{veri, tur, dosya}  (view action mesajinda <%= %>)
 
-const SURE_DK = 10;
 const k = msg.indirilecek;
 if (!k || !k.data) { node.error("indirilecek dosya yok", msg); return null; }
 
-const depo = global.get("indirmeler") || {};
-const simdi = Date.now();
-for (const t of Object.keys(depo)) if (depo[t].bitis < simdi) delete depo[t];   // suresi dolanlari temizle
+const buf = Buffer.isBuffer(k.data) ? k.data : Buffer.from(k.data);
+const tur = /\.xlsx$/i.test(k.ad)
+  ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+  : "application/octet-stream";
 
-let token = "";
-while (token.length < 32) token += Math.random().toString(36).slice(2);
-token = token.slice(0, 32);
-
-depo[token] = { data: k.data, ad: k.ad, bitis: simdi + SURE_DK * 60000 };
-global.set("indirmeler", depo);
-
-msg.messages = Object.assign({}, msg.messages, { token: token, dosya: k.ad, sure: String(SURE_DK) });
+msg.messages = Object.assign({}, msg.messages, {
+  veri: buf.toString("base64"),
+  tur: tur,
+  dosya: String(k.ad).replace(/[^A-Za-z0-9._-]/g, "_")
+});
 delete msg.indirilecek;
 delete msg.downloadFileSubmission;     // aXet'in kendi (hatali) indirmesi devre disi
 
-node.status({ fill: "green", shape: "dot", text: k.ad + " (" + Object.keys(depo).length + " bagli)" });
+node.status({ fill: "green", shape: "dot", text: k.ad + " (" + Math.round(buf.length / 1024) + " KB)" });
 return msg;

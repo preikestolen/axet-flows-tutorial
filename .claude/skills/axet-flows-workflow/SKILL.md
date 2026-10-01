@@ -113,7 +113,7 @@ ayrıntılı madde (tam hata metni + sebep + çözüm) ekle.
 | File bileşeni (base64) | — | `data.<key> = [{ name, originalName, size, url: "data:<mime>;base64,..." }]` |
 | `axetflows-app` | — | Auth: `authNone` / `Okta` / `authBasicInternal`. Okta için `oktaDb` config şart. Menü öğesi: `{type:"form", text, data:{form_id}}` |
 | `axetflows-view-action` | Form msg'si (dokunulmamış) | `action:"update"`; `msg.messages` → mesajdaki `<%= k %>`; `msg.downloadFileSubmission = {data, fileName, inputType:"buffer"\|"base64"\|"path"}`; onInit'te `msg.onInitPopulateFormStructure = {key: [{label,value}]}` |
-| Dosya indirme | Okta korumalı form işlemi | **`downloadFileSubmission` kullanma** (Edge'de `.tmp`). `kaynaklar/ortak/indirme-bagi-olustur.js` → view action mesajında `<a href="/indir/<%= token %>">` → `http in /indir/:token` → `indirme-sun.js` |
+| Dosya indirme | Okta korumalı form işlemi | **`downloadFileSubmission` kullanma** (Edge'de `.tmp`). `kaynaklar/ortak/indirme-bagi-olustur.js` → view action mesajında `<a href="data:<%= tur %>;base64,<%= veri %>" download="<%= dosya %>">`. Okta'lı uygulamada tarayıcıdan `http in` çağırma (aXet REST auth çöküyor) |
 | Tablo sayfası | form onInit | `msg.submission = { tablo: [ {kolon: "deger"} ] }` → view action (update); bileşen datagrid (`disabled`, `disableAddingRemovingRows`); görünüm için `ortak/uygulama.css` |
 | Menü bölümü | — | `{type:"section", text, children:[{type:"form", text: <form adı>, data:{form_id}}]}`; etiket = form adı |
 | Form msg alanları | — | `msg.__deptAppsFormioButtonClicked`, `msg.__deptAppsFormioButtons`, `msg.submission` — **silme** |

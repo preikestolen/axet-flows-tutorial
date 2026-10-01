@@ -45,7 +45,7 @@ Kaynaklar: [`kaynaklar/hava-nobetcisi/`](kaynaklar/hava-nobetcisi/)
 | `05-kaydi-isle.js` | Önceki okumaya göre fark, `|fark| > 3` → uyarı; JSONL satırı |
 | `06-excel-tablosu.js` | Okumalar / Uyarilar / Hatalar / Ozet |
 | `07-sayfa-verisi.js` | Menüdeki dört sayfanın tablosu |
-| `08-excel-indir.js` + `../ortak/indirme-*.js` | Excel indirme bağlantısı (12.6) |
+| `08-excel-indir.js` + `../ortak/indirme-bagi-olustur.js` | Excel indirme bağlantısı (12.6) |
 | `test/calistir.js` | 12 senaryo: fark eşiği, 503 → yeniden deneme, timeout → hata kaydı, 404 → tek deneme… |
 
 ## 12.2 Servis: Open-Meteo
@@ -132,21 +132,29 @@ link.click();                            // <a> sayfaya EKLENMEDEN tiklaniyor
 document.body.removeChild(link);         // ... ve burada hata
 ```
 
-Bu kodu değiştiremeyiz; indirmeyi kendi yolumuzdan yapıyoruz:
+Bu kodu değiştiremeyiz. İlk denediğimiz yol da işe yaramadı:
 
-1. Okta korumalı form işlemi sonunda `ortak/indirme-bagi-olustur.js`
-   dosyayı `global` context'e koyar ve **10 dakika geçerli, 32 karakterlik**
-   bir anahtar üretir.
-2. `view action` mesajı HTML gösterebildiği için mesaja bağlantı konur:
-   `<a href="/indir/<%= token %>" download>…xlsx</a>`.
-3. `http in GET /indir/:token` → `ortak/indirme-sun.js` →
-   `Content-Type: …spreadsheetml.sheet` ve
-   `Content-Disposition: attachment; filename="….xlsx"`.
+| Deneme | Sonuç |
+|---|---|
+| `view action` → *Download file* | Edge'de `.tmp` |
+| Kendi `http in GET /indir/:token` ucumuz | aXet `http in`'leri uygulama oturumuyla doğruluyor; oturumsuz istek `400 Credentials are mandatory`, oturumlu istekte aXet'in kendi kodu çöküyor (`auth-manager-rest.js … ReferenceError: logger is not defined`) ve istek askıda kalıyor |
+| **`data:` bağlantısı** | ✅ Edge'de doğru adla `.xlsx` |
 
-> **Neden düz bir indirme ucu değil:** aXet'in `http in` düğümünde kimlik
-> doğrulama yok; Okta'nın dışında kalır. Bağlantı yalnızca giriş yapmış
-> kullanıcının ekranında üretilir ve 10 dakika sonra geçersizdir. Aynı
-> yöntem Gün 2'nin müşteri raporlarına da uygulandı.
+Çalışan yol: dosyayı Okta korumalı form yanıtının **içinde**, türü belli bir
+`data:` bağlantısı olarak göndermek
+([`kaynaklar/ortak/indirme-bagi-olustur.js`](kaynaklar/ortak/indirme-bagi-olustur.js)):
+
+```javascript
+msg.indirilecek = { data: buffer, ad: "hava-nobetcisi.xlsx" };   // sonra indirme-bagi-olustur.js
+// view action mesaji (HTML olarak gosterilir):
+// <%= mesaj %> <a href="data:<%= tur %>;base64,<%= veri %>" download="<%= dosya %>"><b><%= dosya %></b></a>
+```
+
+Bağlantı sayfanın içinde duruyor, MIME türü ve adı belli; kullanıcı tıklayınca
+tarayıcı `.xlsx` olarak kaydeder. Ek uç nokta yok, sunucuda dosya bekletme
+yok. Dosyalar küçük (8-15 KB) olduğu için mesaja rahat sığar; birkaç MB'lık
+dosyalar için bu yöntem uygun değildir. Aynı yöntem Gün 2'nin rapor
+indirmelerine de uygulandı.
 
 ## 12.7 Sonuç
 

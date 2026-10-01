@@ -177,8 +177,8 @@ function formdanMi(m) { return !!(m.__deptAppsFormioButtonClicked || m.__axetFlo
 ```
 
 > **Güncelleme (Ders 12.6):** `downloadFileSubmission` ile inen dosya Edge'de
-> `.tmp` olarak kaydedildi. İndirme artık 10 dakika geçerli bir bağlantıyla
-> (`/indir/<anahtar>`) yapılıyor; mesajda tıklanabilir dosya adı görünür.
+> `.tmp` olarak kaydedildi. İndirme artık mesajdaki bir `data:` bağlantısıyla
+> yapılıyor (tıklanabilir dosya adı, doğru xlsx türü).
 
 ## 11.8 Sonuç dosyaya değil, kullanıcıya
 

@@ -103,7 +103,7 @@
   "sidebarMenuOrientation": "left",
   "logoImage": "default",
   "schemeColor": "",
-  "customCSS": "/* ============================================================\n   application dugumu > Style > Custom CSS  (Ders 9.9)\n   akis-uret.py bu dosyayi application dugumune gomer.\n\n   Salt okunur tablolar (formio datagrid, anahtari \"tablo\"):\n   devre disi input'lar varsayilan olarak gri kutu gorunur ve dar\n   kolonlarda metni keser (orn. \"01.10.2026 17:38\" -> \"01.10.2026\").\n   Asagidaki kurallar hucreyi duz metin gibi gosterir ve kolonu\n   icerige gore genisletir (field-sizing: content, Chromium 123+).\n   Canli sayfada denenip dogrulandi.\n   ============================================================ */\n\n.formio-component-tablo table { table-layout: auto; width: auto; min-width: 100%; }\n.formio-component-tablo thead th { white-space: nowrap; background: #f4f7f9; }\n.formio-component-tablo td { padding: 6px 10px !important; vertical-align: middle; }\n\n.formio-component-tablo input.form-control,\n.formio-component-tablo input.form-control:disabled,\n.formio-component-tablo input.form-control[readonly] {\n  field-sizing: content;\n  min-width: 3ch;\n  width: auto;\n  background: transparent !important;\n  border: 0 !important;\n  box-shadow: none !important;\n  color: #212529 !important;\n  opacity: 1 !important;\n  padding: 0 !important;\n  height: auto;\n  cursor: default;\n}\n\n/* Indirme baglantisi uyari kutusunda belirgin olsun */\n.alert a[href^=\"/indir/\"] { text-decoration: underline; }\n",
+  "customCSS": "/* ============================================================\n   application dugumu > Style > Custom CSS  (Ders 9.9)\n   akis-uret.py bu dosyayi application dugumune gomer.\n\n   Salt okunur tablolar (formio datagrid, anahtari \"tablo\"):\n   devre disi input'lar varsayilan olarak gri kutu gorunur ve dar\n   kolonlarda metni keser (orn. \"01.10.2026 17:38\" -> \"01.10.2026\").\n   Asagidaki kurallar hucreyi duz metin gibi gosterir ve kolonu\n   icerige gore genisletir (field-sizing: content, Chromium 123+).\n   Canli sayfada denenip dogrulandi.\n   ============================================================ */\n\n.formio-component-tablo table { table-layout: auto; width: auto; min-width: 100%; }\n.formio-component-tablo thead th { white-space: nowrap; background: #f4f7f9; }\n.formio-component-tablo td { padding: 6px 10px !important; vertical-align: middle; }\n\n.formio-component-tablo input.form-control,\n.formio-component-tablo input.form-control:disabled,\n.formio-component-tablo input.form-control[readonly] {\n  field-sizing: content;\n  min-width: 3ch;\n  width: auto;\n  background: transparent !important;\n  border: 0 !important;\n  box-shadow: none !important;\n  color: #212529 !important;\n  opacity: 1 !important;\n  padding: 0 !important;\n  height: auto;\n  cursor: default;\n}\n\n/* Indirme baglantisi uyari kutusunda belirgin olsun */\n.alert a[download] { text-decoration: underline; }\n",
   "customCSSErrors": 0,
   "authConfig": "Okta",
   "sessionExpireTimeInMinutes": "",
@@ -636,7 +636,7 @@
   "type": "function",
   "z": "mk_tab0000000001",
   "name": "indirme baglantisi",
-  "func": "// Indirilecek dosya icin 10 dakika gecerli, tahmin edilemez bir baglanti uretir.\n//\n// Neden: aXet'in view action indirmesi tarayicida tipsiz bir Blob'u, sayfaya\n// eklenmemis bir <a> ile tikliyor; Edge dosyayi \".tmp\" olarak kaydedebiliyor.\n// Bu yuzden dosyayi kendi HTTP ucumuzdan (indirme-sun.js) dogru basliklarla\n// veriyoruz. Baglanti, Okta korumali bir form islemi sonunda uretildigi icin\n// sadece giris yapmis kullanici gorur.\n//\n// Girdi : msg.indirilecek = { data: Buffer, ad: \"dosya.xlsx\" }\n// Cikti : msg.messages.token / msg.messages.dosya  (view action mesajinda <%= %>)\n\nconst SURE_DK = 10;\nconst k = msg.indirilecek;\nif (!k || !k.data) { node.error(\"indirilecek dosya yok\", msg); return null; }\n\nconst depo = global.get(\"indirmeler\") || {};\nconst simdi = Date.now();\nfor (const t of Object.keys(depo)) if (depo[t].bitis < simdi) delete depo[t];   // suresi dolanlari temizle\n\nlet token = \"\";\nwhile (token.length < 32) token += Math.random().toString(36).slice(2);\ntoken = token.slice(0, 32);\n\ndepo[token] = { data: k.data, ad: k.ad, bitis: simdi + SURE_DK * 60000 };\nglobal.set(\"indirmeler\", depo);\n\nmsg.messages = Object.assign({}, msg.messages, { token: token, dosya: k.ad, sure: String(SURE_DK) });\ndelete msg.indirilecek;\ndelete msg.downloadFileSubmission;     // aXet'in kendi (hatali) indirmesi devre disi\n\nnode.status({ fill: \"green\", shape: \"dot\", text: k.ad + \" (\" + Object.keys(depo).length + \" bagli)\" });\nreturn msg;\n",
+  "func": "// Indirilecek dosyayi, view action mesajinda gosterilecek bir data: baglantisina\n// cevirir:  <a href=\"data:<tur>;base64,<veri>\" download=\"<dosya>\">\n//\n// Neden:\n//  1. aXet'in view action indirmesi (downloadFileSubmission) tarayicida tipsiz\n//     bir Blob'u, sayfaya eklenmemis bir <a> ile tikliyor; Edge dosyayi \".tmp\"\n//     olarak kaydediyor.\n//  2. Kendi \"http in\" ucumuz da olmuyor: aXet http in'leri uygulama oturumuyla\n//     dogruluyor ve Okta yolunda kendi kodu cokuyor\n//     (\"auth-manager-rest.js ... ReferenceError: logger is not defined\"), istek askida kaliyor.\n// data: baglantisi sayfanin ICINDE, turu ve adi belli; dosya Okta korumali form\n// yanitiyla geldigi icin baska bir erisim yolu da acilmiyor.\n//\n// Girdi : msg.indirilecek = { data: Buffer, ad: \"dosya.xlsx\" }\n// Cikti : msg.messages.{veri, tur, dosya}  (view action mesajinda <%= %>)\n\nconst k = msg.indirilecek;\nif (!k || !k.data) { node.error(\"indirilecek dosya yok\", msg); return null; }\n\nconst buf = Buffer.isBuffer(k.data) ? k.data : Buffer.from(k.data);\nconst tur = /\\.xlsx$/i.test(k.ad)\n  ? \"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\"\n  : \"application/octet-stream\";\n\nmsg.messages = Object.assign({}, msg.messages, {\n  veri: buf.toString(\"base64\"),\n  tur: tur,\n  dosya: String(k.ad).replace(/[^A-Za-z0-9._-]/g, \"_\")\n});\ndelete msg.indirilecek;\ndelete msg.downloadFileSubmission;     // aXet'in kendi (hatali) indirmesi devre disi\n\nnode.status({ fill: \"green\", shape: \"dot\", text: k.ad + \" (\" + Math.round(buf.length / 1024) + \" KB)\" });\nreturn msg;\n",
   "outputs": 1,
   "timeout": 0,
   "setupErrors": 0,
@@ -663,7 +663,7 @@
   "downloadFile": false,
   "fileName": "rapor.xlsx",
   "inputType": "buffer",
-  "message": "Kontrol tamamlandi: <%= toplam %> satirin <%= hatali %> tanesi hatali (<%= hata %> hata). <a href=\"/indir/<%= token %>\" download=\"<%= dosya %>\"><b><%= dosya %></b></a> -- indirmek icin tiklayin (<%= sure %> dk gecerli).",
+  "message": "Kontrol tamamlandi: <%= toplam %> satirin <%= hatali %> tanesi hatali (<%= hata %> hata). <a href=\"data:<%= tur %>;base64,<%= veri %>\" download=\"<%= dosya %>\"><b><%= dosya %></b></a> -- indirmek icin tiklayin.",
   "messageType": "success",
   "x": 1360,
   "y": 300,
@@ -955,7 +955,7 @@
   "type": "function",
   "z": "mk_tab0000000001",
   "name": "indirme baglantisi",
-  "func": "// Indirilecek dosya icin 10 dakika gecerli, tahmin edilemez bir baglanti uretir.\n//\n// Neden: aXet'in view action indirmesi tarayicida tipsiz bir Blob'u, sayfaya\n// eklenmemis bir <a> ile tikliyor; Edge dosyayi \".tmp\" olarak kaydedebiliyor.\n// Bu yuzden dosyayi kendi HTTP ucumuzdan (indirme-sun.js) dogru basliklarla\n// veriyoruz. Baglanti, Okta korumali bir form islemi sonunda uretildigi icin\n// sadece giris yapmis kullanici gorur.\n//\n// Girdi : msg.indirilecek = { data: Buffer, ad: \"dosya.xlsx\" }\n// Cikti : msg.messages.token / msg.messages.dosya  (view action mesajinda <%= %>)\n\nconst SURE_DK = 10;\nconst k = msg.indirilecek;\nif (!k || !k.data) { node.error(\"indirilecek dosya yok\", msg); return null; }\n\nconst depo = global.get(\"indirmeler\") || {};\nconst simdi = Date.now();\nfor (const t of Object.keys(depo)) if (depo[t].bitis < simdi) delete depo[t];   // suresi dolanlari temizle\n\nlet token = \"\";\nwhile (token.length < 32) token += Math.random().toString(36).slice(2);\ntoken = token.slice(0, 32);\n\ndepo[token] = { data: k.data, ad: k.ad, bitis: simdi + SURE_DK * 60000 };\nglobal.set(\"indirmeler\", depo);\n\nmsg.messages = Object.assign({}, msg.messages, { token: token, dosya: k.ad, sure: String(SURE_DK) });\ndelete msg.indirilecek;\ndelete msg.downloadFileSubmission;     // aXet'in kendi (hatali) indirmesi devre disi\n\nnode.status({ fill: \"green\", shape: \"dot\", text: k.ad + \" (\" + Object.keys(depo).length + \" bagli)\" });\nreturn msg;\n",
+  "func": "// Indirilecek dosyayi, view action mesajinda gosterilecek bir data: baglantisina\n// cevirir:  <a href=\"data:<tur>;base64,<veri>\" download=\"<dosya>\">\n//\n// Neden:\n//  1. aXet'in view action indirmesi (downloadFileSubmission) tarayicida tipsiz\n//     bir Blob'u, sayfaya eklenmemis bir <a> ile tikliyor; Edge dosyayi \".tmp\"\n//     olarak kaydediyor.\n//  2. Kendi \"http in\" ucumuz da olmuyor: aXet http in'leri uygulama oturumuyla\n//     dogruluyor ve Okta yolunda kendi kodu cokuyor\n//     (\"auth-manager-rest.js ... ReferenceError: logger is not defined\"), istek askida kaliyor.\n// data: baglantisi sayfanin ICINDE, turu ve adi belli; dosya Okta korumali form\n// yanitiyla geldigi icin baska bir erisim yolu da acilmiyor.\n//\n// Girdi : msg.indirilecek = { data: Buffer, ad: \"dosya.xlsx\" }\n// Cikti : msg.messages.{veri, tur, dosya}  (view action mesajinda <%= %>)\n\nconst k = msg.indirilecek;\nif (!k || !k.data) { node.error(\"indirilecek dosya yok\", msg); return null; }\n\nconst buf = Buffer.isBuffer(k.data) ? k.data : Buffer.from(k.data);\nconst tur = /\\.xlsx$/i.test(k.ad)\n  ? \"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\"\n  : \"application/octet-stream\";\n\nmsg.messages = Object.assign({}, msg.messages, {\n  veri: buf.toString(\"base64\"),\n  tur: tur,\n  dosya: String(k.ad).replace(/[^A-Za-z0-9._-]/g, \"_\")\n});\ndelete msg.indirilecek;\ndelete msg.downloadFileSubmission;     // aXet'in kendi (hatali) indirmesi devre disi\n\nnode.status({ fill: \"green\", shape: \"dot\", text: k.ad + \" (\" + Math.round(buf.length / 1024) + \" KB)\" });\nreturn msg;\n",
   "outputs": 1,
   "timeout": 0,
   "setupErrors": 0,
@@ -982,7 +982,7 @@
   "downloadFile": false,
   "fileName": "rapor.xlsx",
   "inputType": "buffer",
-  "message": "<%= mesaj %> <a href=\"/indir/<%= token %>\" download=\"<%= dosya %>\"><b><%= dosya %></b></a> -- indirmek icin tiklayin (<%= sure %> dk gecerli).",
+  "message": "<%= mesaj %> <a href=\"data:<%= tur %>;base64,<%= veri %>\" download=\"<%= dosya %>\"><b><%= dosya %></b></a> -- indirmek icin tiklayin.",
   "messageType": "success",
   "x": 820,
   "y": 560,
@@ -1002,56 +1002,6 @@
   "messageType": "warning",
   "x": 600,
   "y": 620,
-  "wires": []
- },
- {
-  "id": "mk_http_in",
-  "type": "http in",
-  "z": "mk_tab0000000001",
-  "name": "GET /indir/:token",
-  "url": "/indir/:token",
-  "method": "get",
-  "upload": false,
-  "swaggerDoc": "",
-  "x": 170,
-  "y": 700,
-  "wires": [
-   [
-    "mk_sun"
-   ]
-  ]
- },
- {
-  "id": "mk_sun",
-  "type": "function",
-  "z": "mk_tab0000000001",
-  "name": "dosyayi sun",
-  "func": "// GET /indir/:token  ->  dosyayi dogru basliklarla gonderir (http response'a).\n// Baglantiyi indirme-bagi-olustur.js uretir; 10 dakika gecerlidir.\n\nconst depo = global.get(\"indirmeler\") || {};\nconst token = msg.req && msg.req.params && msg.req.params.token;\nconst k = token && depo[token];\n\nif (!k || k.bitis < Date.now()) {\n  msg.statusCode = 404;\n  msg.headers = { \"Content-Type\": \"text/plain; charset=utf-8\" };\n  msg.payload = \"Indirme baglantisinin suresi doldu ya da gecersiz. Sayfaya donup tekrar indirin.\";\n  node.status({ fill: \"yellow\", shape: \"ring\", text: \"gecersiz/suresi dolmus\" });\n  return msg;\n}\n\nconst tur = /\\.xlsx$/i.test(k.ad)\n  ? \"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\"\n  : \"application/octet-stream\";\n\nmsg.statusCode = 200;\nmsg.headers = {\n  \"Content-Type\": tur,\n  \"Content-Disposition\": \"attachment; filename=\\\"\" + String(k.ad).replace(/[^A-Za-z0-9._-]/g, \"_\") + \"\\\"\",\n  \"Cache-Control\": \"no-store\"\n};\nmsg.payload = Buffer.isBuffer(k.data) ? k.data : Buffer.from(k.data);\nnode.status({ fill: \"green\", shape: \"dot\", text: k.ad });\nreturn msg;\n",
-  "outputs": 1,
-  "timeout": 0,
-  "setupErrors": 0,
-  "functionErrors": 0,
-  "closeErrors": 0,
-  "initialize": "",
-  "finalize": "",
-  "libs": [],
-  "x": 380,
-  "y": 700,
-  "wires": [
-   [
-    "mk_http_out"
-   ]
-  ]
- },
- {
-  "id": "mk_http_out",
-  "type": "http response",
-  "z": "mk_tab0000000001",
-  "name": "",
-  "statusCode": "",
-  "headers": {},
-  "x": 560,
-  "y": 700,
   "wires": []
  },
  {

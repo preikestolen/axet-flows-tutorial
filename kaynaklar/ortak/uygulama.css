@@ -31,4 +31,4 @@
 }
 
 /* Indirme baglantisi uyari kutusunda belirgin olsun */
-.alert a[href^="/indir/"] { text-decoration: underline; }
+.alert a[download] { text-decoration: underline; }

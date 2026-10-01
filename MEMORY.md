@@ -76,7 +76,8 @@ Son güncelleme: 2026-10-01 · Platform: aXet.flows v6.5.4 (Node-RED v4.1.1)
 | `view action` var, yine dönüyor | Yanlış alan adı kontrol edildi | Gerçek ad `msg.__deptAppsFormioButtonClicked` (yardım metnindeki `__axetFlows...` yanlış) |
 | Form verisi `msg.payload.<alan>`'da yok | Yapı farklı | `msg.payload.data.<alan>` |
 | Dosya eki içerik yerine adres | Storage modu | File bileşeni Storage = **base64** |
-| İndirilen dosya `.tmp` | aXet tarayıcı kodu tipsiz Blob + DOM'a eklenmemiş `<a>` | `ortak/indirme-bagi-olustur.js` + `http in /indir/:token` → `indirme-sun.js` (Ders 12.6) |
+| İndirilen dosya `.tmp` | aXet tarayıcı kodu tipsiz Blob + DOM'a eklenmemiş `<a>` | View action mesajında `data:` bağlantısı: `ortak/indirme-bagi-olustur.js` (Ders 12.6) — Edge'de doğrulandı |
+| Kendi `http in` ucu: `400 Credentials are mandatory` / oturumla askıda | aXet http in'leri uygulama auth'undan geçirir; Okta yolunda `auth-manager-rest.js: logger is not defined` çöker | Okta'lı uygulamada tarayıcı → http in kullanma; veriyi view action yanıtıyla gönder |
 | Salt okunur textarea'da satırlar tek satır | Görüntüleme satır sonunu yutuyor | Datagrid kullan |
 | Datagrid hücreleri gri, metin kesik | Disabled input stili | Custom CSS: `ortak/uygulama.css` |
 | Sayfada eski veri | Form verisi açılışta yüklenir | Menüden tekrar aç / F5 |
@@ -91,7 +92,7 @@ Son güncelleme: 2026-10-01 · Platform: aXet.flows v6.5.4 (Node-RED v4.1.1)
 | Kullanıcıya dosya indirme | `msg.downloadFileSubmission = { data: buffer, fileName, inputType: "buffer" }` + view action'da **Download file** |
 | Sayfa açılırken veri yükleme | Form düğümünün **son çıkışı** = `onInitForm` → function → view action |
 | Sayfa açılışında tablo | Form son çıkışı (onInit) → function `msg.submission = { tablo: [ {...} ] }` → view action (update); bileşen datagrid, anahtarı `tablo` |
-| HTML'li mesaj / bağlantı | view action mesajı HTML olarak gösterilir: `<a href="/indir/<%= token %>">` |
+| HTML'li mesaj / bağlantı | view action mesajı HTML olarak gösterilir (`<a href="data:…" download>` çalışır) |
 | Seçim kutusunu doldurma | `msg.onInitPopulateFormStructure = { <key>: [{label, value}] }` |
 | xlsx okuma (kütüphanesiz) | `kaynaklar/musteri-kontrol/02-xlsx-oku.js` (zip + inflate + XML) |
 | Production'a Windows'tan erişim | `powershell -ExecutionPolicy Bypass -File kaynaklar\production-portu-ac.ps1` |
