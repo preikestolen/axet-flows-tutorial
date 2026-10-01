@@ -120,6 +120,7 @@ axet-flows-egitim/
 ├── 10-sonucu-teslim.md                Excel, koşu geçmişi, e-posta
 ├── 11-musteri-ana-veri-kontrolu.md    Gün 2: Excel kontrolcüsü, Okta, view action
 ├── SORUN-GIDERME.md                   hata → çözüm tablosu
+├── CLAUDE.md / AGENTS.md              AI asistanları için kurallar (önce MEMORY + SKILL oku)
 ├── MEMORY.md                          karşılaşılan hatalar ve çözümleri (kısa liste)
 ├── SKILL.md                           aXet.flows akışı geliştirme iş akışı (Claude skill)
 ├── .claude/skills/axet-flows-workflow/SKILL.md   aynı skill, Claude Code'un otomatik bulduğu yerde

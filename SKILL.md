@@ -11,6 +11,9 @@ yerde stok davranışı değiştirmiş.** Bu skill, Node-RED dokümantasyonunu
 (https://nodered.org/docs/) temel alır ve aXet'te gerçek kurulumda
 doğrulanmış farkları üstüne koyar.
 
+> **Her oturumda:** önce `MEMORY.md`, sonra bu dosya okunur; öğrenilenler
+> ikisine de geri yazılır (bkz. [CLAUDE.md](CLAUDE.md)).
+
 Önce [MEMORY.md](MEMORY.md) dosyasını okuyun: bilinen hatalar ve çözümleri
 orada. Kalıcı örnek: [`kaynaklar/musteri-kontrol/`](kaynaklar/musteri-kontrol/) (Ders 11).
 

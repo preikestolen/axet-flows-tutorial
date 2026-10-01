@@ -1,5 +1,8 @@
 # aXet.flows — Hafıza: hatalar ve çözümleri
 
+> **AI asistanları:** her oturumun başında bu dosyayı oku; yeni bir hata
+> çözdüğünde ya da ortam hakkında yeni bir şey öğrendiğinde güncelle (bkz. [CLAUDE.md](CLAUDE.md)).
+
 Gerçek kurulumda yaşanan hataların kısa listesi. Ayrıntılı açıklama ve
 komutlar için [SORUN-GIDERME.md](SORUN-GIDERME.md); bu dosya hızlı
 hatırlatma içindir. Yeni bir hata çözdüğünüzde buraya bir satır ekleyin.
