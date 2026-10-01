@@ -526,4 +526,5 @@ files Path** söyler (Ders 9.6).
 ---
 
 **Önceki:** [9. Form Arayüzü](09-form-arayuzu.md) ·
+**Sonraki:** [11. Müşteri Ana Verisi Kontrolcüsü](11-musteri-ana-veri-kontrolu.md) ·
 **Takıldınız mı?** → [Sorun Giderme](SORUN-GIDERME.md)

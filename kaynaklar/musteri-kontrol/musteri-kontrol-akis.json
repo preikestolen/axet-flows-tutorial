@@ -1,0 +1,975 @@
+[
+ {
+  "id": "mk_tab0000000001",
+  "type": "tab",
+  "label": "Gun 2 - Musteri Ana Veri Kontrolu",
+  "disabled": false,
+  "info": "Excel yukle -> kurallar (kod) -> AI yorumu -> rapor Excel'i + AI ozeti.\nCiktilar: /internal-storage-files/musteri-kontrol/"
+ },
+ {
+  "id": "mk_app",
+  "type": "axetflows-app",
+  "z": "mk_tab0000000001",
+  "name": "Musteri Veri Kontrolu",
+  "menu": [
+   {
+    "text": "Menu",
+    "icon": "fa fa-sitemap",
+    "data": {},
+    "children": [
+     {
+      "id": "mk_bolum",
+      "text": "Ana Veri",
+      "icon": "fa fa-database",
+      "data": {},
+      "type": "section",
+      "children": [
+       {
+        "id": "mk_sayfa",
+        "text": "Musteri Excel yukle",
+        "icon": "fa fa-file-excel-o",
+        "type": "form",
+        "data": {
+         "form_id": "mk_form"
+        },
+        "children": []
+       },
+       {
+        "id": "mk_sayfa2",
+        "text": "Raporlar",
+        "icon": "fa fa-download",
+        "type": "form",
+        "data": {
+         "form_id": "mk_form2"
+        },
+        "children": []
+       }
+      ]
+     }
+    ],
+    "type": "root"
+   }
+  ],
+  "welcomePage": "mk_form",
+  "sidebarMenuOrientation": "left",
+  "logoImage": "default",
+  "schemeColor": "",
+  "customCSS": "",
+  "customCSSErrors": 0,
+  "authConfig": "Okta",
+  "sessionExpireTimeInMinutes": "",
+  "basicInternalDb": "",
+  "oktaDb": "",
+  "roles": [],
+  "__wellKnownRes": {},
+  "x": 150,
+  "y": 80,
+  "wires": []
+ },
+ {
+  "id": "mk_form",
+  "type": "axetflows-form",
+  "z": "mk_tab0000000001",
+  "name": "Musteri Excel yukle",
+  "onDocumentReadyButtonAction": "",
+  "formStructure": {
+   "components": [
+    {
+     "input": true,
+     "key": "musteriExcel",
+     "placeholder": "",
+     "prefix": "",
+     "customClass": "",
+     "suffix": "",
+     "multiple": false,
+     "defaultValue": null,
+     "protected": false,
+     "unique": false,
+     "persistent": true,
+     "hidden": false,
+     "clearOnHide": true,
+     "refreshOn": "",
+     "redrawOn": "",
+     "tableView": false,
+     "modalEdit": false,
+     "label": "Musteri ana verisi (Excel)",
+     "labelPosition": "top",
+     "description": "Tek bir .xlsx dosyasi yukleyin. Ilk satir baslik olmali; ilk sayfa kontrol edilir.",
+     "errorLabel": "",
+     "tooltip": "",
+     "hideLabel": false,
+     "tabindex": "",
+     "disabled": false,
+     "autofocus": false,
+     "dbIndex": false,
+     "customDefaultValue": "",
+     "calculateValue": "",
+     "widget": null,
+     "attributes": {},
+     "validateOn": "change",
+     "validate": {
+      "required": true,
+      "custom": "",
+      "customPrivate": false,
+      "strictDateValidation": false
+     },
+     "conditional": {
+      "show": null,
+      "when": null,
+      "eq": ""
+     },
+     "overlay": {
+      "style": "",
+      "left": "",
+      "top": "",
+      "width": "",
+      "height": ""
+     },
+     "allowCalculateOverride": false,
+     "encrypted": false,
+     "showCharCount": false,
+     "showWordCount": false,
+     "properties": {},
+     "allowMultipleMasks": false,
+     "type": "file",
+     "storage": "base64",
+     "url": "",
+     "options": "",
+     "fileKey": "file",
+     "webcam": false,
+     "fileTypes": [
+      {
+       "label": "",
+       "value": ""
+      }
+     ],
+     "image": false,
+     "privateDownload": false,
+     "imageSize": "200",
+     "filePattern": ".xlsx",
+     "fileMinSize": "0KB",
+     "fileMaxSize": "5MB",
+     "uploadOnly": false,
+     "id": "mkexcel1"
+    },
+    {
+     "type": "button",
+     "label": "Submit",
+     "key": "submit",
+     "size": "md",
+     "block": false,
+     "action": "submit",
+     "disableOnInvalid": true,
+     "theme": "primary",
+     "input": true,
+     "placeholder": "",
+     "prefix": "",
+     "customClass": "",
+     "suffix": "",
+     "multiple": false,
+     "defaultValue": null,
+     "protected": false,
+     "unique": false,
+     "persistent": false,
+     "hidden": false,
+     "clearOnHide": true,
+     "refreshOn": "",
+     "redrawOn": "",
+     "tableView": false,
+     "modalEdit": false,
+     "labelPosition": "top",
+     "description": "",
+     "errorLabel": "",
+     "tooltip": "",
+     "hideLabel": false,
+     "tabindex": "",
+     "disabled": false,
+     "autofocus": false,
+     "dbIndex": false,
+     "customDefaultValue": "",
+     "calculateValue": "",
+     "widget": {
+      "type": "input"
+     },
+     "attributes": {},
+     "validateOn": "change",
+     "validate": {
+      "required": false,
+      "custom": "",
+      "customPrivate": false,
+      "strictDateValidation": false,
+      "unique": false,
+      "multiple": false
+     },
+     "conditional": {
+      "show": null,
+      "when": null,
+      "eq": ""
+     },
+     "overlay": {
+      "style": "",
+      "left": "",
+      "top": "",
+      "width": "",
+      "height": ""
+     },
+     "allowCalculateOverride": false,
+     "encrypted": false,
+     "showCharCount": false,
+     "showWordCount": false,
+     "properties": {},
+     "allowMultipleMasks": false,
+     "leftIcon": "",
+     "rightIcon": "",
+     "dataGridLabel": true,
+     "id": "euini9q"
+    }
+   ]
+  },
+  "associatedEntityMetamodel": null,
+  "associatedEntityFormType": null,
+  "associatedContractModelMetamodel": null,
+  "associatedPersistantFormId": null,
+  "associatedLocalStorageDatabaseId": null,
+  "buttons": [
+   {
+    "type": "button",
+    "label": "Submit",
+    "key": "submit",
+    "size": "md",
+    "block": false,
+    "action": "submit",
+    "disableOnInvalid": true,
+    "theme": "primary",
+    "input": true,
+    "placeholder": "",
+    "prefix": "",
+    "customClass": "",
+    "suffix": "",
+    "multiple": false,
+    "defaultValue": null,
+    "protected": false,
+    "unique": false,
+    "persistent": false,
+    "hidden": false,
+    "clearOnHide": true,
+    "refreshOn": "",
+    "redrawOn": "",
+    "tableView": false,
+    "modalEdit": false,
+    "labelPosition": "top",
+    "description": "",
+    "errorLabel": "",
+    "tooltip": "",
+    "hideLabel": false,
+    "tabindex": "",
+    "disabled": false,
+    "autofocus": false,
+    "dbIndex": false,
+    "customDefaultValue": "",
+    "calculateValue": "",
+    "widget": {
+     "type": "input"
+    },
+    "attributes": {},
+    "validateOn": "change",
+    "validate": {
+     "required": false,
+     "custom": "",
+     "customPrivate": false,
+     "strictDateValidation": false,
+     "unique": false,
+     "multiple": false
+    },
+    "conditional": {
+     "show": null,
+     "when": null,
+     "eq": ""
+    },
+    "overlay": {
+     "style": "",
+     "left": "",
+     "top": "",
+     "width": "",
+     "height": ""
+    },
+    "allowCalculateOverride": false,
+    "encrypted": false,
+    "showCharCount": false,
+    "showWordCount": false,
+    "properties": {},
+    "allowMultipleMasks": false,
+    "leftIcon": "",
+    "rightIcon": "",
+    "dataGridLabel": true,
+    "id": "euini9q"
+   }
+  ],
+  "outputs": 2,
+  "x": 150,
+  "y": 160,
+  "wires": [
+   [
+    "mk_buffer"
+   ],
+   []
+  ]
+ },
+ {
+  "id": "mk_test_i",
+  "type": "inject",
+  "z": "mk_tab0000000001",
+  "name": "ornek dosyayla test",
+  "props": [],
+  "repeat": "",
+  "crontab": "",
+  "once": false,
+  "onceDelay": 0.1,
+  "topic": "",
+  "x": 150,
+  "y": 240,
+  "wires": [
+   [
+    "mk_test_f"
+   ]
+  ]
+ },
+ {
+  "id": "mk_test_f",
+  "type": "function",
+  "z": "mk_tab0000000001",
+  "name": "ornek form verisi",
+  "func": "// Tasarimcida form yayinlanmaz (Ders 9.1). Bu dugum formun gonderecegi\n// veriyi taklit eder: icine gomulu ornek Excel'de 20 gizli hata var.\n\nmsg.payload = {\n  data: {\n    musteriExcel: [{\n      storage: \"base64\",\n      name: \"ornek-musteri.xlsx\",\n      originalName: \"ornek-musteri.xlsx\",\n      url: \"data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,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\"\n    }]\n  }\n};\nreturn msg;\n",
+  "outputs": 1,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 350,
+  "y": 240,
+  "wires": [
+   [
+    "mk_buffer"
+   ]
+  ]
+ },
+ {
+  "id": "mk_buffer",
+  "type": "function",
+  "z": "mk_tab0000000001",
+  "name": "ekten Buffer",
+  "func": "// Formdan gelen Excel ekini Buffer'a cevirir.\n//\n// Formio \"base64\" depolama modunda dosya su bicimde gelir:\n//   msg.payload.data.musteriExcel = [{ name, originalName, size, url: \"data:...;base64,UEsDB...\" }]\n//\n// Ders 9'daki kopruden TEK farki: .toString(\"utf8\") YOK.\n// xlsx ikili bir dosyadir (zip); metne cevirirsek bozulur.\n\nconst veri = (msg.payload && msg.payload.data) || {};\nlet dosyalar = veri.musteriExcel;\nif (dosyalar && !Array.isArray(dosyalar)) dosyalar = [dosyalar];\n\nif (!Array.isArray(dosyalar) || dosyalar.length === 0) {\n  node.status({ fill: \"red\", shape: \"ring\", text: \"dosya yok\" });\n  node.error(\"Form dosya eklenmeden gonderildi\", msg);\n  return null;\n}\n\nconst d = dosyalar[0];\nconst url = d.url || \"\";\nconst virgul = url.indexOf(\",\");\n\nif (virgul < 0 || url.indexOf(\"base64\") < 0) {\n  node.error(\"Dosya base64 degil, File bileseninin Storage ayarini kontrol edin: \" + (d.name || \"?\"), msg);\n  return null;\n}\n\nmsg.dosyaAdi = d.originalName || d.name || \"musteri.xlsx\";\nmsg.kosuZamani = new Date().toISOString();\nmsg.payload = Buffer.from(url.slice(virgul + 1), \"base64\");\n\n// xlsx bir zip'tir; zip dosyalari \"PK\" ile baslar\nif (msg.payload.length < 4 || msg.payload[0] !== 0x50 || msg.payload[1] !== 0x4b) {\n  node.error(\"Yuklenen dosya .xlsx degil (eski .xls veya .csv olabilir): \" + msg.dosyaAdi, msg);\n  return null;\n}\n\nnode.status({ fill: \"blue\", shape: \"dot\", text: msg.dosyaAdi + \" / \" + Math.round(msg.payload.length / 1024) + \" KB\" });\nreturn msg;\n",
+  "outputs": 1,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 560,
+  "y": 160,
+  "wires": [
+   [
+    "mk_oku"
+   ]
+  ]
+ },
+ {
+  "id": "mk_oku",
+  "type": "function",
+  "z": "mk_tab0000000001",
+  "name": "xlsx oku",
+  "func": "// .xlsx dosyasini (Buffer) satirlara cevirir -- hicbir kutuphane kullanmadan.\n//\n// Neden kendi okuyucumuz? function dugumu sandbox'tir: require, zlib, fs kapali.\n// xlsx aslinda bir zip; icinde XML dosyalari var. Zip'i acmak icin DEFLATE\n// cozucu gerekiyor -- asagidaki inflate() RFC 1951'in kisa bir uygulamasi.\n//\n// Girdi : msg.payload = Buffer (.xlsx)\n// Cikti : msg.sayfaAdi, msg.basliklar = [\"Musteri No\", ...]\n//         msg.satirlar = [{ satir: 2, degerler: { \"Musteri No\": \"M-001\", ... } }, ...]\n//         (satir = Excel'deki GERCEK satir numarasi)\n\n// ---------------------------------------------------------------- inflate\nconst LBASE = [3,4,5,6,7,8,9,10,11,13,15,17,19,23,27,31,35,43,51,59,67,83,99,115,131,163,195,227,258];\nconst LEXT  = [0,0,0,0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,0];\nconst DBASE = [1,2,3,4,5,7,9,13,17,25,33,49,65,97,129,193,257,385,513,769,1025,1537,2049,3073,4097,6145,8193,12289,16385,24577];\nconst DEXT  = [0,0,0,0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,11,11,12,12,13,13];\nconst CL_SIRA = [16,17,18,0,8,7,9,6,10,5,11,4,12,3,13,2,14,1,15];\n\nfunction inflate(src, boyut) {\n  let out = Buffer.alloc(boyut > 0 ? boyut : src.length * 4 + 1024);\n  let n = 0, pos = 0, bb = 0, bc = 0;\n\n  function bits(k) {\n    while (bc < k) {\n      if (pos >= src.length) throw new Error(\"xlsx: sikistirilmis veri beklenenden kisa\");\n      bb |= src[pos++] << bc;\n      bc += 8;\n    }\n    const v = bb & ((1 << k) - 1);\n    bb >>>= k;\n    bc -= k;\n    return v;\n  }\n  function yaz(b) {\n    if (n >= out.length) { const y = Buffer.alloc(out.length * 2); out.copy(y); out = y; }\n    out[n++] = b;\n  }\n  function agac(uzunluklar) {\n    const say = new Uint16Array(16), ofs = new Uint16Array(16);\n    for (const l of uzunluklar) say[l]++;\n    say[0] = 0;\n    for (let i = 1; i < 16; i++) ofs[i] = ofs[i - 1] + say[i - 1];\n    const sembol = new Uint16Array(uzunluklar.length);\n    for (let s = 0; s < uzunluklar.length; s++) if (uzunluklar[s]) sembol[ofs[uzunluklar[s]]++] = s;\n    return { say, sembol };\n  }\n  function coz(h) {\n    let kod = 0, ilk = 0, idx = 0;\n    for (let len = 1; len < 16; len++) {\n      kod |= bits(1);\n      const c = h.say[len];\n      if (kod - c < ilk) return h.sembol[idx + (kod - ilk)];\n      idx += c; ilk += c; ilk <<= 1; kod <<= 1;\n    }\n    throw new Error(\"xlsx: gecersiz huffman kodu\");\n  }\n\n  let sabitL = null, sabitD = null, son;\n  do {\n    son = bits(1);\n    const tip = bits(2);\n    if (tip === 0) {                                   // sikistirilmamis blok\n      bb = 0; bc = 0;\n      const len = src[pos] | (src[pos + 1] << 8);\n      pos += 4;\n      for (let i = 0; i < len; i++) yaz(src[pos++]);\n      continue;\n    }\n    let lk, dk;\n    if (tip === 1) {                                   // sabit huffman\n      if (!sabitL) {\n        const l = [];\n        for (let i = 0; i < 288; i++) l.push(i < 144 ? 8 : i < 256 ? 9 : i < 280 ? 7 : 8);\n        sabitL = agac(l);\n        sabitD = agac(new Array(30).fill(5));\n      }\n      lk = sabitL; dk = sabitD;\n    } else if (tip === 2) {                            // dinamik huffman\n      const hlit = bits(5) + 257, hdist = bits(5) + 1, hclen = bits(4) + 4;\n      const cl = new Array(19).fill(0);\n      for (let i = 0; i < hclen; i++) cl[CL_SIRA[i]] = bits(3);\n      const clAgac = agac(cl);\n      const u = [];\n      while (u.length < hlit + hdist) {\n        const s = coz(clAgac);\n        if (s < 16) u.push(s);\n        else if (s === 16) { const p = u[u.length - 1]; for (let r = 3 + bits(2); r > 0; r--) u.push(p); }\n        else if (s === 17) { for (let r = 3 + bits(3); r > 0; r--) u.push(0); }\n        else { for (let r = 11 + bits(7); r > 0; r--) u.push(0); }\n      }\n      lk = agac(u.slice(0, hlit));\n      dk = agac(u.slice(hlit));\n    } else {\n      throw new Error(\"xlsx: gecersiz blok tipi\");\n    }\n    for (;;) {\n      let s = coz(lk);\n      if (s < 256) { yaz(s); continue; }\n      if (s === 256) break;\n      s -= 257;\n      const len = LBASE[s] + bits(LEXT[s]);\n      const ds = coz(dk);\n      const mesafe = DBASE[ds] + bits(DEXT[ds]);\n      for (let i = 0; i < len; i++) yaz(out[n - mesafe]);\n    }\n  } while (!son);\n\n  return out.slice(0, n);\n}\n\n// ---------------------------------------------------------------- zip\nfunction zipAc(buf) {\n  let eocd = -1;\n  for (let i = buf.length - 22; i >= Math.max(0, buf.length - 65557); i--) {\n    if (buf.readUInt32LE(i) === 0x06054b50) { eocd = i; break; }\n  }\n  if (eocd < 0) throw new Error(\"xlsx: zip dizini bulunamadi (dosya bozuk veya .xlsx degil)\");\n\n  const adet = buf.readUInt16LE(eocd + 10);\n  let p = buf.readUInt32LE(eocd + 16);\n  const dosyalar = {};\n\n  for (let i = 0; i < adet; i++) {\n    if (buf.readUInt32LE(p) !== 0x02014b50) throw new Error(\"xlsx: zip dizini bozuk\");\n    const yontem = buf.readUInt16LE(p + 10);\n    const sikisik = buf.readUInt32LE(p + 20);\n    const acik = buf.readUInt32LE(p + 24);\n    const adLen = buf.readUInt16LE(p + 28), ekLen = buf.readUInt16LE(p + 30), yorumLen = buf.readUInt16LE(p + 32);\n    const yerel = buf.readUInt32LE(p + 42);\n    const ad = buf.slice(p + 46, p + 46 + adLen).toString(\"utf8\");\n    p += 46 + adLen + ekLen + yorumLen;\n\n    dosyalar[ad] = () => {                             // tembel: sadece gereken acilir\n      const bas = yerel + 30 + buf.readUInt16LE(yerel + 26) + buf.readUInt16LE(yerel + 28);\n      const ham = buf.slice(bas, bas + sikisik);\n      if (yontem === 0) return ham;\n      if (yontem === 8) return inflate(ham, acik);\n      throw new Error(\"xlsx: desteklenmeyen sikistirma yontemi \" + yontem);\n    };\n  }\n  return dosyalar;\n}\n\n// ---------------------------------------------------------------- xml\nfunction varlik(s) {\n  return s.replace(/&(#x[0-9a-fA-F]+|#[0-9]+|amp|lt|gt|quot|apos);/g, (m, e) => {\n    if (e[0] === \"#\") return String.fromCodePoint(e[1] === \"x\" ? parseInt(e.slice(2), 16) : parseInt(e.slice(1), 10));\n    return { amp: \"&\", lt: \"<\", gt: \">\", quot: \"\\\"\", apos: \"'\" }[e];\n  });\n}\nfunction metinler(xml) {                               // <t>..</t> parcalarini birlestir (<rPh> haric)\n  xml = xml.replace(/<rPh\\b[\\s\\S]*?<\\/rPh>/g, \"\");\n  let s = \"\";\n  const re = /<t\\b[^>]*>([\\s\\S]*?)<\\/t>/g;\n  let m;\n  while ((m = re.exec(xml))) s += m[1];\n  return varlik(s);\n}\nfunction oznitelik(attrs, ad) {\n  const m = new RegExp(\"\\\\b\" + ad + \"=\\\"([^\\\"]*)\\\"\").exec(attrs);\n  return m ? m[1] : null;\n}\nfunction kolonNo(ref) {                                // \"AB12\" -> 27 (0 tabanli)\n  const m = /^([A-Z]+)/.exec(ref || \"\");\n  if (!m) return -1;\n  let k = 0;\n  for (const ch of m[1]) k = k * 26 + (ch.charCodeAt(0) - 64);\n  return k - 1;\n}\n\n// ---------------------------------------------------------------- ana is\nconst zip = zipAc(msg.payload);\nconst oku = (ad) => zip[ad] ? zip[ad]().toString(\"utf8\") : null;\n\n// Paylasilan metinler\nconst paylasilan = [];\nconst ss = oku(\"xl/sharedStrings.xml\");\nif (ss) {\n  const re = /<si\\b[^>]*>([\\s\\S]*?)<\\/si>|<si\\s*\\/>/g;\n  let m;\n  while ((m = re.exec(ss))) paylasilan.push(m[1] ? metinler(m[1]) : \"\");\n}\n\n// Ilk sayfanin yolunu bul: workbook.xml -> rels\nlet sayfaAdi = \"Sayfa1\", sayfaYolu = \"xl/worksheets/sheet1.xml\";\nconst wb = oku(\"xl/workbook.xml\"), rels = oku(\"xl/_rels/workbook.xml.rels\");\nif (wb) {\n  const s = /<sheet\\b([^>]*)\\/?>/.exec(wb);\n  if (s) {\n    sayfaAdi = varlik(oznitelik(s[1], \"name\") || sayfaAdi);\n    const rid = oznitelik(s[1], \"r:id\");\n    if (rid && rels) {\n      const r = new RegExp(\"<Relationship\\\\b[^>]*Id=\\\"\" + rid + \"\\\"[^>]*>\").exec(rels);\n      const hedef = r && oznitelik(r[0], \"Target\");\n      if (hedef) sayfaYolu = hedef[0] === \"/\" ? hedef.slice(1) : \"xl/\" + hedef.replace(/^\\.\\//, \"\");\n    }\n  }\n}\nconst sayfa = oku(sayfaYolu);\nif (!sayfa) throw new Error(\"xlsx: sayfa bulunamadi: \" + sayfaYolu);\n\n// Hucreleri oku\nconst hamSatirlar = [];                                 // [{ satir, hucreler: [] }]\nconst satirRe = /<row\\b([^>]*?)(?:\\/>|>([\\s\\S]*?)<\\/row>)/g;\nlet sm, sonrakiSatir = 1;\nwhile ((sm = satirRe.exec(sayfa))) {\n  const r = oznitelik(sm[1], \"r\");\n  const satirNo = r ? parseInt(r, 10) : sonrakiSatir;\n  sonrakiSatir = satirNo + 1;\n  const hucreler = [];\n  const hucreRe = /<c\\b([^>]*?)(?:\\/>|>([\\s\\S]*?)<\\/c>)/g;\n  let hm, sira = 0;\n  while ((hm = hucreRe.exec(sm[2] || \"\"))) {\n    const k = kolonNo(oznitelik(hm[1], \"r\"));\n    const kolon = k >= 0 ? k : sira;\n    sira = kolon + 1;\n    const tip = oznitelik(hm[1], \"t\");\n    const ic = hm[2] || \"\";\n    const v = /<v\\b[^>]*>([\\s\\S]*?)<\\/v>/.exec(ic);\n    let deger = \"\";\n    if (tip === \"s\") deger = v ? (paylasilan[parseInt(v[1], 10)] || \"\") : \"\";\n    else if (tip === \"inlineStr\") deger = metinler(ic);\n    else if (tip === \"b\") deger = v && v[1] === \"1\" ? \"TRUE\" : \"FALSE\";\n    else if (v) {\n      deger = varlik(v[1]);\n      if (tip !== \"str\" && tip !== \"e\" && /e/i.test(deger)) {   // 1.2345E+9 -> 1234500000\n        const sayi = Number(deger);\n        if (Number.isInteger(sayi) && Math.abs(sayi) < 1e21) deger = String(sayi);\n      }\n    }\n    hucreler[kolon] = deger;\n  }\n  hamSatirlar.push({ satir: satirNo, hucreler });\n}\n\nconst bosMu = (v) => v === undefined || v === null || String(v).trim() === \"\";\nconst dolu = hamSatirlar.filter(r => r.hucreler.some(v => !bosMu(v)));\nif (dolu.length === 0) {\n  node.error(\"Excel bos: \" + (msg.dosyaAdi || \"\"), msg);\n  return null;\n}\n\n// Ilk dolu satir baslik satiri\nconst baslikSatiri = dolu[0];\nconst basliklar = [];\nconst kullanilan = {};\nfor (let k = 0; k < baslikSatiri.hucreler.length; k++) {\n  let b = String(baslikSatiri.hucreler[k] || \"\").trim() || (\"Kolon \" + String.fromCharCode(65 + (k % 26)));\n  if (kullanilan[b]) b = b + \" (\" + (++kullanilan[b]) + \")\";\n  kullanilan[b] = kullanilan[b] || 1;\n  basliklar[k] = b;\n}\n\nmsg.sayfaAdi = sayfaAdi;\nmsg.basliklar = basliklar;\nmsg.satirlar = dolu.slice(1).map(r => {\n  const degerler = {};\n  basliklar.forEach((b, k) => { degerler[b] = r.hucreler[k] === undefined ? \"\" : String(r.hucreler[k]); });\n  return { satir: r.satir, degerler };\n});\nmsg.payload = { sayfa: sayfaAdi, kolon: basliklar.length, satir: msg.satirlar.length };\n\nnode.status({ fill: \"blue\", shape: \"dot\", text: msg.satirlar.length + \" satir / \" + basliklar.length + \" kolon\" });\nreturn msg;\n",
+  "outputs": 1,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 740,
+  "y": 160,
+  "wires": [
+   [
+    "mk_kural"
+   ]
+  ]
+ },
+ {
+  "id": "mk_kural",
+  "type": "function",
+  "z": "mk_tab0000000001",
+  "name": "kurallar",
+  "func": "// Musteri ana verisi kurallari. SAYIM BURADA YAPILIR -- AI'a sayi saydirmiyoruz.\n//\n// Dort kural:\n//   ZORUNLU_BOS    zorunlu alan bos (sadece bosluk da bos sayilir)\n//   VERGI_TEKRAR   ayni vergi numarasi birden fazla satirda\n//   ULKE_GECERSIZ  ulke kodu ISO 3166-1 alpha-2 degil\n//   IBAN_BOZUK     IBAN karakter / uzunluk / mod-97 kontrolunden gecmiyor\n//\n// Girdi : msg.basliklar, msg.satirlar  (xlsx oku dugumunden)\n// Cikti : msg.hatalar = [{ satir, kolon, kural, deger, aciklama }]\n//         msg.istatistik = AI'a ve rapora giden hazir sayilar\n\n// ------------------------------------------------------------ AYARLAR\n// Kolon basliklari dosyadan dosyaya degisir. Her mantiksal alan icin kabul\n// edilen basliklar (kucuk harf, Turkce karaktersiz) asagida. Basligi \"*\" ile\n// biten her kolon da ayrica zorunlu sayilir.\nconst ALANLAR = {\n  musteriNo: { zorunlu: true,  esler: [\"musteri no\", \"musteri numarasi\", \"musteri kodu\", \"customer\", \"customer no\", \"customer number\", \"kunnr\", \"debitor\", \"musteri\"] },\n  unvan:     { zorunlu: true,  esler: [\"unvan\", \"ad\", \"adi\", \"musteri adi\", \"firma\", \"firma adi\", \"name\", \"name1\", \"ad soyad\"] },\n  vergiNo:   { zorunlu: true,  esler: [\"vergi no\", \"vergi numarasi\", \"vkn\", \"tckn\", \"vkn tckn\", \"tax number\", \"tax no\", \"tax id\", \"stcd1\", \"vergi kimlik no\"] },\n  ulke:      { zorunlu: true,  esler: [\"ulke\", \"ulke kodu\", \"country\", \"country key\", \"country code\", \"land1\", \"land\"] },\n  iban:      { zorunlu: false, esler: [\"iban\", \"iban no\"] }\n};\nconst TEKRARIN_ILKINI_DE_ISARETLE = true;   // false: yalnizca ikinci ve sonraki tekrarlar\n\n// ISO 3166-1 alpha-2 (249 kod)\nconst ULKELER = new Set((\n  \"AD AE AF AG AI AL AM AO AQ AR AS AT AU AW AX AZ BA BB BD BE BF BG BH BI BJ BL BM BN BO BQ BR BS BT BV BW BY BZ \" +\n  \"CA CC CD CF CG CH CI CK CL CM CN CO CR CU CV CW CX CY CZ DE DJ DK DM DO DZ EC EE EG EH ER ES ET FI FJ FK FM FO FR \" +\n  \"GA GB GD GE GF GG GH GI GL GM GN GP GQ GR GS GT GU GW GY HK HM HN HR HT HU ID IE IL IM IN IO IQ IR IS IT JE JM JO JP \" +\n  \"KE KG KH KI KM KN KP KR KW KY KZ LA LB LC LI LK LR LS LT LU LV LY MA MC MD ME MF MG MH MK ML MM MN MO MP MQ MR MS MT \" +\n  \"MU MV MW MX MY MZ NA NC NE NF NG NI NL NO NP NR NU NZ OM PA PE PF PG PH PK PL PM PN PR PS PT PW PY QA RE RO RS RU RW \" +\n  \"SA SB SC SD SE SG SH SI SJ SK SL SM SN SO SR SS ST SV SX SY SZ TC TD TF TG TH TJ TK TL TM TN TO TR TT TV TW TZ UA UG \" +\n  \"UM US UY UZ VA VC VE VG VI VN VU WF WS YE YT ZA ZM ZW\").split(\" \"));\n\n// Bilinen yanlislar icin yol gosterici not\nconst ULKE_IPUCU = { UK: \"GB\", TU: \"TR\", EN: \"GB\", GER: \"DE\", TUR: \"TR\", USA: \"US\", DEU: \"DE\", GBR: \"GB\" };\n\n// IBAN uzunluklari (SWIFT IBAN Registry). Listede olmayan ulkede uzunluk\n// kontrolu atlanir, mod-97 yine uygulanir.\nconst IBAN_UZUNLUK = {\n  AD:24, AE:23, AL:28, AT:20, AZ:28, BA:20, BE:16, BG:22, BH:22, BI:27, BR:29, BY:28, CH:21, CR:22, CY:28, CZ:24,\n  DE:22, DJ:27, DK:18, DO:28, EE:20, EG:29, ES:24, FI:18, FK:18, FO:18, FR:27, GB:22, GE:22, GI:23, GL:18, GR:27,\n  GT:28, HR:21, HU:28, IE:22, IL:23, IQ:23, IS:26, IT:27, JO:30, KW:30, KZ:20, LB:28, LC:32, LI:21, LT:20, LU:20,\n  LV:21, LY:25, MC:27, MD:24, ME:22, MK:19, MN:20, MR:27, MT:31, MU:30, NI:28, NL:18, NO:15, OM:23, PK:24, PL:28,\n  PS:29, PT:25, QA:29, RO:24, RS:22, RU:33, SA:24, SC:31, SD:18, SE:24, SI:19, SK:24, SM:27, SO:23, ST:25, SV:28,\n  TL:23, TN:24, TR:26, UA:29, VA:22, VG:24, XK:20, YE:30\n};\n\n// ------------------------------------------------------------ yardimcilar\nfunction sade(s) {                                      // \"Vergi No*\" -> \"vergi no\"\n  return String(s).replace(/\\*/g, \"\")\n    .replace(/İ/g, \"i\").replace(/I/g, \"i\").replace(/ı/g, \"i\")\n    .toLowerCase()\n    .replace(/ş/g, \"s\").replace(/ğ/g, \"g\").replace(/ü/g, \"u\").replace(/ö/g, \"o\").replace(/ç/g, \"c\")\n    .replace(/[^a-z0-9]+/g, \" \").trim();\n}\nconst bos = (v) => v === undefined || v === null || String(v).trim() === \"\";\n\nfunction ibanKontrol(ham) {                             // hata metni veya null\n  const iban = String(ham).replace(/\\s+/g, \"\").toUpperCase();\n  if (/[^A-Z0-9]/.test(iban)) return \"gecersiz karakter iceriyor\";\n  if (!/^[A-Z]{2}[0-9]{2}/.test(iban)) return \"ulke kodu + 2 haneli kontrol basamagiyla baslamiyor\";\n  const ulke = iban.slice(0, 2);\n  const beklenen = IBAN_UZUNLUK[ulke];\n  if (beklenen && iban.length !== beklenen) return ulke + \" IBAN'i \" + beklenen + \" karakter olmali, \" + iban.length + \" karakter\";\n  if (!beklenen && (iban.length < 15 || iban.length > 34)) return \"uzunluk \" + iban.length + \" (15-34 olmali)\";\n  if (ulke === \"TR\" && !/^TR[0-9]{24}$/.test(iban)) return \"TR IBAN'i yalnizca rakam icermeli\";\n  const duzen = iban.slice(4) + iban.slice(0, 4);\n  let kalan = 0;\n  for (const ch of duzen) {\n    const d = ch >= \"A\" ? String(ch.charCodeAt(0) - 55) : ch;\n    for (const r of d) kalan = (kalan * 10 + (r.charCodeAt(0) - 48)) % 97;\n  }\n  if (kalan !== 1) return \"kontrol basamagi tutmuyor (mod-97) -- yazim hatasi olabilir\";\n  return null;\n}\n\n// ------------------------------------------------------------ kolon eslestirme\nconst basliklar = msg.basliklar || [];\nconst satirlar = msg.satirlar || [];\nconst kolon = {};                                       // mantiksal alan -> baslik\nconst dosyaUyarilari = [];\n\nfor (const [alan, tanim] of Object.entries(ALANLAR)) {\n  const b = basliklar.find(x => tanim.esler.includes(sade(x)));\n  if (b) kolon[alan] = b;\n  else if (tanim.zorunlu || alan === \"iban\") {\n    dosyaUyarilari.push(\"'\" + alan + \"' kolonu bulunamadi -- ilgili kural uygulanamadi. Basliklar: \" + basliklar.join(\", \"));\n  }\n}\n\nconst zorunluKolonlar = new Set();\nfor (const [alan, tanim] of Object.entries(ALANLAR)) if (tanim.zorunlu && kolon[alan]) zorunluKolonlar.add(kolon[alan]);\nfor (const b of basliklar) if (/\\*\\s*$/.test(b)) zorunluKolonlar.add(b);\n\n// ------------------------------------------------------------ kurallar\nconst hatalar = [];\nconst ekle = (s, k, kural, deger, aciklama) =>\n  hatalar.push({ satir: s.satir, kolon: k, kural, deger: deger === undefined ? \"\" : String(deger), aciklama });\n\n// 1) Zorunlu alanlar\nfor (const s of satirlar) {\n  for (const k of zorunluKolonlar) {\n    if (bos(s.degerler[k])) ekle(s, k, \"ZORUNLU_BOS\", s.degerler[k], k + \" bos birakilmis\");\n  }\n}\n\n// 2) Vergi numarasi tekrari (bosluk, nokta, tire yok sayilir)\nif (kolon.vergiNo) {\n  const gruplar = {};\n  for (const s of satirlar) {\n    const v = s.degerler[kolon.vergiNo];\n    if (bos(v)) continue;                               // bos olan zaten kural 1'de\n    const anahtar = String(v).replace(/[\\s.\\-\\/]/g, \"\").toUpperCase();\n    (gruplar[anahtar] = gruplar[anahtar] || []).push(s);\n  }\n  for (const [vno, grup] of Object.entries(gruplar)) {\n    if (grup.length < 2) continue;\n    grup.forEach((s, i) => {\n      if (i === 0 && !TEKRARIN_ILKINI_DE_ISARETLE) return;\n      const digerleri = grup.filter(x => x !== s).map(x => x.satir).join(\", \");\n      ekle(s, kolon.vergiNo, \"VERGI_TEKRAR\", s.degerler[kolon.vergiNo],\n        \"Vergi no \" + vno + \" su satir(lar)da da var: \" + digerleri);\n    });\n  }\n}\n\n// 3) Ulke kodu\nif (kolon.ulke) {\n  for (const s of satirlar) {\n    const ham = s.degerler[kolon.ulke];\n    if (bos(ham)) continue;\n    const v = String(ham).trim();\n    if (ULKELER.has(v)) continue;\n    let not = \"'\" + v + \"' gecerli bir ISO ulke kodu degil\";\n    if (ULKELER.has(v.toUpperCase())) not = \"'\" + v + \"' kucuk harfle yazilmis, '\" + v.toUpperCase() + \"' olmali\";\n    else if (ULKE_IPUCU[v.toUpperCase()]) not += \", '\" + ULKE_IPUCU[v.toUpperCase()] + \"' olmali\";\n    else if (v.length !== 2) not += \" (2 harfli olmali)\";\n    ekle(s, kolon.ulke, \"ULKE_GECERSIZ\", ham, not);\n  }\n}\n\n// 4) IBAN (bos IBAN hata degil -- zorunlu degilse)\nif (kolon.iban) {\n  for (const s of satirlar) {\n    const ham = s.degerler[kolon.iban];\n    if (bos(ham)) continue;\n    const sorun = ibanKontrol(ham);\n    if (sorun) ekle(s, kolon.iban, \"IBAN_BOZUK\", ham, \"IBAN \" + sorun);\n  }\n}\n\nhatalar.sort((a, b) => a.satir - b.satir || basliklar.indexOf(a.kolon) - basliklar.indexOf(b.kolon));\n\n// ------------------------------------------------------------ istatistik\nconst KURAL_ADI = {\n  ZORUNLU_BOS: \"Bos zorunlu alan\",\n  VERGI_TEKRAR: \"Tekrar eden vergi numarasi\",\n  ULKE_GECERSIZ: \"Gecersiz ulke kodu\",\n  IBAN_BOZUK: \"Bozuk IBAN\"\n};\nconst kuralSayisi = {};\nfor (const k of Object.keys(KURAL_ADI)) kuralSayisi[k] = 0;\nconst kolonSayisi = {};\nconst hataliSatirlar = new Set();\nfor (const h of hatalar) {\n  kuralSayisi[h.kural]++;\n  kolonSayisi[h.kolon] = (kolonSayisi[h.kolon] || 0) + 1;\n  hataliSatirlar.add(h.satir);\n}\n\nmsg.hatalar = hatalar;\nmsg.kolonEslesme = kolon;\nmsg.zorunluKolonlar = Array.from(zorunluKolonlar);\nmsg.kuralAdlari = KURAL_ADI;\nmsg.istatistik = {\n  dosya: msg.dosyaAdi,\n  toplamSatir: satirlar.length,\n  hataliSatir: hataliSatirlar.size,\n  temizSatir: satirlar.length - hataliSatirlar.size,\n  toplamHata: hatalar.length,\n  kuralBazinda: Object.entries(kuralSayisi).map(([kod, adet]) => ({ kural: KURAL_ADI[kod], kod, adet }))\n    .sort((a, b) => b.adet - a.adet),\n  kolonBazinda: kolonSayisi,\n  dosyaUyarilari,\n  ornekler: Object.keys(KURAL_ADI).map(kod => ({\n    kural: KURAL_ADI[kod],\n    ilkUc: hatalar.filter(h => h.kural === kod).slice(0, 3).map(h => \"satir \" + h.satir + \": \" + h.aciklama)\n  })).filter(o => o.ilkUc.length > 0)\n};\n\nfor (const u of dosyaUyarilari) node.warn(u);\nnode.status(hatalar.length\n  ? { fill: \"yellow\", shape: \"dot\", text: hataliSatirlar.size + \"/\" + satirlar.length + \" satir hatali, \" + hatalar.length + \" hata\" }\n  : { fill: \"green\", shape: \"dot\", text: satirlar.length + \" satir, hata yok\" });\nreturn msg;\n",
+  "outputs": 1,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 910,
+  "y": 160,
+  "wires": [
+   [
+    "mk_ai_hz",
+    "mk_ist_dbg"
+   ]
+  ]
+ },
+ {
+  "id": "mk_ist_dbg",
+  "type": "debug",
+  "z": "mk_tab0000000001",
+  "name": "KONTROL SONUCU",
+  "active": true,
+  "tosidebar": true,
+  "console": false,
+  "tostatus": false,
+  "complete": "istatistik",
+  "targetType": "msg",
+  "statusVal": "",
+  "statusType": "auto",
+  "x": 1110,
+  "y": 100,
+  "wires": []
+ },
+ {
+  "id": "mk_ai_hz",
+  "type": "function",
+  "z": "mk_tab0000000001",
+  "name": "AI istegi",
+  "func": "// AI'a SAYMA isi verilmez: sayilar kural dugumunde hesaplandi, buraya hazir\n// gelir. Ajandan istenen tek sey YORUM -- en sik hata ne, ne yapilmali.\n//\n// Musteri satirlarinin kendisi gonderilmez, sadece istatistik ve birkac ornek\n// aciklama gider (veri AI'a ne kadar az giderse o kadar iyi -- Ders 9.6).\n\nconst ist = msg.istatistik;\n\nif (ist.toplamHata === 0 && ist.dosyaUyarilari.length === 0) {\n  // Hata yoksa AI'a gitmeye gerek yok -- rapora dogrudan gec (2. cikis)\n  msg.aiOzet = \"Dosyada kural ihlali bulunmadi. \" + ist.toplamSatir + \" satirin tamami temiz.\";\n  node.status({ fill: \"green\", shape: \"dot\", text: \"hata yok, AI atlandi\" });\n  return [null, msg];\n}\n\nmsg.payload = `Bir SAP musteri ana verisi Excel'i kontrol edildi. Kontrolu KOD yapti;\nasagidaki sayilar kesindir.\n\nKURALLAR:\n1. Sayilari AYNEN kullan. Yeniden sayma, tahmin etme, yuvarlama.\n2. Verilmeyen bir bilgi uydurma.\n3. Turkce yaz, en fazla 180 kelime, Markdown kullan.\n4. Su yapida yaz:\n   ## Genel durum   (1-2 cumle: kac satirdan kaci hatali)\n   ## En sik hata   (hangisi, kac kez, neden onemli -- SAP acisindan)\n   ## Ne yapilmali  (her hata turu icin tek satirlik somut duzeltme talimati, en sik olandan baslayarak)\n   ## Oncelik       (once neyi duzeltmek gerekir ve neden; tek cumle)\n\nKONTROL SONUCU (JSON):\n${JSON.stringify(ist, null, 2)}`;\n\nnode.status({ fill: \"blue\", shape: \"dot\", text: \"AI ozeti isteniyor...\" });\nreturn [msg, null];\n",
+  "outputs": 2,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 1100,
+  "y": 160,
+  "wires": [
+   [
+    "mk_ai"
+   ],
+   [
+    "mk_rapor"
+   ]
+  ]
+ },
+ {
+  "id": "mk_ai",
+  "type": "axet-agents-execute",
+  "z": "mk_tab0000000001",
+  "name": "Veri kalitesi yorumcusu",
+  "agentId": "",
+  "agentName": "",
+  "description": "Veri kalitesi yorumcusu",
+  "instructions": "Sen SAP musteri ana verisi (KNA1/BUT000) konusunda deneyimli bir veri kalitesi danismanisin. Sana kod tarafindan hesaplanmis kesin sayilar verilir; bunlari DEGISTIRMEZ, yeniden saymazsin. Gorevin yorumlamak: en sik hatayi, is etkisini ve somut duzeltme adimlarini kisa ve net yazmak.",
+  "model": "aws-anthropic/eu.anthropic.claude-sonnet-4-6",
+  "input": "",
+  "mcpTools": "[]",
+  "coreTools": "",
+  "customTools": "[]",
+  "temperature": 0.2,
+  "maxRetries": 2,
+  "maxSteps": 5,
+  "timeout": 120000,
+  "stream": false,
+  "outputSchema": "",
+  "projectId": "33909419-e9c2-45c1-99c6-124ac059ca56",
+  "x": 1310,
+  "y": 160,
+  "wires": [
+   [
+    "mk_ai_cvp"
+   ],
+   [
+    "mk_ai_cvp"
+   ]
+  ]
+ },
+ {
+  "id": "mk_ai_cvp",
+  "type": "function",
+  "z": "mk_tab0000000001",
+  "name": "AI yaniti",
+  "func": "// Ajanin iki cikisi da buraya baglidir:\n//   1. cikis (basari): msg.payload.response = ozet metni\n//   2. cikis (hata):   msg.error = { message, code, details }\n//\n// AI basarisiz olsa bile rapor Excel'i URETILMELI -- kurallar zaten koddan\n// geldi, AI sadece yorum katmani. Bu yuzden hata da rapora devam ediyor.\n\nif (msg.error && !(msg.payload && msg.payload.response)) {\n  const m = msg.error.message || String(msg.error);\n  msg.aiOzet = \"AI ozeti alinamadi (\" + m + \"). Hata sayilari rapordaki 'Ozet' sayfasinda.\";\n  node.warn(\"AI ozeti alinamadi: \" + m);\n  node.status({ fill: \"red\", shape: \"ring\", text: \"AI hatasi, rapor yine uretilecek\" });\n  delete msg.error;                      // asagidaki catch dalini tetiklemesin\n} else {\n  msg.aiOzet = (msg.payload && msg.payload.response) || String(msg.payload);\n  node.status({ fill: \"green\", shape: \"dot\", text: \"AI ozeti alindi\" });\n}\nreturn msg;\n",
+  "outputs": 1,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 1500,
+  "y": 160,
+  "wires": [
+   [
+    "mk_rapor"
+   ]
+  ]
+ },
+ {
+  "id": "mk_rapor",
+  "type": "function",
+  "z": "mk_tab0000000001",
+  "name": "rapor tablosu",
+  "func": "// json-to-excel dugumunun bekledigi sekli kurar (Ders 10.1):\n//   msg.payload.data = { \"<Sayfa adi>\": [ {kolon: deger}, ... ] }\n//\n// Dort sayfa:\n//   Kontrol   -- yuklenen dosyanin TUM satirlari; hatali HUCRE kirmizi,\n//                Durum kolonu HATALI/TEMIZ\n//   Hatalar   -- her hata bir satir\n//   Ozet      -- kural bazinda sayilar (koddan)\n//   AI Ozeti  -- ajanin yorumu\n//\n// AI yorumu ayri bir dosyaya degil, raporun 'AI Ozeti' sayfasina gider.\n\nconst KIRMIZI = { fontColor: \"9C0006\", fill: \"FFC7CE\" };\nconst YESIL   = { fontColor: \"006100\", fill: \"C6EFCE\" };\nconst BASLIK  = { bold: true };\n\nconst basliklar = msg.basliklar;\nconst hatalar = msg.hatalar;\nconst ist = msg.istatistik;\nconst kuralAdi = msg.kuralAdlari;\n\n// satir -> kolon -> [aciklama]\nconst harita = {};\nfor (const h of hatalar) {\n  harita[h.satir] = harita[h.satir] || {};\n  (harita[h.satir][h.kolon] = harita[h.satir][h.kolon] || []).push(h.aciklama);\n}\n\n// --- Kontrol\nconst kontrol = msg.satirlar.map(s => {\n  const hs = harita[s.satir];\n  const r = { \"Excel Satiri\": s.satir };\n  for (const b of basliklar) {\n    const v = s.degerler[b];\n    if (hs && hs[b]) {\n      // Bos hucreyi de boyayabilmek icin gorunur bir deger yaziyoruz\n      r[b] = { value: String(v).trim() === \"\" ? \"(bos)\" : v, style: KIRMIZI };\n    } else {\n      r[b] = v;\n    }\n  }\n  r[\"Durum\"] = hs ? { value: \"HATALI\", style: Object.assign({ bold: true }, KIRMIZI) }\n                  : { value: \"TEMIZ\",  style: Object.assign({ bold: true }, YESIL) };\n  r[\"Hata Aciklamasi\"] = hs ? Object.values(hs).reduce((a, x) => a.concat(x), []).join(\" | \") : \"\";\n  return r;\n});\n\n// --- Hatalar\nconst hataSayfasi = hatalar.map(h => ({\n  \"Excel Satiri\": h.satir,\n  \"Kolon\": h.kolon,\n  \"Kural\": kuralAdi[h.kural],\n  \"Deger\": h.deger.trim() === \"\" ? \"(bos)\" : h.deger,\n  \"Aciklama\": h.aciklama\n}));\nif (hataSayfasi.length === 0) {\n  hataSayfasi.push({ \"Excel Satiri\": \"\", \"Kolon\": \"\", \"Kural\": \"\", \"Deger\": \"\", \"Aciklama\": \"Hata bulunmadi\" });\n}\n\n// --- Ozet\nconst ozet = [\n  { \"Bilgi\": { value: \"Dosya\", style: BASLIK },         \"Deger\": ist.dosya || \"\" },\n  { \"Bilgi\": { value: \"Kontrol zamani\", style: BASLIK }, \"Deger\": msg.kosuZamani || \"\" },\n  { \"Bilgi\": { value: \"Toplam satir\", style: BASLIK },   \"Deger\": ist.toplamSatir },\n  { \"Bilgi\": { value: \"Hatali satir\", style: BASLIK },   \"Deger\": ist.hataliSatir },\n  { \"Bilgi\": { value: \"Temiz satir\", style: BASLIK },    \"Deger\": ist.temizSatir },\n  { \"Bilgi\": { value: \"Toplam hata\", style: BASLIK },    \"Deger\": ist.toplamHata },\n  { \"Bilgi\": \"\", \"Deger\": \"\" }\n];\nfor (const k of ist.kuralBazinda) {\n  ozet.push({ \"Bilgi\": k.kural, \"Deger\": k.adet > 0 ? { value: k.adet, style: KIRMIZI } : 0 });\n}\nfor (const u of ist.dosyaUyarilari) ozet.push({ \"Bilgi\": \"UYARI\", \"Deger\": u });\n\n// --- AI Ozeti (her satir ayri hucre -- Excel'de okunur kalsin)\nconst NL = String.fromCharCode(10);\nconst aiSatirlar = String(msg.aiOzet || \"\").split(NL).map(x => ({ \"AI Ozeti (yorum -- sayilar Ozet sayfasindan)\": x }));\n\nmsg.payload = { data: { \"Kontrol\": kontrol, \"Hatalar\": hataSayfasi, \"Ozet\": ozet, \"AI Ozeti\": aiSatirlar } };\n\n// Rapor adi: uygulamadaki \"Raporlar\" sayfasinda ve indirilen dosyada bu ad gorunur.\nconst t = new Date();\nconst iki = (n) => String(n).padStart(2, \"0\");\nconst damga = t.getFullYear() + iki(t.getMonth() + 1) + iki(t.getDate()) + \"-\" + iki(t.getHours()) + iki(t.getMinutes()) + iki(t.getSeconds());\nconst kok = String(ist.dosya || \"musteri\").replace(/\\.xlsx$/i, \"\").replace(/[^A-Za-z0-9_-]+/g, \"_\");\nmsg.raporAdi = damga + \"-\" + kok + \"-RAPOR.xlsx\";\n\nnode.status({ fill: \"blue\", shape: \"dot\", text: kontrol.length + \" satir rapora yazildi\" });\nreturn msg;\n",
+  "outputs": 1,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 560,
+  "y": 320,
+  "wires": [
+   [
+    "mk_xls"
+   ]
+  ]
+ },
+ {
+  "id": "mk_xls",
+  "type": "json-to-excel",
+  "z": "mk_tab0000000001",
+  "name": "excel uret",
+  "kind": "auto",
+  "bufferProp": "payload",
+  "payloadProp": "payload",
+  "x": 760,
+  "y": 320,
+  "wires": [
+   [
+    "mk_kaydet"
+   ]
+  ]
+ },
+ {
+  "id": "mk_kaydet",
+  "type": "function",
+  "z": "mk_tab0000000001",
+  "name": "rapora kaydet",
+  "func": "// json-to-excel'den gelen raporu (Buffer) diske DEGIL uygulamanin hafizasina\n// koyar; \"Raporlar\" sayfasi listeyi buradan okur. Sonra forma yanit hazirlar.\n//\n// Neden flow context: kullanici raporu kendi bilgisayarinda istedigi yere\n// tarayicidan indirir; sunucuda dosya birikmez.\n// Bedeli: context bellekte tutulur, Production yeniden baslatilinca liste\n// sifirlanir. Bu yuzden rapor gonderim aninda da indirilir (asagida).\n//\n// Cikis 1 -> view action (forma \"tamamlandi\" mesaji + indirme)\n// Cikis 2 -> debug (her durumda)\n\nconst ENFAZLA = 20;                                    // bellekte tutulan son rapor sayisi\nconst ist = msg.istatistik || {};\n\nconst rapor = {\n  id: Date.now() + \"-\" + Math.random().toString(36).slice(2, 8),   // ayni milisaniyede iki kosu olabilir\n  ad: msg.raporAdi || (\"rapor-\" + Date.now() + \".xlsx\"),\n  zaman: new Date().toISOString(),\n  dosya: ist.dosya || \"\",\n  ozet: (ist.hataliSatir || 0) + \"/\" + (ist.toplamSatir || 0) + \" satir hatali, \" + (ist.toplamHata || 0) + \" hata\",\n  icerik: msg.payload                                  // Buffer\n};\n\nconst liste = flow.get(\"raporlar\") || [];\nliste.unshift(rapor);\nflow.set(\"raporlar\", liste.slice(0, ENFAZLA));\n\nconst kayit = { payload: { rapor: rapor.ad, ozet: rapor.ozet, bellekteki: Math.min(liste.length, ENFAZLA) } };\n\n// Form dugumunun koydugu alanin GERCEK adi __deptAppsFormioButtonClicked.\n// view action'in yardim metni __axetFlowsFormioButtonClicked yaziyor -- yanlis;\n// ikisine de bakiyoruz ki surum degisirse kirilmasin.\nfunction formdanMi(m) { return !!(m.__deptAppsFormioButtonClicked || m.__axetFlowsFormioButtonClicked); }\n\n// Tasarimcidaki \"ornek dosyayla test\" kosusunda form yok -> view action'a gitme.\n// Form dugumu bu ozellikleri koyar; view action onlarsiz calismaz, DOKUNMAYIN.\nif (!formdanMi(msg)) {\n  node.status({ fill: \"grey\", shape: \"dot\", text: \"kaydedildi (formsuz test)\" });\n  return [null, kayit];\n}\n\nmsg.downloadFileSubmission = { data: rapor.icerik, fileName: rapor.ad, inputType: \"buffer\" };\nmsg.messages = {\n  dosya: String(rapor.dosya),\n  toplam: String(ist.toplamSatir || 0),\n  hatali: String(ist.hataliSatir || 0),\n  hata: String(ist.toplamHata || 0)\n};\n\nnode.status({ fill: \"green\", shape: \"dot\", text: rapor.ozet });\nreturn [msg, kayit];\n",
+  "outputs": 2,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 960,
+  "y": 320,
+  "wires": [
+   [
+    "mk_view"
+   ],
+   [
+    "mk_bitti"
+   ]
+  ]
+ },
+ {
+  "id": "mk_view",
+  "type": "axetflows-view-action",
+  "z": "mk_tab0000000001",
+  "name": "sonucu goster + indir",
+  "action": "update",
+  "redirectPage": null,
+  "downloadFile": true,
+  "fileName": "rapor.xlsx",
+  "inputType": "buffer",
+  "message": "Kontrol tamamlandi: <%= dosya %> -- <%= toplam %> satirin <%= hatali %> tanesi hatali (<%= hata %> hata). Rapor indiriliyor; sonra da Raporlar sayfasindan indirebilirsiniz.",
+  "messageType": "success",
+  "x": 1180,
+  "y": 300,
+  "wires": []
+ },
+ {
+  "id": "mk_bitti",
+  "type": "debug",
+  "z": "mk_tab0000000001",
+  "name": "RAPOR HAZIR",
+  "active": true,
+  "tosidebar": true,
+  "console": false,
+  "tostatus": true,
+  "complete": "payload",
+  "targetType": "msg",
+  "statusVal": "",
+  "statusType": "auto",
+  "x": 1180,
+  "y": 360,
+  "wires": []
+ },
+ {
+  "id": "mk_form2",
+  "type": "axetflows-form",
+  "z": "mk_tab0000000001",
+  "name": "Raporlar",
+  "onDocumentReadyButtonAction": "",
+  "formStructure": {
+   "components": [
+    {
+     "type": "select",
+     "key": "rapor",
+     "label": "Rapor",
+     "id": "mkrapor1",
+     "input": true,
+     "placeholder": "Bir rapor secin",
+     "widget": "choicesjs",
+     "dataSrc": "values",
+     "data": {
+      "values": []
+     },
+     "valueProperty": "value",
+     "template": "<span>{{ item.label }}</span>",
+     "searchEnabled": true,
+     "tableView": true,
+     "persistent": true,
+     "hidden": false,
+     "description": "Son 20 kontrol. Liste uygulama yeniden baslatilinca sifirlanir.",
+     "validate": {
+      "required": true
+     },
+     "conditional": {
+      "show": null,
+      "when": null,
+      "eq": ""
+     }
+    },
+    {
+     "type": "button",
+     "label": "Indir",
+     "key": "indir",
+     "size": "md",
+     "block": false,
+     "action": "submit",
+     "disableOnInvalid": true,
+     "theme": "primary",
+     "input": true,
+     "placeholder": "",
+     "prefix": "",
+     "customClass": "",
+     "suffix": "",
+     "multiple": false,
+     "defaultValue": null,
+     "protected": false,
+     "unique": false,
+     "persistent": false,
+     "hidden": false,
+     "clearOnHide": true,
+     "refreshOn": "",
+     "redrawOn": "",
+     "tableView": false,
+     "modalEdit": false,
+     "labelPosition": "top",
+     "description": "",
+     "errorLabel": "",
+     "tooltip": "",
+     "hideLabel": false,
+     "tabindex": "",
+     "disabled": false,
+     "autofocus": false,
+     "dbIndex": false,
+     "customDefaultValue": "",
+     "calculateValue": "",
+     "widget": {
+      "type": "input"
+     },
+     "attributes": {},
+     "validateOn": "change",
+     "validate": {
+      "required": false,
+      "custom": "",
+      "customPrivate": false,
+      "strictDateValidation": false,
+      "unique": false,
+      "multiple": false
+     },
+     "conditional": {
+      "show": null,
+      "when": null,
+      "eq": ""
+     },
+     "overlay": {
+      "style": "",
+      "left": "",
+      "top": "",
+      "width": "",
+      "height": ""
+     },
+     "allowCalculateOverride": false,
+     "encrypted": false,
+     "showCharCount": false,
+     "showWordCount": false,
+     "properties": {},
+     "allowMultipleMasks": false,
+     "leftIcon": "fa fa-download",
+     "rightIcon": "",
+     "dataGridLabel": true,
+     "id": "mkindir1"
+    }
+   ]
+  },
+  "associatedEntityMetamodel": null,
+  "associatedEntityFormType": null,
+  "associatedContractModelMetamodel": null,
+  "associatedPersistantFormId": null,
+  "associatedLocalStorageDatabaseId": null,
+  "buttons": [
+   {
+    "type": "button",
+    "label": "Indir",
+    "key": "indir",
+    "size": "md",
+    "block": false,
+    "action": "submit",
+    "disableOnInvalid": true,
+    "theme": "primary",
+    "input": true,
+    "placeholder": "",
+    "prefix": "",
+    "customClass": "",
+    "suffix": "",
+    "multiple": false,
+    "defaultValue": null,
+    "protected": false,
+    "unique": false,
+    "persistent": false,
+    "hidden": false,
+    "clearOnHide": true,
+    "refreshOn": "",
+    "redrawOn": "",
+    "tableView": false,
+    "modalEdit": false,
+    "labelPosition": "top",
+    "description": "",
+    "errorLabel": "",
+    "tooltip": "",
+    "hideLabel": false,
+    "tabindex": "",
+    "disabled": false,
+    "autofocus": false,
+    "dbIndex": false,
+    "customDefaultValue": "",
+    "calculateValue": "",
+    "widget": {
+     "type": "input"
+    },
+    "attributes": {},
+    "validateOn": "change",
+    "validate": {
+     "required": false,
+     "custom": "",
+     "customPrivate": false,
+     "strictDateValidation": false,
+     "unique": false,
+     "multiple": false
+    },
+    "conditional": {
+     "show": null,
+     "when": null,
+     "eq": ""
+    },
+    "overlay": {
+     "style": "",
+     "left": "",
+     "top": "",
+     "width": "",
+     "height": ""
+    },
+    "allowCalculateOverride": false,
+    "encrypted": false,
+    "showCharCount": false,
+    "showWordCount": false,
+    "properties": {},
+    "allowMultipleMasks": false,
+    "leftIcon": "fa fa-download",
+    "rightIcon": "",
+    "dataGridLabel": true,
+    "id": "mkindir1"
+   }
+  ],
+  "outputs": 2,
+  "x": 150,
+  "y": 600,
+  "wires": [
+   [
+    "mk_indir"
+   ],
+   [
+    "mk_liste"
+   ]
+  ]
+ },
+ {
+  "id": "mk_liste",
+  "type": "function",
+  "z": "mk_tab0000000001",
+  "name": "rapor listesi",
+  "func": "// \"Raporlar\" sayfasi acilirken (form dugumunun son cikisi: onInitForm) calisir.\n// Bellekteki raporlari secim kutusuna doldurur.\n//\n// msg.onInitPopulateFormStructure = { <bilesen anahtari>: [{label, value}] }\n// aXet'in kendi sablonlarinda (Apply Auth App) kullanilan mekanizma.\n\nconst liste = flow.get(\"raporlar\") || [];\n\nconst secenekler = liste.map(r => ({\n  label: r.ad + \"  --  \" + r.ozet,\n  value: r.id\n}));\n\nmsg.onInitPopulateFormStructure = { rapor: secenekler };\nmsg.onInitSubmission = {};\n\nnode.status({ fill: \"blue\", shape: \"dot\", text: secenekler.length + \" rapor listelendi\" });\nreturn msg;\n",
+  "outputs": 1,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 380,
+  "y": 640,
+  "wires": [
+   [
+    "mk_view_liste"
+   ]
+  ]
+ },
+ {
+  "id": "mk_view_liste",
+  "type": "axetflows-view-action",
+  "z": "mk_tab0000000001",
+  "name": "listeyi goster",
+  "action": "update",
+  "redirectPage": null,
+  "downloadFile": false,
+  "fileName": "rapor.xlsx",
+  "inputType": "buffer",
+  "message": null,
+  "messageType": "info",
+  "x": 600,
+  "y": 640,
+  "wires": []
+ },
+ {
+  "id": "mk_indir",
+  "type": "function",
+  "z": "mk_tab0000000001",
+  "name": "rapor indir",
+  "func": "// \"Raporlar\" sayfasinda Indir dugmesi: secilen raporu tarayiciya gonderir.\n\nconst veri = (msg.payload && msg.payload.data) || (msg.submission && msg.submission.data) || {};\nconst secilen = veri.rapor;\nconst liste = flow.get(\"raporlar\") || [];\nconst r = liste.find(x => x.id === String(secilen));\n\nif (!r) {\n  msg.messages = { mesaj: \"Rapor bulunamadi. Uygulama yeniden baslatildiysa eski raporlar silinmis olabilir; dosyayi tekrar yukleyin.\" };\n  delete msg.downloadFileSubmission;\n  node.status({ fill: \"yellow\", shape: \"ring\", text: \"rapor yok: \" + secilen });\n  return msg;\n}\n\nmsg.downloadFileSubmission = { data: r.icerik, fileName: r.ad, inputType: \"buffer\" };\nmsg.messages = { mesaj: r.ad + \" indiriliyor (\" + r.ozet + \").\" };\nnode.status({ fill: \"green\", shape: \"dot\", text: r.ad });\nreturn msg;\n",
+  "outputs": 1,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 380,
+  "y": 580,
+  "wires": [
+   [
+    "mk_view_indir"
+   ]
+  ]
+ },
+ {
+  "id": "mk_view_indir",
+  "type": "axetflows-view-action",
+  "z": "mk_tab0000000001",
+  "name": "raporu indir",
+  "action": "update",
+  "redirectPage": null,
+  "downloadFile": true,
+  "fileName": "rapor.xlsx",
+  "inputType": "buffer",
+  "message": "<%= mesaj %>",
+  "messageType": "info",
+  "x": 600,
+  "y": 580,
+  "wires": []
+ },
+ {
+  "id": "mk_catch",
+  "type": "catch",
+  "z": "mk_tab0000000001",
+  "name": "kontrol hatalari",
+  "scope": [
+   "mk_buffer",
+   "mk_oku",
+   "mk_kural",
+   "mk_ai_hz",
+   "mk_ai_cvp",
+   "mk_rapor",
+   "mk_xls",
+   "mk_kaydet"
+  ],
+  "uncaught": false,
+  "x": 160,
+  "y": 460,
+  "wires": [
+   [
+    "mk_hata_dbg",
+    "mk_hata_yanit"
+   ]
+  ]
+ },
+ {
+  "id": "mk_hata_dbg",
+  "type": "debug",
+  "z": "mk_tab0000000001",
+  "name": "KONTROL HATASI",
+  "active": true,
+  "tosidebar": true,
+  "console": false,
+  "tostatus": true,
+  "complete": "error",
+  "targetType": "msg",
+  "statusVal": "",
+  "statusType": "auto",
+  "x": 380,
+  "y": 460,
+  "wires": []
+ },
+ {
+  "id": "mk_hata_yanit",
+  "type": "function",
+  "z": "mk_tab0000000001",
+  "name": "hata yaniti",
+  "func": "// Akis bir yerde hata verirse Submit dugmesi sonsuza kadar donmesin:\n// catch -> bu dugum -> view action (kirmizi mesaj).\n// catch'ten gelen msg, hatayi veren dugumun aldigi msg'dir; form alanlari\n// (msg.__deptAppsFormioButtonClicked vb.) uzerinde durur.\n\n// Alanin gercek adi __deptAppsFormioButtonClicked (yardim metnindeki __axetFlows... yanlis).\nfunction formdanMi(m) { return !!(m.__deptAppsFormioButtonClicked || m.__axetFlowsFormioButtonClicked); }\n\nif (!formdanMi(msg)) return null;   // formsuz test kosusu\n\nconst m = (msg.error && msg.error.message) || \"bilinmeyen hata\";\nmsg.messages = { hata: m.length > 300 ? m.slice(0, 300) + \"...\" : m };\ndelete msg.downloadFileSubmission;\nreturn msg;\n",
+  "outputs": 1,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 380,
+  "y": 510,
+  "wires": [
+   [
+    "mk_view_hata"
+   ]
+  ]
+ },
+ {
+  "id": "mk_view_hata",
+  "type": "axetflows-view-action",
+  "z": "mk_tab0000000001",
+  "name": "hatayi goster",
+  "action": "update",
+  "redirectPage": null,
+  "downloadFile": false,
+  "fileName": "rapor.xlsx",
+  "inputType": "buffer",
+  "message": "Kontrol tamamlanamadi: <%= hata %>",
+  "messageType": "danger",
+  "x": 600,
+  "y": 510,
+  "wires": []
+ }
+]

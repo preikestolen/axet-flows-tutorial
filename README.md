@@ -52,6 +52,7 @@ Her dersin tasarımcıda karşılık gelen bir akış sekmesi vardır:
 | 8 | [Ajan Zinciri](08-ajan-zinciri.md) | ~40 dk | `Ders 8 - Ajan Zinciri` | Çok ajanlı akış, denetim döngüsü, geçit sınırları |
 | 9 | [Form Arayüzü](09-form-arayuzu.md) | ~45 dk | `Ders 9 - Formlu Zincir` | Web uygulaması, dosya eki, ajan aktivasyonu, kalıcı dosya, özel CSS |
 | 10 | [Sonucu Teslim Etmek](10-sonucu-teslim.md) | ~40 dk | `Ders 10 - Teslim` | Excel üretimi, koşu geçmişi, sır yönetimi, e-posta, cron |
+| 11 | [Müşteri Ana Verisi Kontrolcüsü](11-musteri-ana-veri-kontrolu.md) | ~60 dk | `Gun 2 - Musteri Ana Veri Kontrolu` | Kural motoru + AI yorumu, Okta, view action, indirme, yerel test |
 | — | [Sorun Giderme](SORUN-GIDERME.md) | başvuru | — | Hata → çözüm tablosu |
 
 Dersler birbirinin üstüne kurulur; sırayla ilerleyin. İlk yedisi bittiğinde şunu
@@ -117,7 +118,10 @@ axet-flows-egitim/
 ├── 08-ajan-zinciri.md                 birbirini denetleyen dört ajan
 ├── 09-form-arayuzu.md                 web arayüzü, dosya eki, özel CSS
 ├── 10-sonucu-teslim.md                Excel, koşu geçmişi, e-posta
+├── 11-musteri-ana-veri-kontrolu.md    Gün 2: Excel kontrolcüsü, Okta, view action
 ├── SORUN-GIDERME.md                   hata → çözüm tablosu
+├── MEMORY.md                          karşılaşılan hatalar ve çözümleri (kısa liste)
+├── SKILL.md                           aXet.flows akışı geliştirme iş akışı (Claude skill)
 ├── gorseller/                         ekran görüntüleri (14 adet)
 └── kaynaklar/
     ├── ornek-01-kurulum-dogrulama.json  Ders 1 akışı (import edilebilir)
@@ -146,7 +150,8 @@ axet-flows-egitim/
     ├── demo-cikti-formlu/               formdan metin ile tetiklenen koşu
     ├── demo-cikti-ekli/                 formdan dosya eki ile tetiklenen koşu
     ├── demo-cikti-kalici/               kalıcı yol denemesinin çıktısı
-    └── demo-cikti-rapor/                Ders 10: üretilen Excel + koşu geçmişi
+    ├── demo-cikti-rapor/                Ders 10: üretilen Excel + koşu geçmişi
+    └── musteri-kontrol/                 Ders 11: 10 function, akış üretici, yerel test
 ```
 
 > **Not:** Ekran görüntülerindeki kişisel bilgiler (kullanıcı adı, dosya

@@ -1,0 +1,102 @@
+[
+ {
+  "satir": 14,
+  "kolon": "Unvan*",
+  "kural": "ZORUNLU_BOS"
+ },
+ {
+  "satir": 15,
+  "kolon": "Ulke*",
+  "kural": "ULKE_GECERSIZ"
+ },
+ {
+  "satir": 16,
+  "kolon": "IBAN",
+  "kural": "IBAN_BOZUK"
+ },
+ {
+  "satir": 17,
+  "kolon": "Vergi No*",
+  "kural": "ZORUNLU_BOS"
+ },
+ {
+  "satir": 19,
+  "kolon": "Vergi No*",
+  "kural": "VERGI_TEKRAR"
+ },
+ {
+  "satir": 22,
+  "kolon": "Ulke*",
+  "kural": "ZORUNLU_BOS"
+ },
+ {
+  "satir": 24,
+  "kolon": "Vergi No*",
+  "kural": "VERGI_TEKRAR"
+ },
+ {
+  "satir": 25,
+  "kolon": "Ulke*",
+  "kural": "ULKE_GECERSIZ"
+ },
+ {
+  "satir": 26,
+  "kolon": "IBAN",
+  "kural": "IBAN_BOZUK"
+ },
+ {
+  "satir": 27,
+  "kolon": "Vergi No*",
+  "kural": "VERGI_TEKRAR"
+ },
+ {
+  "satir": 29,
+  "kolon": "Ulke*",
+  "kural": "ULKE_GECERSIZ"
+ },
+ {
+  "satir": 30,
+  "kolon": "Musteri No*",
+  "kural": "ZORUNLU_BOS"
+ },
+ {
+  "satir": 32,
+  "kolon": "IBAN",
+  "kural": "IBAN_BOZUK"
+ },
+ {
+  "satir": 33,
+  "kolon": "Vergi No*",
+  "kural": "VERGI_TEKRAR"
+ },
+ {
+  "satir": 34,
+  "kolon": "Ulke*",
+  "kural": "ULKE_GECERSIZ"
+ },
+ {
+  "satir": 36,
+  "kolon": "Vergi No*",
+  "kural": "VERGI_TEKRAR"
+ },
+ {
+  "satir": 38,
+  "kolon": "IBAN",
+  "kural": "IBAN_BOZUK"
+ },
+ {
+  "satir": 39,
+  "kolon": "Vergi No*",
+  "kural": "VERGI_TEKRAR"
+ },
+ {
+  "satir": 41,
+  "kolon": "Ulke*",
+  "kural": "ULKE_GECERSIZ"
+ },
+ {
+  "satir": 41,
+  "kolon": "Unvan*",
+  "kural": "ZORUNLU_BOS"
+ }
+]

@@ -927,6 +927,140 @@ Sırayla kontrol edin:
    düğümü (kurumsal relay adresi ve kimlik ister)
 
 
+## Desktop tasarım modu ve Gün 2 sorunları
+
+Bu bölümdekilerin hepsi Ders 11 sırasında, aXet v6.5.4 + Desktop tasarım
+modunda yaşandı.
+
+### `invalid properties: setupErrors functionErrors closeErrors`
+
+**Belirti:** Elle üretilmiş (veya stok Node-RED'den gelen) bir akışı
+import edip deploy edince `function` düğümleri geçersiz sayılır.
+**Sebep:** aXet `function` düğümünü kendi sürümüyle değiştirmiş
+(`10-function-af.html`); stok `noerr` yerine üç alanı zorunlu tutuyor.
+**Çözüm:** Her `function` düğümüne ekleyin:
+
+```json
+"setupErrors": 0, "functionErrors": 0, "closeErrors": 0
+```
+
+Düğümü editörde açıp **Done** demek de alanları doldurur.
+
+### Submit düğmesi sonsuza kadar dönüyor
+
+**Belirti:** Formdan gönderim yapılıyor, akış çalışıyor (çıktı oluşuyor)
+ama düğmedeki ikon dönmeye devam ediyor, mesaj gelmiyor.
+**Sebep:** Formdan başlayan akış bir `view action` düğümünde bitmiyor.
+Tarayıcı yanıtı bekliyor.
+**Çözüm:** Akışın sonuna `view action` koyun (Action: *Refresh/Update
+current page*). Mesaj ve indirme için:
+
+```javascript
+msg.messages = { sayi: "19" };   // mesaj metninde <%= sayi %>
+msg.downloadFileSubmission = { data: buffer, fileName: "rapor.xlsx", inputType: "buffer" };
+```
+
+`msg.submission` ve form alanlarını silmeyin.
+
+### `view action` var ama yine dönüyor
+
+**Sebep:** "Formdan mı geldi?" kontrolü yanlış alan adıyla yazılmış.
+`view action`'ın yardım metni `__axetFlowsFormioButtonClicked` der;
+form düğümünün **kodunda** ad `__deptAppsFormioButtonClicked`.
+**Çözüm:**
+
+```javascript
+const formdan = !!(msg.__deptAppsFormioButtonClicked || msg.__axetFlowsFormioButtonClicked);
+```
+
+### `Not found config node with id '' for auth Okta`
+
+**Belirti:** `application` düğümünde Auth = Okta, Production'da uygulama
+*Error on load application* gösteriyor.
+**Sebep:** Okta, izinli kullanıcıları tutan bir tabloya bağlı bir config
+düğümü ister; `Authentication Config` boş.
+**Çözüm:** Editörde **sihirli değnek → Apply Auth App → LocalStorage BD →
+OKTA Authentication → Accept**. Tabloyu, config'i, kullanıcı formlarını ve
+Admin. Area menüsünü kurar. Boş tabloda ilk giren kişi yönetici olur.
+
+### `The form '<ad>' does not exist between the flows of your application` (v6.5.4)
+
+Ders 9.7'deki etiket eşleşmesine ek olarak: v6.5.4 menü öğesini
+`{type:"page", pageId}` değil `{type:"form", data:{form_id}}` biçiminde
+bekliyor. Menüyü editörün Menu sekmesinden yeniden kurun ya da JSON'da:
+
+```json
+{ "text": "Musteri Excel yukle", "type": "form", "data": { "form_id": "<form dugum id>" } }
+```
+
+### Production `localhost:<port>` açılmıyor (`ERR_CONNECTION_TIMED_OUT`)
+
+**Kontrol:**
+
+```bash
+wsl.exe -d aXet-flows_WSL -- ss -ltn | grep <port>
+# 172.17.0.1:<port>  -> sadece Docker koprusunde dinliyor
+```
+
+**Çözüm:** WSL içinde köprü (süreç açık kaldıkça çalışır):
+
+```bash
+wsl.exe -d aXet-flows_WSL -- socat TCP-LISTEN:<port>,bind=127.0.0.1,reuseaddr,fork TCP:172.17.0.1:<port>
+```
+
+### `Other instance of this Axet Flow is running yet in production mode!`
+
+Aynı flow aynı anda hem tasarımcıda hem Production'da açılamaz. Önce
+Production kartındaki kafatasıyla durdurun. Not: sağ üstteki
+**+ New Version** tasarımcıyı, versiyon satırındaki **… → Run Flow**
+Production'ı açar — karıştırmayın.
+
+### `Fatal Error! Flow configuration not exists or is bad!`
+
+Tasarımcı penceresi (`aXet.flows.exe`) doğrudan — görev çubuğu ya da son
+açılanlardan — başlatılmış. Tek başına açılamaz; her zaman portaldan
+(**Catalog → flow → New Version**) açın.
+
+### `Unexpected starting error!` / `The file is locked: ...deptapps-desktop-database.mv.db`
+
+Desktop iki kez başlatılmış; ilki tepside çalışırken ikincisi
+veritabanını açamıyor. Hata ekranına çift tıklayıp kapatın, tepsideki
+mevcut örneği kullanın. Emin değilseniz Görev Yöneticisi'nden **bütün**
+`aXet.flows-Desktop` süreçlerini kapatıp **bir kez** açın.
+
+### Ajan düğümünde proje listesi boş / `The aXet.Core nodes are not activated!`
+
+**Kontrol:** Desktop günlüğü:
+
+```powershell
+Select-String -Path "$env:LOCALAPPDATA\axet-flows\.deptapps-desktop\logs\application.log" -Pattern 'JWT expired' | Select-Object -Last 1
+```
+
+`JWT expired at ...` görüyorsanız Desktop oturumunun süresi dolmuş.
+Tasarımcı günlüğünde `ENOTFOUND <axet-portal-adresiniz>` varsa sebep ağ kopması:
+**oturum ağ yokken yenilenemiyor ve sonra kendiliğinden düzelmiyor.**
+**Çözüm:** Tepsi simgesi → **Exit**, Desktop'ı bir kez açıp Okta ile girin,
+tasarımcıyı portaldan yeniden açın. `activate here` bağlantısı "error
+trying to recover aXet.Core user data" diyorsa sebep yine budur.
+
+### `OKTA token not returned from ai-config endpoint` (tasarımcıda)
+
+Ağ kopmasından sonra tasarımcıda görüldü; akış ajan hata dalına düştü.
+Yukarıdaki maddeyle aynı çözüm. Production kendi aktivasyonunu kullanır,
+oradan etkilenmeyebilir.
+
+### Catalog boş görünüyor
+
+Liste geç yükleniyor; sayfa ilk anda *No results* gösterebilir. Birkaç
+saniye bekleyin, **My Flows** filtresini kontrol edin.
+
+### Çıktı dosyası `C:\internal-storage-files\` altında
+
+Desktop tasarım modunda `/internal-storage-files/` yolu doğrudan
+`C:\internal-storage-files\`'a yazılır. Production'da ise Dashboard'daki
+*Internal files Path* (`...\.deptapps-instances\<id>`) geçerlidir.
+
+
 ## Katkı
 
 Yeni bir hatayla karşılaştıysanız bu dosyaya şu şablonla ekleyin:
