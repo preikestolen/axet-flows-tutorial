@@ -122,6 +122,7 @@ axet-flows-egitim/
 ├── SORUN-GIDERME.md                   hata → çözüm tablosu
 ├── MEMORY.md                          karşılaşılan hatalar ve çözümleri (kısa liste)
 ├── SKILL.md                           aXet.flows akışı geliştirme iş akışı (Claude skill)
+├── .claude/skills/axet-flows-workflow/SKILL.md   aynı skill, Claude Code'un otomatik bulduğu yerde
 ├── gorseller/                         ekran görüntüleri (14 adet)
 └── kaynaklar/
     ├── ornek-01-kurulum-dogrulama.json  Ders 1 akışı (import edilebilir)
