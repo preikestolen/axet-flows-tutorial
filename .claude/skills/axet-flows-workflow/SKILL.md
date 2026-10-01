@@ -113,6 +113,9 @@ ayrıntılı madde (tam hata metni + sebep + çözüm) ekle.
 | File bileşeni (base64) | — | `data.<key> = [{ name, originalName, size, url: "data:<mime>;base64,..." }]` |
 | `axetflows-app` | — | Auth: `authNone` / `Okta` / `authBasicInternal`. Okta için `oktaDb` config şart. Menü öğesi: `{type:"form", text, data:{form_id}}` |
 | `axetflows-view-action` | Form msg'si (dokunulmamış) | `action:"update"`; `msg.messages` → mesajdaki `<%= k %>`; `msg.downloadFileSubmission = {data, fileName, inputType:"buffer"\|"base64"\|"path"}`; onInit'te `msg.onInitPopulateFormStructure = {key: [{label,value}]}` |
+| Dosya indirme | Okta korumalı form işlemi | **`downloadFileSubmission` kullanma** (Edge'de `.tmp`). `kaynaklar/ortak/indirme-bagi-olustur.js` → view action mesajında `<a href="/indir/<%= token %>">` → `http in /indir/:token` → `indirme-sun.js` |
+| Tablo sayfası | form onInit | `msg.submission = { tablo: [ {kolon: "deger"} ] }` → view action (update); bileşen datagrid (`disabled`, `disableAddingRemovingRows`); görünüm için `ortak/uygulama.css` |
+| Menü bölümü | — | `{type:"section", text, children:[{type:"form", text: <form adı>, data:{form_id}}]}`; etiket = form adı |
 | Form msg alanları | — | `msg.__deptAppsFormioButtonClicked`, `msg.__deptAppsFormioButtons`, `msg.submission` — **silme** |
 | `axet-agents-execute` | `msg.payload` (metin/nesne) | Çıkış 1: `msg.payload.response` (şemasız) veya şema nesnesi; çıkış 2: `msg.error`. Diğer `msg` alanları korunur |
 | `json-to-excel` | `msg.payload.data = { "<Sayfa>": [ {kolon: değer} ] }` | `msg.payload` = Buffer. Stil `{value, style:{fill, fontColor, bold, numberFormat}}`, formül `() => "=A1"` |
@@ -128,7 +131,7 @@ ayrıntılı madde (tam hata metni + sebep + çözüm) ekle.
 - **Ortam:** `env.get("AD")`; düğüm alanında `${AD}` (alanın tamamıysa).
 - **Switch:** varsayılan olarak eşleşen **her** kurala gönderir.
 - **HTTP Request:** zincirde önceki yanıt başlıkları sonraki isteğe gider — arada `msg.headers` temizle.
-- **Admin API:** `GET /flows`, `POST /flows` (`Node-RED-Deployment-Type`), `GET/PUT /flow/:id`, `POST /inject/:id`.
+- **Admin API:** `GET /flows`, `POST /flows` (`Node-RED-Deployment-Type`), `GET/PUT /flow/:id`, `POST /flow` (yeni sekme — sekme ID'si yeniden üretilir, düğüm ID'leri korunur), `POST /inject/:id`.
 - Referans: https://nodered.org/docs/user-guide/ · https://nodered.org/docs/user-guide/writing-functions · https://nodered.org/docs/api/admin/methods/
 
 ## Yapma
@@ -138,5 +141,7 @@ ayrıntılı madde (tam hata metni + sebep + çözüm) ekle.
 - `/data/` altına kalıcı çıktı yazma.
 - Kullanıcıyı AppData klasöründe dosya aramaya mecbur bırakma — indir.
 - AI çıktısındaki sayıları ve SAP işlem kodlarını doğrulamadan kullanma.
+- Salt okunur çok satırlı veriyi `textarea`'da gösterme (satırlar birleşir) — datagrid kullan.
+- Zamanlanmış akışta "önceki değer"i bellekte tutma — kalıcı dosyadan (JSONL) oku.
 - Gerçek müşteri verisini ajana gönderme; sadece özet/istatistik gönder.
 - Desktop'ı ikinci kez başlatma; tasarımcı penceresini doğrudan açma.

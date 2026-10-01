@@ -176,6 +176,10 @@ msg.messages = { hatali: "19", toplam: "40" };   // mesajdaki <%= hatali %> alan
 function formdanMi(m) { return !!(m.__deptAppsFormioButtonClicked || m.__axetFlowsFormioButtonClicked); }
 ```
 
+> **Güncelleme (Ders 12.6):** `downloadFileSubmission` ile inen dosya Edge'de
+> `.tmp` olarak kaydedildi. İndirme artık 10 dakika geçerli bir bağlantıyla
+> (`/indir/<anahtar>`) yapılıyor; mesajda tıklanabilir dosya adı görünür.
+
 ## 11.8 Sonuç dosyaya değil, kullanıcıya
 
 İlk sürüm raporu `/internal-storage-files/` altına yazıyordu — kullanıcı
@@ -290,4 +294,5 @@ Tasarımcı penceresi (`aXet.flows.exe`) tek başına açılmaz
 ---
 
 **Önceki:** [10. Sonucu Teslim Etmek](10-sonucu-teslim.md) ·
+**Sonraki:** [12. Hava Nöbetçisi](12-hava-nobetcisi.md) ·
 **Takıldınız mı?** → [Sorun Giderme](SORUN-GIDERME.md)

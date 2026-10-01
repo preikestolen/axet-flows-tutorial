@@ -1073,6 +1073,43 @@ Desktop tasarım modunda `/internal-storage-files/` yolu doğrudan
 *Internal files Path* (`...\.deptapps-instances\<id>`) geçerlidir.
 
 
+### İndirilen dosya `.tmp` uzantılı
+
+**Belirti:** `view action`'da *Download file* açık; dosya iniyor ama
+`xxxx.tmp` adıyla. **Sebep:** aXet'in tarayıcı kodu tipsiz bir `Blob`'u,
+sayfaya eklenmemiş bir `<a>` ile tıklıyor; sunucu yanıtı (dosya adı,
+içerik) doğru. **Çözüm:** İndirmeyi kendi ucunuzdan verin:
+`kaynaklar/ortak/indirme-bagi-olustur.js` (10 dk geçerli anahtar +
+mesajda bağlantı) ve `http in GET /indir/:token` → `indirme-sun.js`
+(`Content-Type` + `Content-Disposition: attachment`). Ayrıntı: Ders 12.6.
+
+### Salt okunur metin alanında satırlar tek satıra diziliyor
+
+Devre dışı `textarea` görüntüsü satır sonlarını yutuyor. Çok satırlı veri
+için **datagrid** kullanın; satırları `msg.submission = { <anahtar>: [ {...} ] }`
+ile basın (Ders 12.5).
+
+### Datagrid hücreleri gri kutu, metin kesiliyor
+
+Devre dışı input'ların varsayılan stili. Uygulamanın Custom CSS'ine
+`kaynaklar/ortak/uygulama.css` (`field-sizing: content`, saydam arka plan).
+
+### Sayfa eski veriyi gösteriyor
+
+Form sayfası verisini **açıldığı anda** yükler, kendiliğinden yenilenmez.
+Yeni okuma geldikten sonra menüden sayfaya tekrar tıklayın ya da F5.
+
+### `POST /flow` sonrası sekmeyi ID ile bulamıyorum
+
+Node-RED yeni sekmeye **yeni bir ID** verir (düğüm ID'leri korunur).
+`GET /flows` ile sekmeyi etiketine göre bulun; güncellemede `PUT /flow/<o id>`.
+
+### New Version'dan hemen sonra tasarımcı Admin API'si yanıt vermiyor
+
+`127.0.0.1:52333` istekleri zaman aşımına düşüyor, süreç CPU harcamıyor.
+Tasarımcı yeni sürümü yüklüyor; 1-2 dakika sonra kendiliğinden açılıyor.
+
+
 ## Katkı
 
 Yeni bir hatayla karşılaştıysanız bu dosyaya şu şablonla ekleyin:

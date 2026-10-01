@@ -6,7 +6,7 @@
 // Bedeli: context bellekte tutulur, Production yeniden baslatilinca liste
 // sifirlanir. Bu yuzden rapor gonderim aninda da indirilir (asagida).
 //
-// Cikis 1 -> view action (forma "tamamlandi" mesaji + indirme)
+// Cikis 1 -> indirme baglantisi -> view action (forma "tamamlandi" mesaji + baglanti)
 // Cikis 2 -> debug (her durumda)
 
 const ENFAZLA = 20;                                    // bellekte tutulan son rapor sayisi
@@ -39,7 +39,7 @@ if (!formdanMi(msg)) {
   return [null, kayit];
 }
 
-msg.downloadFileSubmission = { data: rapor.icerik, fileName: rapor.ad, inputType: "buffer" };
+msg.indirilecek = { data: rapor.icerik, ad: rapor.ad };      // -> ortak/indirme-bagi-olustur.js
 msg.messages = {
   dosya: String(rapor.dosya),
   toplam: String(ist.toplamSatir || 0),

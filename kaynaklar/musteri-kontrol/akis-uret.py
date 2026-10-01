@@ -24,6 +24,13 @@ def js(ad):
     return (BURASI / ad).read_text(encoding="utf-8")
 
 
+ORTAK = KAYNAK / "ortak"
+LINK = ('<a href="/indir/<%= token %>" download="<%= dosya %>"><b><%= dosya %></b></a> '
+        '-- indirmek icin tiklayin (<%= sure %> dk gecerli).')
+# Uygulama geneli Custom CSS: salt okunur tablolari duz metin gibi goster (Ders 9.9)
+UYGULAMA_CSS = (KAYNAK / "ortak" / "uygulama.css").read_text(encoding="utf-8")
+
+
 def fn(id_, ad, kod, x, y, wires, outputs=1):
     # aXet'in function dugumu (10-function-af.html) stok Node-RED'deki "noerr"
     # yerine bu uc alani ZORUNLU tutar; eksikse deploy "invalid properties" der.
@@ -83,7 +90,7 @@ form2.update({"id": "mk_form2", "name": RAPOR_SAYFASI, "buttons": [buton],
 app.update({
     "id": "mk_app", "z": TAB, "name": "Musteri Veri Kontrolu",
     "welcomePage": "mk_form",
-    "customCSS": "", "customCSSErrors": 0,
+    "customCSS": UYGULAMA_CSS, "customCSSErrors": 0,
     "authConfig": "Okta",   # tasarimcida Okta secilince yazilan deger
     "x": 150, "y": 80,
 })
@@ -95,6 +102,15 @@ app["menu"][0]["children"] = [{
                   "data": {"form_id": "mk_form"}, "children": []},
                  {"id": "mk_sayfa2", "text": RAPOR_SAYFASI, "icon": "fa fa-download", "type": "form",
                   "data": {"form_id": "mk_form2"}, "children": []}],
+}, {
+    # Gun 1 -- dugumleri ayri sekmede: ../hava-nobetcisi/akis-uret.py (hv_form)
+    "id": "hv_bolum", "text": "Hava Nobetcisi", "icon": "fa fa-cloud", "data": {}, "type": "section",
+    # Excel'deki dort sayfa = dort menu sayfasi. Etiket = form adi (Ders 9.7).
+    "children": [{"id": "hv_" + fid, "text": ad, "icon": ikon, "type": "form", "data": {"form_id": fid}, "children": []}
+                 for fid, ad, ikon in [("hv_form_ozet", "Ozet", "fa fa-dashboard"),
+                                       ("hv_form_okuma", "Okumalar", "fa fa-thermometer-half"),
+                                       ("hv_form_uyari", "Uyarilar", "fa fa-exclamation-triangle"),
+                                       ("hv_form_hata", "Hatalar", "fa fa-bug")]],
 }]
 
 # ------------------------------------------------ test girisi (tasarimcida formsuz deneme)
@@ -147,24 +163,33 @@ akis = [
     fn("mk_rapor", "rapor tablosu", js("06-rapor-tablosu.js"), 560, 320, [["mk_xls"]]),
     {"id": "mk_xls", "type": "json-to-excel", "z": TAB, "name": "excel uret", "kind": "auto",
      "bufferProp": "payload", "payloadProp": "payload", "x": 760, "y": 320, "wires": [["mk_kaydet"]]},
-    fn("mk_kaydet", "rapora kaydet", js("07-rapora-kaydet.js"), 960, 320, [["mk_view"], ["mk_bitti"]], outputs=2),
-    view_action("mk_view", "sonucu goster + indir", 1180, 300, "success", True,
-                "Kontrol tamamlandi: <%= dosya %> -- <%= toplam %> satirin <%= hatali %> tanesi hatali "
-                "(<%= hata %> hata). Rapor indiriliyor; sonra da Raporlar sayfasindan indirebilirsiniz."),
+    fn("mk_kaydet", "rapora kaydet", js("07-rapora-kaydet.js"), 960, 320, [["mk_bag"], ["mk_bitti"]], outputs=2),
+    fn("mk_bag", "indirme baglantisi", (ORTAK / "indirme-bagi-olustur.js").read_text(encoding="utf-8"), 1160, 300, [["mk_view"]]),
+    view_action("mk_view", "sonucu goster + baglanti", 1360, 300, "success", False,
+                "Kontrol tamamlandi: <%= toplam %> satirin <%= hatali %> tanesi hatali (<%= hata %> hata). " + LINK),
     debug("mk_bitti", "RAPOR HAZIR", 1180, 360, alan="payload", status=True),
 
     # --- Raporlar sayfasi
     form2,
     fn("mk_liste", "rapor listesi", js("08-rapor-listesi.js"), 380, 640, [["mk_view_liste"]]),
     view_action("mk_view_liste", "listeyi goster", 600, 640, "info", False, None),
-    fn("mk_indir", "rapor indir", js("09-rapor-indir.js"), 380, 580, [["mk_view_indir"]]),
-    view_action("mk_view_indir", "raporu indir", 600, 580, "info", True, "<%= mesaj %>"),
+    fn("mk_indir", "rapor indir", js("09-rapor-indir.js"), 380, 580, [["mk_bag2"], ["mk_view_yok"]], outputs=2),
+    fn("mk_bag2", "indirme baglantisi", (ORTAK / "indirme-bagi-olustur.js").read_text(encoding="utf-8"), 600, 560, [["mk_view_indir"]]),
+    view_action("mk_view_indir", "baglantiyi goster", 820, 560, "success", False, "<%= mesaj %> " + LINK),
+    view_action("mk_view_yok", "rapor yok", 600, 620, "warning", False, "<%= mesaj %>"),
+
+    # --- indirme ucu: GET /indir/:token (dogru Content-Type + dosya adi)
+    {"id": "mk_http_in", "type": "http in", "z": TAB, "name": "GET /indir/:token", "url": "/indir/:token",
+     "method": "get", "upload": False, "swaggerDoc": "", "x": 170, "y": 700, "wires": [["mk_sun"]]},
+    fn("mk_sun", "dosyayi sun", (ORTAK / "indirme-sun.js").read_text(encoding="utf-8"), 380, 700, [["mk_http_out"]]),
+    {"id": "mk_http_out", "type": "http response", "z": TAB, "name": "", "statusCode": "", "headers": {},
+     "x": 560, "y": 700, "wires": []},
 
     # Kapsam bilerek SINIRLI: ajan dugumu kendi hata cikisiyla yonetiliyor; o da
     # catch'e dusseydi forma iki kez yanit gidebilirdi.
     {"id": "mk_catch", "type": "catch", "z": TAB, "name": "kontrol hatalari",
      "scope": ["mk_buffer", "mk_oku", "mk_kural", "mk_ai_hz", "mk_ai_cvp", "mk_rapor",
-               "mk_xls", "mk_kaydet"],
+               "mk_xls", "mk_kaydet", "mk_bag"],
      "uncaught": False, "x": 160, "y": 460, "wires": [["mk_hata_dbg", "mk_hata_yanit"]]},
     debug("mk_hata_dbg", "KONTROL HATASI", 380, 460, alan="error", status=True),
     fn("mk_hata_yanit", "hata yaniti", js("10-hata-yaniti.js"), 380, 510, [["mk_view_hata"]]),

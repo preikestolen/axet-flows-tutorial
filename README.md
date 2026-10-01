@@ -53,6 +53,7 @@ Her dersin tasarımcıda karşılık gelen bir akış sekmesi vardır:
 | 9 | [Form Arayüzü](09-form-arayuzu.md) | ~45 dk | `Ders 9 - Formlu Zincir` | Web uygulaması, dosya eki, ajan aktivasyonu, kalıcı dosya, özel CSS |
 | 10 | [Sonucu Teslim Etmek](10-sonucu-teslim.md) | ~40 dk | `Ders 10 - Teslim` | Excel üretimi, koşu geçmişi, sır yönetimi, e-posta, cron |
 | 11 | [Müşteri Ana Verisi Kontrolcüsü](11-musteri-ana-veri-kontrolu.md) | ~60 dk | `Gun 2 - Musteri Ana Veri Kontrolu` | Kural motoru + AI yorumu, Okta, view action, indirme, yerel test |
+| 12 | [Hava Nöbetçisi](12-hava-nobetcisi.md) | ~45 dk | `Gun 1 - Hava Nobetcisi` | Saatlik zamanlayıcı, kalıcı JSONL + Excel, yeniden deneme, tablo sayfaları, .xlsx indirme |
 | — | [Sorun Giderme](SORUN-GIDERME.md) | başvuru | — | Hata → çözüm tablosu |
 
 Dersler birbirinin üstüne kurulur; sırayla ilerleyin. İlk yedisi bittiğinde şunu
@@ -119,6 +120,7 @@ axet-flows-egitim/
 ├── 09-form-arayuzu.md                 web arayüzü, dosya eki, özel CSS
 ├── 10-sonucu-teslim.md                Excel, koşu geçmişi, e-posta
 ├── 11-musteri-ana-veri-kontrolu.md    Gün 2: Excel kontrolcüsü, Okta, view action
+├── 12-hava-nobetcisi.md               Gün 1: zamanlanmış okuma, kalıcılık, tablo sayfaları
 ├── SORUN-GIDERME.md                   hata → çözüm tablosu
 ├── CLAUDE.md / AGENTS.md              AI asistanları için kurallar (önce MEMORY + SKILL oku)
 ├── MEMORY.md                          karşılaşılan hatalar ve çözümleri (kısa liste)
@@ -154,7 +156,9 @@ axet-flows-egitim/
     ├── demo-cikti-kalici/               kalıcı yol denemesinin çıktısı
     ├── production-portu-ac.ps1          her Run Flow'dan sonra: Production'ı localhost'a açar
     ├── demo-cikti-rapor/                Ders 10: üretilen Excel + koşu geçmişi
-    └── musteri-kontrol/                 Ders 11: 10 function, akış üretici, yerel test
+    ├── musteri-kontrol/                 Ders 11: 10 function, akış üretici, yerel test
+    ├── hava-nobetcisi/                  Ders 12: 9 function, akış üretici, yerel test
+    └── ortak/                           indirme bağlantısı (.xlsx), uygulama Custom CSS'i
 ```
 
 > **Not:** Ekran görüntülerindeki kişisel bilgiler (kullanıcı adı, dosya

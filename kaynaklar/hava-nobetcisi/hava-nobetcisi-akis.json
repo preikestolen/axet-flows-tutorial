@@ -1,0 +1,1205 @@
+[
+ {
+  "id": "hv_tab0000000001",
+  "type": "tab",
+  "label": "Gun 1 - Hava Nobetcisi",
+  "disabled": false,
+  "info": "Saatte bir Istanbul sicaklik + ruzgar (Open-Meteo) -> JSONL gecmis -> Excel.\nKalici: /internal-storage-files/hava/okumalar.jsonl ve /internal-storage-files/hava/hava-nobetcisi.xlsx\nServis hatasi: 3 deneme, sonra Hatalar sayfasina kayit."
+ },
+ {
+  "id": "hv_zaman",
+  "type": "inject",
+  "z": "hv_tab0000000001",
+  "name": "her saat",
+  "props": [
+   {
+    "p": "kaynak",
+    "v": "zamanlayici",
+    "vt": "str"
+   }
+  ],
+  "repeat": "3600",
+  "crontab": "",
+  "once": true,
+  "onceDelay": 15,
+  "topic": "",
+  "x": 150,
+  "y": 80,
+  "wires": [
+   [
+    "hv_istek"
+   ]
+  ]
+ },
+ {
+  "id": "hv_elle",
+  "type": "inject",
+  "z": "hv_tab0000000001",
+  "name": "elle oku (test)",
+  "props": [
+   {
+    "p": "kaynak",
+    "v": "elle",
+    "vt": "str"
+   }
+  ],
+  "repeat": "",
+  "crontab": "",
+  "once": false,
+  "onceDelay": 0.1,
+  "topic": "",
+  "x": 150,
+  "y": 130,
+  "wires": [
+   [
+    "hv_istek"
+   ]
+  ]
+ },
+ {
+  "id": "hv_istek",
+  "type": "function",
+  "z": "hv_tab0000000001",
+  "name": "istek hazirla",
+  "func": "// Open-Meteo'dan Istanbul'un anlik sicaklik ve ruzgar hizini isteyecek\n// msg'yi hazirlar. Anahtar gerektirmeyen, herkese acik bir servis.\n//\n// Zamanlayici (saatte bir) ve elle tetikleme buraya gelir; yeniden deneme\n// dongusu de (delay) buraya geri baglanir -- o yuzden deneme sayacini\n// SIFIRLAMIYORUZ, sadece yoksa baslatiyoruz.\n\nmsg.kaynak = msg.kaynak || \"zamanlayici\";\nmsg.deneme = msg.deneme || 0;\nmsg.tetiklenme = msg.tetiklenme || new Date().toISOString();\n\nmsg.method = \"GET\";\nmsg.url = \"https://api.open-meteo.com/v1/forecast\" +\n  \"?latitude=41.0082&longitude=28.9784\" +\n  \"&current=temperature_2m,wind_speed_10m\" +\n  \"&timezone=Europe%2FIstanbul\";\nmsg.requestTimeout = 20000;      // 20 sn icinde cevap yoksa hata -> catch\ndelete msg.headers;              // onceki bir HTTP yanitinin basliklari istege gitmesin\ndelete msg.payload;\n\nnode.status({ fill: \"blue\", shape: \"dot\", text: msg.kaynak + (msg.deneme ? \" / deneme \" + (msg.deneme + 1) : \"\") });\nreturn msg;\n",
+  "outputs": 1,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 360,
+  "y": 100,
+  "wires": [
+   [
+    "hv_http"
+   ]
+  ]
+ },
+ {
+  "id": "hv_http",
+  "type": "http request",
+  "z": "hv_tab0000000001",
+  "name": "Open-Meteo",
+  "method": "use",
+  "ret": "obj",
+  "paytoqs": "ignore",
+  "url": "",
+  "tls": "",
+  "persist": false,
+  "proxy": "",
+  "insecureHTTPParser": false,
+  "authType": "",
+  "senderr": false,
+  "headers": [],
+  "x": 550,
+  "y": 100,
+  "wires": [
+   [
+    "hv_kontrol"
+   ]
+  ]
+ },
+ {
+  "id": "hv_kontrol",
+  "type": "function",
+  "z": "hv_tab0000000001",
+  "name": "yanit kontrol",
+  "func": "// HTTP yanitini dogrular ve tek bir \"okuma\" kaydina cevirir.\n//\n// http request dugumu 4xx/5xx'te hata FIRLATMAZ, sadece statusCode koyar.\n// Bu yuzden kontrolu biz yapiyoruz ve sorun varsa node.error(..., msg) ile\n// catch'e gonderiyoruz -- akis sessizce olmesin (Ders 7).\n\nconst p = msg.payload;\nconst kod = msg.statusCode;\n\nif (kod !== 200) {\n  node.error(\"Hava servisi HTTP \" + kod + \" dondu\", msg);\n  return null;\n}\nif (!p || typeof p !== \"object\" || !p.current) {\n  node.error(\"Hava servisi beklenmeyen yanit verdi (JSON degil ya da 'current' yok)\", msg);\n  return null;\n}\n\nconst sicaklik = Number(p.current.temperature_2m);\nconst ruzgar = Number(p.current.wind_speed_10m);\nif (!isFinite(sicaklik) || !isFinite(ruzgar)) {\n  node.error(\"Hava servisi yanitinda sicaklik/ruzgar sayi degil\", msg);\n  return null;\n}\n\nmsg.yeniKayit = {\n  tip: \"okuma\",\n  zaman: new Date().toISOString(),          // okumayi yaptigimiz an (UTC)\n  olcumZamani: p.current.time,              // servisin olcum zamani (Istanbul saati)\n  sicaklik: sicaklik,\n  ruzgar: ruzgar,\n  kaynak: msg.kaynak,\n  deneme: (msg.deneme || 0) + 1\n};\n\nnode.status({ fill: \"green\", shape: \"dot\", text: sicaklik + \" C / \" + ruzgar + \" km/s\" });\nreturn msg;\n",
+  "outputs": 1,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 740,
+  "y": 100,
+  "wires": [
+   [
+    "hv_gecmis"
+   ]
+  ]
+ },
+ {
+  "id": "hv_catch",
+  "type": "catch",
+  "z": "hv_tab0000000001",
+  "name": "servis hatalari",
+  "scope": [
+   "hv_istek",
+   "hv_http",
+   "hv_kontrol"
+  ],
+  "uncaught": false,
+  "x": 150,
+  "y": 220,
+  "wires": [
+   [
+    "hv_sinif"
+   ]
+  ]
+ },
+ {
+  "id": "hv_sinif",
+  "type": "function",
+  "z": "hv_tab0000000001",
+  "name": "hata siniflandir",
+  "func": "// catch -> burasi. Servis cevap vermedi ya da bozuk cevap verdi.\n//\n// Cikis 1: yeniden dene (delay -> istek hazirla)\n// Cikis 2: vazgec -> hatayi da kayda yaz (Excel'in \"Hatalar\" sayfasi)\n//\n// Sayac msg uzerinde (Ders 7.6): ayni anda gelen iki tetikleme birbirinin\n// hakkini yemesin.\n\nconst ENUST_DENEME = 3;\nconst metin = (msg.error && msg.error.message) || String(msg.error || \"bilinmeyen hata\");\nconst gecici = /timeout|timed out|ETIMEDOUT|ECONNRESET|ECONNREFUSED|ENOTFOUND|EAI_AGAIN|socket hang up|HTTP 5\\d\\d|HTTP 429/i.test(metin);\n\nmsg.deneme = (msg.deneme || 0) + 1;\n\nif (gecici && msg.deneme < ENUST_DENEME) {\n  node.status({ fill: \"yellow\", shape: \"ring\", text: \"deneme \" + msg.deneme + \"/\" + ENUST_DENEME + \": \" + metin.slice(0, 30) });\n  node.warn(\"Hava servisi hatasi, yeniden denenecek (\" + msg.deneme + \"/\" + ENUST_DENEME + \"): \" + metin);\n  delete msg.error;\n  return [msg, null];\n}\n\nmsg.yeniKayit = {\n  tip: \"hata\",\n  zaman: new Date().toISOString(),\n  mesaj: metin.slice(0, 300),\n  gecici: gecici,\n  deneme: msg.deneme,\n  kaynak: msg.kaynak || \"?\"\n};\ndelete msg.error;\n\nnode.status({ fill: \"red\", shape: \"dot\", text: \"vazgecildi: \" + metin.slice(0, 40) });\nreturn [null, msg];\n",
+  "outputs": 2,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 360,
+  "y": 220,
+  "wires": [
+   [
+    "hv_bekle"
+   ],
+   [
+    "hv_gecmis"
+   ]
+  ]
+ },
+ {
+  "id": "hv_bekle",
+  "type": "delay",
+  "z": "hv_tab0000000001",
+  "name": "60 sn bekle",
+  "pauseType": "delay",
+  "timeout": "60",
+  "timeoutUnits": "seconds",
+  "rate": "1",
+  "nbRateUnits": "1",
+  "rateUnits": "second",
+  "randomFirst": "1",
+  "randomLast": "5",
+  "randomUnits": "seconds",
+  "drop": false,
+  "allowrate": false,
+  "outputs": 1,
+  "x": 560,
+  "y": 200,
+  "wires": [
+   [
+    "hv_istek"
+   ]
+  ]
+ },
+ {
+  "id": "hv_gecmis",
+  "type": "file in",
+  "z": "hv_tab0000000001",
+  "name": "gecmisi oku",
+  "filename": "/internal-storage-files/hava/okumalar.jsonl",
+  "filenameType": "str",
+  "format": "utf8",
+  "chunk": false,
+  "sendError": false,
+  "encoding": "utf8",
+  "allProps": true,
+  "x": 940,
+  "y": 140,
+  "wires": [
+   [
+    "hv_isle"
+   ]
+  ]
+ },
+ {
+  "id": "hv_catch_gecmis",
+  "type": "catch",
+  "z": "hv_tab0000000001",
+  "name": "gecmis yok (ilk calisma)",
+  "scope": [
+   "hv_gecmis"
+  ],
+  "uncaught": false,
+  "x": 940,
+  "y": 220,
+  "wires": [
+   [
+    "hv_gecmis_yok"
+   ]
+  ]
+ },
+ {
+  "id": "hv_gecmis_yok",
+  "type": "function",
+  "z": "hv_tab0000000001",
+  "name": "bos gecmis",
+  "func": "// \"gecmisi oku\" (file in) hata verdiyse buraya gelir. Ilk calismada dosya\n// henuz yoktur -- bu bir hata degil, bos gecmistir.\n\nconst metin = (msg.error && msg.error.message) || \"\";\nif (!/ENOENT|no such file/i.test(metin)) {\n  node.warn(\"Gecmis dosyasi okunamadi, bos kabul ediliyor: \" + metin);\n}\ndelete msg.error;\nmsg.payload = \"\";\nreturn msg;\n",
+  "outputs": 1,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 1140,
+  "y": 220,
+  "wires": [
+   [
+    "hv_isle"
+   ]
+  ]
+ },
+ {
+  "id": "hv_isle",
+  "type": "function",
+  "z": "hv_tab0000000001",
+  "name": "kaydi isle",
+  "func": "// Gecmisi (JSONL, her satir bir kayit) okur, yeni kaydi ekler.\n// Okumaysa bir ONCEKI okumaya gore farki hesaplar; |fark| > 3 C ise uyari.\n//\n// Neden JSONL + Excel'i her seferinde bastan uretmek: Excel'e \"satir eklemek\"\n// icin dosyayi okuyup cozmek gerekir; JSONL'e eklemek tek satirdir ve bozulmaz.\n// Gercek kayit JSONL'dir, Excel onun goruntusudur.\n//\n// Cikis 1 -> JSONL'e eklenecek satir (file, append)\n// Cikis 2 -> tum kayitlar (Excel uretimi)\n\nconst ESIK = 3;   // derece\n\nconst kayitlar = [];\nfor (const satir of String(msg.payload || \"\").split(/\\r?\\n/)) {\n  if (!satir.trim()) continue;\n  try { kayitlar.push(JSON.parse(satir)); }\n  catch (e) { node.warn(\"Bozuk gecmis satiri atlandi: \" + satir.slice(0, 80)); }\n}\n\nconst k = msg.yeniKayit;\nif (!k) { node.error(\"yeniKayit yok\", msg); return null; }\n\nif (k.tip === \"okuma\") {\n  const onceki = kayitlar.filter(x => x.tip === \"okuma\").pop();\n  if (onceki) {\n    k.onceki = onceki.sicaklik;\n    k.fark = Math.round((k.sicaklik - onceki.sicaklik) * 10) / 10;\n    k.uyari = Math.abs(k.fark) > ESIK;\n  } else {\n    k.onceki = null;\n    k.fark = null;\n    k.uyari = false;\n  }\n}\nkayitlar.push(k);\n\nconst satirMsg = { filename: \"/internal-storage-files/hava/okumalar.jsonl\", payload: JSON.stringify(k) };\n\nmsg.kayitlar = kayitlar;\nmsg.payload = null;\n\nconst okumaSayisi = kayitlar.filter(x => x.tip === \"okuma\").length;\nnode.status(k.tip === \"okuma\"\n  ? { fill: k.uyari ? \"yellow\" : \"green\", shape: \"dot\", text: \"#\" + okumaSayisi + \" \" + k.sicaklik + \" C\" + (k.fark !== null ? \" (\" + (k.fark > 0 ? \"+\" : \"\") + k.fark + \")\" : \"\") + (k.uyari ? \" UYARI\" : \"\") }\n  : { fill: \"red\", shape: \"ring\", text: \"hata kaydedildi\" });\n\nreturn [satirMsg, msg];\n",
+  "outputs": 2,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 1140,
+  "y": 140,
+  "wires": [
+   [
+    "hv_jsonl"
+   ],
+   [
+    "hv_tablo"
+   ]
+  ]
+ },
+ {
+  "id": "hv_jsonl",
+  "type": "file",
+  "z": "hv_tab0000000001",
+  "name": "okumalar.jsonl (ekle)",
+  "filename": "filename",
+  "filenameType": "msg",
+  "appendNewline": true,
+  "createDir": true,
+  "overwriteFile": "false",
+  "encoding": "utf8",
+  "x": 1360,
+  "y": 100,
+  "wires": [
+   []
+  ]
+ },
+ {
+  "id": "hv_tablo",
+  "type": "function",
+  "z": "hv_tab0000000001",
+  "name": "excel tablosu",
+  "func": "// Tum kayitlardan dort sayfali Excel kurar (json-to-excel, Ders 10.1):\n//   Okumalar  -- her okuma bir satir (en yeni en altta)\n//   Uyarilar  -- onceki okumaya gore 3 C'den fazla degisim\n//   Hatalar   -- servis cevap vermediginde\n//   Ozet      -- kabul kriteri icin: otomatik satir sayisi vb.\n\nconst KIRMIZI = { fontColor: \"9C0006\", fill: \"FFC7CE\" };\nconst MAVI    = { fontColor: \"1F4E79\", fill: \"DDEBF7\" };\nconst BASLIK  = { bold: true };\n\nfunction yerel(iso) {     // UTC ISO -> Istanbul saati, \"01.10.2026 16:30\"\n  if (!iso) return \"\";\n  try {\n    return new Date(iso).toLocaleString(\"tr-TR\", { timeZone: \"Europe/Istanbul\", day: \"2-digit\", month: \"2-digit\", year: \"numeric\", hour: \"2-digit\", minute: \"2-digit\" });\n  } catch (e) { return iso; }\n}\n\nconst kayitlar = msg.kayitlar || [];\nconst okumalar = kayitlar.filter(k => k.tip === \"okuma\");\nconst hatalar = kayitlar.filter(k => k.tip === \"hata\");\n\nconst okumaSayfasi = okumalar.map((k, i) => ({\n  \"No\": i + 1,\n  \"Okuma zamani\": yerel(k.zaman),\n  \"Olcum zamani (servis)\": k.olcumZamani || \"\",\n  \"Sicaklik (C)\": k.sicaklik,\n  \"Ruzgar (km/s)\": k.ruzgar,\n  \"Fark (C)\": k.fark === null || k.fark === undefined ? \"\" : (k.uyari ? { value: k.fark, style: KIRMIZI } : k.fark),\n  \"Kaynak\": k.kaynak === \"zamanlayici\" ? \"otomatik\" : (k.kaynak || \"\")\n}));\n\nconst uyariSayfasi = okumalar.filter(k => k.uyari).map(k => ({\n  \"Okuma zamani\": yerel(k.zaman),\n  \"Onceki (C)\": k.onceki,\n  \"Simdiki (C)\": k.sicaklik,\n  \"Fark (C)\": { value: k.fark, style: KIRMIZI },\n  \"Yon\": k.fark > 0 ? \"YUKSELIS\" : \"DUSUS\",\n  \"Kaynak\": k.kaynak === \"zamanlayici\" ? \"otomatik\" : (k.kaynak || \"\")\n}));\nif (uyariSayfasi.length === 0) uyariSayfasi.push({ \"Okuma zamani\": \"Henuz 3 C'den buyuk degisim yok\", \"Onceki (C)\": \"\", \"Simdiki (C)\": \"\", \"Fark (C)\": \"\", \"Yon\": \"\", \"Kaynak\": \"\" });\n\nconst hataSayfasi = hatalar.map(k => ({\n  \"Zaman\": yerel(k.zaman),\n  \"Hata\": k.mesaj,\n  \"Deneme\": k.deneme,\n  \"Gecici mi\": k.gecici ? \"evet\" : \"hayir\",\n  \"Kaynak\": k.kaynak === \"zamanlayici\" ? \"otomatik\" : (k.kaynak || \"\")\n}));\nif (hataSayfasi.length === 0) hataSayfasi.push({ \"Zaman\": \"Hata yok\", \"Hata\": \"\", \"Deneme\": \"\", \"Gecici mi\": \"\", \"Kaynak\": \"\" });\n\nconst otomatik = okumalar.filter(k => k.kaynak === \"zamanlayici\").length;\nconst son = okumalar[okumalar.length - 1];\nconst ozet = [\n  { \"Bilgi\": { value: \"Otomatik okuma sayisi\", style: BASLIK }, \"Deger\": otomatik >= 3 ? { value: otomatik, style: MAVI } : otomatik },\n  { \"Bilgi\": { value: \"Toplam okuma\", style: BASLIK }, \"Deger\": okumalar.length },\n  { \"Bilgi\": { value: \"Uyari\", style: BASLIK }, \"Deger\": okumalar.filter(k => k.uyari).length },\n  { \"Bilgi\": { value: \"Servis hatasi\", style: BASLIK }, \"Deger\": hatalar.length },\n  { \"Bilgi\": { value: \"Son okuma\", style: BASLIK }, \"Deger\": son ? yerel(son.zaman) + \" -- \" + son.sicaklik + \" C, \" + son.ruzgar + \" km/s\" : \"-\" },\n  { \"Bilgi\": { value: \"Zamanlayici\", style: BASLIK }, \"Deger\": \"saatte bir (3600 sn)\" },\n  { \"Bilgi\": { value: \"Uyari esigi\", style: BASLIK }, \"Deger\": \"onceki okumaya gore 3 C'den fazla\" }\n];\n\nmsg.payload = { data: { \"Okumalar\": okumaSayfasi, \"Uyarilar\": uyariSayfasi, \"Hatalar\": hataSayfasi, \"Ozet\": ozet } };\nmsg.filename = \"/internal-storage-files/hava/hava-nobetcisi.xlsx\";\n\nnode.status({ fill: \"blue\", shape: \"dot\", text: okumalar.length + \" okuma, \" + otomatik + \" otomatik\" });\nreturn msg;\n",
+  "outputs": 1,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 360,
+  "y": 340,
+  "wires": [
+   [
+    "hv_xls"
+   ]
+  ]
+ },
+ {
+  "id": "hv_xls",
+  "type": "json-to-excel",
+  "z": "hv_tab0000000001",
+  "name": "excel uret",
+  "kind": "auto",
+  "bufferProp": "payload",
+  "payloadProp": "payload",
+  "x": 560,
+  "y": 340,
+  "wires": [
+   [
+    "hv_xls_w"
+   ]
+  ]
+ },
+ {
+  "id": "hv_xls_w",
+  "type": "file",
+  "z": "hv_tab0000000001",
+  "name": "hava-nobetcisi.xlsx",
+  "filename": "filename",
+  "filenameType": "msg",
+  "appendNewline": false,
+  "createDir": true,
+  "overwriteFile": "true",
+  "encoding": "none",
+  "x": 760,
+  "y": 340,
+  "wires": [
+   [
+    "hv_bitti"
+   ]
+  ]
+ },
+ {
+  "id": "hv_bitti",
+  "type": "debug",
+  "z": "hv_tab0000000001",
+  "name": "EXCEL GUNCELLENDI",
+  "active": true,
+  "tosidebar": true,
+  "console": false,
+  "tostatus": true,
+  "complete": "filename",
+  "targetType": "msg",
+  "statusVal": "",
+  "statusType": "auto",
+  "x": 960,
+  "y": 340,
+  "wires": []
+ },
+ {
+  "id": "hv_catch_kayit",
+  "type": "catch",
+  "z": "hv_tab0000000001",
+  "name": "kayit/excel hatalari",
+  "scope": [
+   "hv_gecmis_yok",
+   "hv_isle",
+   "hv_jsonl",
+   "hv_tablo",
+   "hv_xls",
+   "hv_xls_w"
+  ],
+  "uncaught": false,
+  "x": 150,
+  "y": 400,
+  "wires": [
+   [
+    "hv_kayit_hata"
+   ]
+  ]
+ },
+ {
+  "id": "hv_kayit_hata",
+  "type": "debug",
+  "z": "hv_tab0000000001",
+  "name": "KAYIT HATASI",
+  "active": true,
+  "tosidebar": true,
+  "console": false,
+  "tostatus": true,
+  "complete": "error",
+  "targetType": "msg",
+  "statusVal": "",
+  "statusType": "auto",
+  "x": 360,
+  "y": 400,
+  "wires": []
+ },
+ {
+  "id": "hv_form_ozet",
+  "type": "axetflows-form",
+  "z": "hv_tab0000000001",
+  "name": "Ozet",
+  "onDocumentReadyButtonAction": "",
+  "formStructure": {
+   "components": [
+    {
+     "type": "datagrid",
+     "key": "tablo",
+     "label": "",
+     "hideLabel": true,
+     "id": "hvtablo1",
+     "input": true,
+     "disabled": true,
+     "disableAddingRemovingRows": true,
+     "reorder": false,
+     "initEmpty": true,
+     "tableView": false,
+     "persistent": false,
+     "description": "Istanbul -- Open-Meteo. Zamanlayici saatte bir okur; veri kalici klasorde.",
+     "conditional": {
+      "show": null,
+      "when": null,
+      "eq": ""
+     },
+     "components": [
+      {
+       "type": "textfield",
+       "key": "bilgi",
+       "label": "Bilgi",
+       "id": "hvbilgi",
+       "input": true,
+       "disabled": true,
+       "tableView": true
+      },
+      {
+       "type": "textfield",
+       "key": "deger",
+       "label": "Deger",
+       "id": "hvdeger",
+       "input": true,
+       "disabled": true,
+       "tableView": true
+      }
+     ]
+    },
+    {
+     "type": "button",
+     "label": "Excel'i indir",
+     "key": "indir",
+     "size": "md",
+     "block": false,
+     "action": "submit",
+     "disableOnInvalid": true,
+     "theme": "primary",
+     "input": true,
+     "placeholder": "",
+     "prefix": "",
+     "customClass": "",
+     "suffix": "",
+     "multiple": false,
+     "defaultValue": null,
+     "protected": false,
+     "unique": false,
+     "persistent": false,
+     "hidden": false,
+     "clearOnHide": true,
+     "refreshOn": "",
+     "redrawOn": "",
+     "tableView": false,
+     "modalEdit": false,
+     "labelPosition": "top",
+     "description": "",
+     "errorLabel": "",
+     "tooltip": "",
+     "hideLabel": false,
+     "tabindex": "",
+     "disabled": false,
+     "autofocus": false,
+     "dbIndex": false,
+     "customDefaultValue": "",
+     "calculateValue": "",
+     "widget": {
+      "type": "input"
+     },
+     "attributes": {},
+     "validateOn": "change",
+     "validate": {
+      "required": false,
+      "custom": "",
+      "customPrivate": false,
+      "strictDateValidation": false,
+      "unique": false,
+      "multiple": false
+     },
+     "conditional": {
+      "show": null,
+      "when": null,
+      "eq": ""
+     },
+     "overlay": {
+      "style": "",
+      "left": "",
+      "top": "",
+      "width": "",
+      "height": ""
+     },
+     "allowCalculateOverride": false,
+     "encrypted": false,
+     "showCharCount": false,
+     "showWordCount": false,
+     "properties": {},
+     "allowMultipleMasks": false,
+     "leftIcon": "fa fa-download",
+     "rightIcon": "",
+     "dataGridLabel": true,
+     "id": "hvindir1"
+    }
+   ]
+  },
+  "associatedEntityMetamodel": null,
+  "associatedEntityFormType": null,
+  "associatedContractModelMetamodel": null,
+  "associatedPersistantFormId": null,
+  "associatedLocalStorageDatabaseId": null,
+  "buttons": [
+   {
+    "type": "button",
+    "label": "Excel'i indir",
+    "key": "indir",
+    "size": "md",
+    "block": false,
+    "action": "submit",
+    "disableOnInvalid": true,
+    "theme": "primary",
+    "input": true,
+    "placeholder": "",
+    "prefix": "",
+    "customClass": "",
+    "suffix": "",
+    "multiple": false,
+    "defaultValue": null,
+    "protected": false,
+    "unique": false,
+    "persistent": false,
+    "hidden": false,
+    "clearOnHide": true,
+    "refreshOn": "",
+    "redrawOn": "",
+    "tableView": false,
+    "modalEdit": false,
+    "labelPosition": "top",
+    "description": "",
+    "errorLabel": "",
+    "tooltip": "",
+    "hideLabel": false,
+    "tabindex": "",
+    "disabled": false,
+    "autofocus": false,
+    "dbIndex": false,
+    "customDefaultValue": "",
+    "calculateValue": "",
+    "widget": {
+     "type": "input"
+    },
+    "attributes": {},
+    "validateOn": "change",
+    "validate": {
+     "required": false,
+     "custom": "",
+     "customPrivate": false,
+     "strictDateValidation": false,
+     "unique": false,
+     "multiple": false
+    },
+    "conditional": {
+     "show": null,
+     "when": null,
+     "eq": ""
+    },
+    "overlay": {
+     "style": "",
+     "left": "",
+     "top": "",
+     "width": "",
+     "height": ""
+    },
+    "allowCalculateOverride": false,
+    "encrypted": false,
+    "showCharCount": false,
+    "showWordCount": false,
+    "properties": {},
+    "allowMultipleMasks": false,
+    "leftIcon": "fa fa-download",
+    "rightIcon": "",
+    "dataGridLabel": true,
+    "id": "hvindir1"
+   }
+  ],
+  "outputs": 2,
+  "x": 150,
+  "y": 500,
+  "wires": [
+   [
+    "hv_xls_oku"
+   ],
+   [
+    "hv_isaret_ozet"
+   ]
+  ]
+ },
+ {
+  "id": "hv_form_okuma",
+  "type": "axetflows-form",
+  "z": "hv_tab0000000001",
+  "name": "Okumalar",
+  "onDocumentReadyButtonAction": "",
+  "formStructure": {
+   "components": [
+    {
+     "type": "datagrid",
+     "key": "tablo",
+     "label": "",
+     "hideLabel": true,
+     "id": "hvtablo1",
+     "input": true,
+     "disabled": true,
+     "disableAddingRemovingRows": true,
+     "reorder": false,
+     "initEmpty": true,
+     "tableView": false,
+     "persistent": false,
+     "description": "Her okuma bir satir, en yeni ustte. Fark: bir onceki okumaya gore.",
+     "conditional": {
+      "show": null,
+      "when": null,
+      "eq": ""
+     },
+     "components": [
+      {
+       "type": "textfield",
+       "key": "no",
+       "label": "No",
+       "id": "hvno",
+       "input": true,
+       "disabled": true,
+       "tableView": true
+      },
+      {
+       "type": "textfield",
+       "key": "zaman",
+       "label": "Okuma zamani",
+       "id": "hvzaman",
+       "input": true,
+       "disabled": true,
+       "tableView": true
+      },
+      {
+       "type": "textfield",
+       "key": "sicaklik",
+       "label": "Sicaklik",
+       "id": "hvsicaklik",
+       "input": true,
+       "disabled": true,
+       "tableView": true
+      },
+      {
+       "type": "textfield",
+       "key": "ruzgar",
+       "label": "Ruzgar",
+       "id": "hvruzgar",
+       "input": true,
+       "disabled": true,
+       "tableView": true
+      },
+      {
+       "type": "textfield",
+       "key": "fark",
+       "label": "Fark",
+       "id": "hvfark",
+       "input": true,
+       "disabled": true,
+       "tableView": true
+      },
+      {
+       "type": "textfield",
+       "key": "kaynak",
+       "label": "Kaynak",
+       "id": "hvkaynak",
+       "input": true,
+       "disabled": true,
+       "tableView": true
+      }
+     ]
+    }
+   ]
+  },
+  "associatedEntityMetamodel": null,
+  "associatedEntityFormType": null,
+  "associatedContractModelMetamodel": null,
+  "associatedPersistantFormId": null,
+  "associatedLocalStorageDatabaseId": null,
+  "buttons": [],
+  "outputs": 1,
+  "x": 150,
+  "y": 560,
+  "wires": [
+   [
+    "hv_isaret_okumalar"
+   ]
+  ]
+ },
+ {
+  "id": "hv_form_uyari",
+  "type": "axetflows-form",
+  "z": "hv_tab0000000001",
+  "name": "Uyarilar",
+  "onDocumentReadyButtonAction": "",
+  "formStructure": {
+   "components": [
+    {
+     "type": "datagrid",
+     "key": "tablo",
+     "label": "",
+     "hideLabel": true,
+     "id": "hvtablo1",
+     "input": true,
+     "disabled": true,
+     "disableAddingRemovingRows": true,
+     "reorder": false,
+     "initEmpty": true,
+     "tableView": false,
+     "persistent": false,
+     "description": "Bir onceki okumaya gore 3 C'den fazla yukselis ya da dusus.",
+     "conditional": {
+      "show": null,
+      "when": null,
+      "eq": ""
+     },
+     "components": [
+      {
+       "type": "textfield",
+       "key": "zaman",
+       "label": "Okuma zamani",
+       "id": "hvzaman",
+       "input": true,
+       "disabled": true,
+       "tableView": true
+      },
+      {
+       "type": "textfield",
+       "key": "yon",
+       "label": "Yon",
+       "id": "hvyon",
+       "input": true,
+       "disabled": true,
+       "tableView": true
+      },
+      {
+       "type": "textfield",
+       "key": "onceki",
+       "label": "Onceki",
+       "id": "hvonceki",
+       "input": true,
+       "disabled": true,
+       "tableView": true
+      },
+      {
+       "type": "textfield",
+       "key": "simdiki",
+       "label": "Simdiki",
+       "id": "hvsimdiki",
+       "input": true,
+       "disabled": true,
+       "tableView": true
+      },
+      {
+       "type": "textfield",
+       "key": "fark",
+       "label": "Fark",
+       "id": "hvfark",
+       "input": true,
+       "disabled": true,
+       "tableView": true
+      },
+      {
+       "type": "textfield",
+       "key": "kaynak",
+       "label": "Kaynak",
+       "id": "hvkaynak",
+       "input": true,
+       "disabled": true,
+       "tableView": true
+      }
+     ]
+    }
+   ]
+  },
+  "associatedEntityMetamodel": null,
+  "associatedEntityFormType": null,
+  "associatedContractModelMetamodel": null,
+  "associatedPersistantFormId": null,
+  "associatedLocalStorageDatabaseId": null,
+  "buttons": [],
+  "outputs": 1,
+  "x": 150,
+  "y": 620,
+  "wires": [
+   [
+    "hv_isaret_uyarilar"
+   ]
+  ]
+ },
+ {
+  "id": "hv_form_hata",
+  "type": "axetflows-form",
+  "z": "hv_tab0000000001",
+  "name": "Hatalar",
+  "onDocumentReadyButtonAction": "",
+  "formStructure": {
+   "components": [
+    {
+     "type": "datagrid",
+     "key": "tablo",
+     "label": "",
+     "hideLabel": true,
+     "id": "hvtablo1",
+     "input": true,
+     "disabled": true,
+     "disableAddingRemovingRows": true,
+     "reorder": false,
+     "initEmpty": true,
+     "tableView": false,
+     "persistent": false,
+     "description": "Servis cevap vermediginde: 3 deneme, sonra buraya kayit.",
+     "conditional": {
+      "show": null,
+      "when": null,
+      "eq": ""
+     },
+     "components": [
+      {
+       "type": "textfield",
+       "key": "zaman",
+       "label": "Zaman",
+       "id": "hvzaman",
+       "input": true,
+       "disabled": true,
+       "tableView": true
+      },
+      {
+       "type": "textfield",
+       "key": "hata",
+       "label": "Hata",
+       "id": "hvhata",
+       "input": true,
+       "disabled": true,
+       "tableView": true
+      },
+      {
+       "type": "textfield",
+       "key": "deneme",
+       "label": "Deneme",
+       "id": "hvdeneme",
+       "input": true,
+       "disabled": true,
+       "tableView": true
+      },
+      {
+       "type": "textfield",
+       "key": "tur",
+       "label": "Tur",
+       "id": "hvtur",
+       "input": true,
+       "disabled": true,
+       "tableView": true
+      },
+      {
+       "type": "textfield",
+       "key": "kaynak",
+       "label": "Kaynak",
+       "id": "hvkaynak",
+       "input": true,
+       "disabled": true,
+       "tableView": true
+      }
+     ]
+    }
+   ]
+  },
+  "associatedEntityMetamodel": null,
+  "associatedEntityFormType": null,
+  "associatedContractModelMetamodel": null,
+  "associatedPersistantFormId": null,
+  "associatedLocalStorageDatabaseId": null,
+  "buttons": [],
+  "outputs": 1,
+  "x": 150,
+  "y": 680,
+  "wires": [
+   [
+    "hv_isaret_hatalar"
+   ]
+  ]
+ },
+ {
+  "id": "hv_isaret_ozet",
+  "type": "function",
+  "z": "hv_tab0000000001",
+  "name": "Ozet acildi",
+  "func": "msg.hvSayfa = \"ozet\";\nreturn msg;\n",
+  "outputs": 1,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 360,
+  "y": 500,
+  "wires": [
+   [
+    "hv_sayfa_oku"
+   ]
+  ]
+ },
+ {
+  "id": "hv_isaret_okumalar",
+  "type": "function",
+  "z": "hv_tab0000000001",
+  "name": "Okumalar acildi",
+  "func": "msg.hvSayfa = \"okumalar\";\nreturn msg;\n",
+  "outputs": 1,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 360,
+  "y": 560,
+  "wires": [
+   [
+    "hv_sayfa_oku"
+   ]
+  ]
+ },
+ {
+  "id": "hv_isaret_uyarilar",
+  "type": "function",
+  "z": "hv_tab0000000001",
+  "name": "Uyarilar acildi",
+  "func": "msg.hvSayfa = \"uyarilar\";\nreturn msg;\n",
+  "outputs": 1,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 360,
+  "y": 620,
+  "wires": [
+   [
+    "hv_sayfa_oku"
+   ]
+  ]
+ },
+ {
+  "id": "hv_isaret_hatalar",
+  "type": "function",
+  "z": "hv_tab0000000001",
+  "name": "Hatalar acildi",
+  "func": "msg.hvSayfa = \"hatalar\";\nreturn msg;\n",
+  "outputs": 1,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 360,
+  "y": 680,
+  "wires": [
+   [
+    "hv_sayfa_oku"
+   ]
+  ]
+ },
+ {
+  "id": "hv_sayfa_oku",
+  "type": "file in",
+  "z": "hv_tab0000000001",
+  "name": "gecmisi oku",
+  "filename": "/internal-storage-files/hava/okumalar.jsonl",
+  "filenameType": "str",
+  "format": "utf8",
+  "chunk": false,
+  "sendError": false,
+  "encoding": "utf8",
+  "allProps": true,
+  "x": 560,
+  "y": 590,
+  "wires": [
+   [
+    "hv_sayfa"
+   ]
+  ]
+ },
+ {
+  "id": "hv_sayfa",
+  "type": "function",
+  "z": "hv_tab0000000001",
+  "name": "sayfa verisi",
+  "func": "// Hava Nobetcisi menusundeki dort sayfanin (Ozet / Okumalar / Uyarilar /\n// Hatalar) acilisinda calisir. Excel'deki ayni adli sayfanin satirlarini\n// uretir ve sayfadaki tabloya (datagrid, anahtari \"tablo\") basar.\n//\n// Hangi sayfa oldugu msg.hvSayfa'da (form'un onInit cikisindaki kucuk\n// isaret dugumu koyar).\n//\n// view action \"update\" yaniti, msg.submission'daki alanlari forma doldurur:\n// { tablo: [ {kolon: deger}, ... ] }   (aXet on yuz: initSubmission = response.submission)\n\nconst kayitlar = [];\nfor (const satir of String(msg.payload || \"\").split(/\\r?\\n/)) {\n  if (!satir.trim()) continue;\n  try { kayitlar.push(JSON.parse(satir)); } catch (e) {}\n}\n\nfunction yerel(iso) {\n  if (!iso) return \"\";\n  try { return new Date(iso).toLocaleString(\"tr-TR\", { timeZone: \"Europe/Istanbul\", day: \"2-digit\", month: \"2-digit\", year: \"numeric\", hour: \"2-digit\", minute: \"2-digit\" }); }\n  catch (e) { return iso; }\n}\nconst isaretli = (f) => (f > 0 ? \"+\" : \"\") + f;\nconst kaynakAdi = (k) => k.kaynak === \"zamanlayici\" ? \"otomatik\" : (k.kaynak || \"\");\nconst S = (v) => (v === null || v === undefined) ? \"\" : String(v);\n\nconst okumalar = kayitlar.filter(k => k.tip === \"okuma\");\nconst hatalar = kayitlar.filter(k => k.tip === \"hata\");\nconst uyarilar = okumalar.filter(k => k.uyari);\nconst otomatik = okumalar.filter(k => k.kaynak === \"zamanlayici\").length;\nconst son = okumalar[okumalar.length - 1];\n\nlet tablo;\nswitch (msg.hvSayfa) {\n  case \"ozet\":\n    tablo = [\n      { bilgi: \"Otomatik okuma sayisi\", deger: otomatik + (otomatik >= 3 ? \"  (kabul kriteri en az 3: TAMAM)\" : \"  (kabul kriteri: en az 3)\") },\n      { bilgi: \"Toplam okuma\", deger: S(okumalar.length) },\n      { bilgi: \"Uyari\", deger: S(uyarilar.length) },\n      { bilgi: \"Servis hatasi\", deger: S(hatalar.length) },\n      { bilgi: \"Son okuma\", deger: son ? yerel(son.zaman) + \"  --  \" + son.sicaklik + \" C, \" + son.ruzgar + \" km/s\" : \"Henuz okuma yok\" },\n      { bilgi: \"Zamanlayici\", deger: \"saatte bir (3600 sn)\" },\n      { bilgi: \"Uyari esigi\", deger: \"onceki okumaya gore 3 C'den fazla\" }\n    ];\n    break;\n\n  case \"okumalar\":                                       // en yeni ustte\n    tablo = okumalar.map((k, i) => ({\n      no: S(i + 1), zaman: yerel(k.zaman), sicaklik: k.sicaklik + \" C\", ruzgar: k.ruzgar + \" km/s\",\n      fark: k.fark === null || k.fark === undefined ? \"-\" : isaretli(k.fark) + \" C\" + (k.uyari ? \"  UYARI\" : \"\"),\n      kaynak: kaynakAdi(k)\n    })).reverse();\n    if (!tablo.length) tablo = [{ no: \"\", zaman: \"Henuz okuma yok\", sicaklik: \"\", ruzgar: \"\", fark: \"\", kaynak: \"\" }];\n    break;\n\n  case \"uyarilar\":\n    tablo = uyarilar.map(k => ({\n      zaman: yerel(k.zaman), yon: k.fark > 0 ? \"YUKSELIS\" : \"DUSUS\",\n      onceki: k.onceki + \" C\", simdiki: k.sicaklik + \" C\", fark: isaretli(k.fark) + \" C\", kaynak: kaynakAdi(k)\n    })).reverse();\n    if (!tablo.length) tablo = [{ zaman: \"Henuz uyari yok (3 C'den buyuk degisim olmadi)\", yon: \"\", onceki: \"\", simdiki: \"\", fark: \"\", kaynak: \"\" }];\n    break;\n\n  case \"hatalar\":\n    tablo = hatalar.map(k => ({\n      zaman: yerel(k.zaman), hata: S(k.mesaj), deneme: S(k.deneme),\n      tur: k.gecici ? \"gecici\" : \"kalici\", kaynak: kaynakAdi(k)\n    })).reverse();\n    if (!tablo.length) tablo = [{ zaman: \"Hata yok\", hata: \"\", deneme: \"\", tur: \"\", kaynak: \"\" }];\n    break;\n\n  default:\n    node.error(\"Bilinmeyen sayfa: \" + msg.hvSayfa, msg);\n    return null;\n}\n\nmsg.submission = { tablo: tablo };\nnode.status({ fill: \"blue\", shape: \"dot\", text: msg.hvSayfa + \": \" + tablo.length + \" satir\" });\nreturn msg;\n",
+  "outputs": 1,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 760,
+  "y": 590,
+  "wires": [
+   [
+    "hv_view_sayfa"
+   ]
+  ]
+ },
+ {
+  "id": "hv_view_sayfa",
+  "type": "axetflows-view-action",
+  "z": "hv_tab0000000001",
+  "name": "tabloyu goster",
+  "action": "update",
+  "redirectPage": null,
+  "downloadFile": false,
+  "fileName": "hava-nobetcisi.xlsx",
+  "inputType": "buffer",
+  "message": null,
+  "messageType": "info",
+  "x": 960,
+  "y": 590,
+  "wires": []
+ },
+ {
+  "id": "hv_xls_oku",
+  "type": "file in",
+  "z": "hv_tab0000000001",
+  "name": "excel oku",
+  "filename": "/internal-storage-files/hava/hava-nobetcisi.xlsx",
+  "filenameType": "str",
+  "format": "",
+  "chunk": false,
+  "sendError": false,
+  "encoding": "none",
+  "allProps": true,
+  "x": 560,
+  "y": 740,
+  "wires": [
+   [
+    "hv_indir_f"
+   ]
+  ]
+ },
+ {
+  "id": "hv_indir_f",
+  "type": "function",
+  "z": "hv_tab0000000001",
+  "name": "excel indir",
+  "func": "// \"Excel'i indir\" dugmesi: kalici klasordeki Excel'i (file in, Buffer)\n// indirme baglantisina cevirir (ortak/indirme-bagi-olustur.js). Dosya yoksa catch -> 09-sayfa-hatasi.js.\n\nmsg.indirilecek = { data: msg.payload, ad: \"hava-nobetcisi.xlsx\" };   // -> ortak/indirme-bagi-olustur.js\nmsg.messages = { mesaj: \"Excel hazir.\" };\nnode.status({ fill: \"green\", shape: \"dot\", text: Math.round(msg.payload.length / 1024) + \" KB\" });\nreturn msg;\n",
+  "outputs": 1,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 760,
+  "y": 740,
+  "wires": [
+   [
+    "hv_bag"
+   ]
+  ]
+ },
+ {
+  "id": "hv_bag",
+  "type": "function",
+  "z": "hv_tab0000000001",
+  "name": "indirme baglantisi",
+  "func": "// Indirilecek dosya icin 10 dakika gecerli, tahmin edilemez bir baglanti uretir.\n//\n// Neden: aXet'in view action indirmesi tarayicida tipsiz bir Blob'u, sayfaya\n// eklenmemis bir <a> ile tikliyor; Edge dosyayi \".tmp\" olarak kaydedebiliyor.\n// Bu yuzden dosyayi kendi HTTP ucumuzdan (indirme-sun.js) dogru basliklarla\n// veriyoruz. Baglanti, Okta korumali bir form islemi sonunda uretildigi icin\n// sadece giris yapmis kullanici gorur.\n//\n// Girdi : msg.indirilecek = { data: Buffer, ad: \"dosya.xlsx\" }\n// Cikti : msg.messages.token / msg.messages.dosya  (view action mesajinda <%= %>)\n\nconst SURE_DK = 10;\nconst k = msg.indirilecek;\nif (!k || !k.data) { node.error(\"indirilecek dosya yok\", msg); return null; }\n\nconst depo = global.get(\"indirmeler\") || {};\nconst simdi = Date.now();\nfor (const t of Object.keys(depo)) if (depo[t].bitis < simdi) delete depo[t];   // suresi dolanlari temizle\n\nlet token = \"\";\nwhile (token.length < 32) token += Math.random().toString(36).slice(2);\ntoken = token.slice(0, 32);\n\ndepo[token] = { data: k.data, ad: k.ad, bitis: simdi + SURE_DK * 60000 };\nglobal.set(\"indirmeler\", depo);\n\nmsg.messages = Object.assign({}, msg.messages, { token: token, dosya: k.ad, sure: String(SURE_DK) });\ndelete msg.indirilecek;\ndelete msg.downloadFileSubmission;     // aXet'in kendi (hatali) indirmesi devre disi\n\nnode.status({ fill: \"green\", shape: \"dot\", text: k.ad + \" (\" + Object.keys(depo).length + \" bagli)\" });\nreturn msg;\n",
+  "outputs": 1,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 960,
+  "y": 740,
+  "wires": [
+   [
+    "hv_view_indir"
+   ]
+  ]
+ },
+ {
+  "id": "hv_view_indir",
+  "type": "axetflows-view-action",
+  "z": "hv_tab0000000001",
+  "name": "baglantiyi goster",
+  "action": "update",
+  "redirectPage": null,
+  "downloadFile": false,
+  "fileName": "hava-nobetcisi.xlsx",
+  "inputType": "buffer",
+  "message": "<%= mesaj %> <a href=\"/indir/<%= token %>\" download=\"<%= dosya %>\"><b><%= dosya %></b></a> -- indirmek icin tiklayin (<%= sure %> dk gecerli).",
+  "messageType": "success",
+  "x": 1160,
+  "y": 740,
+  "wires": []
+ },
+ {
+  "id": "hv_catch_sayfa",
+  "type": "catch",
+  "z": "hv_tab0000000001",
+  "name": "sayfa dosya hatalari",
+  "scope": [
+   "hv_sayfa_oku",
+   "hv_sayfa",
+   "hv_xls_oku",
+   "hv_indir_f",
+   "hv_bag"
+  ],
+  "uncaught": false,
+  "x": 150,
+  "y": 800,
+  "wires": [
+   [
+    "hv_sayfa_hata"
+   ]
+  ]
+ },
+ {
+  "id": "hv_sayfa_hata",
+  "type": "function",
+  "z": "hv_tab0000000001",
+  "name": "sayfa hatasi",
+  "func": "// Sayfalardaki dosya okumalari hata verirse: en olasi sebep dosyanin henuz\n// olusmamis olmasi. Formu bekletme, acikla.\n// Cikis 1 -> sayfa acilisi view action'i, Cikis 2 -> \"Excel'i indir\" view action'i\n\nconst metin = (msg.error && msg.error.message) || \"\";\nconst yok = /ENOENT|no such file/i.test(metin);\ndelete msg.error;\ndelete msg.downloadFileSubmission;\n\nif (msg.hvSayfa) {                                       // sayfa acilisi\n  const aciklama = yok ? \"Henuz okuma yok -- zamanlayici saatte bir calisir\" : \"Gecmis okunamadi: \" + metin;\n  const ilkKolon = { ozet: \"bilgi\", okumalar: \"zaman\", uyarilar: \"zaman\", hatalar: \"zaman\" }[msg.hvSayfa] || \"zaman\";\n  const satir = {}; satir[ilkKolon] = aciklama;\n  msg.submission = { tablo: [satir] };\n  return [msg, null];\n}\nmsg.messages = { mesaj: yok ? \"Excel henuz olusmadi; ilk okumadan sonra indirilebilir.\" : \"Excel okunamadi: \" + metin };\nreturn [null, msg];\n",
+  "outputs": 2,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 360,
+  "y": 800,
+  "wires": [
+   [
+    "hv_view_sayfa"
+   ],
+   [
+    "hv_view_yok"
+   ]
+  ]
+ },
+ {
+  "id": "hv_view_yok",
+  "type": "axetflows-view-action",
+  "z": "hv_tab0000000001",
+  "name": "excel yok",
+  "action": "update",
+  "redirectPage": null,
+  "downloadFile": false,
+  "fileName": "hava-nobetcisi.xlsx",
+  "inputType": "buffer",
+  "message": "<%= mesaj %>",
+  "messageType": "warning",
+  "x": 560,
+  "y": 860,
+  "wires": []
+ }
+]

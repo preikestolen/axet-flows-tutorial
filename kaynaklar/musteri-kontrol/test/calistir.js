@@ -13,14 +13,16 @@ const xlsx = process.argv[2] || path.join(__dirname, "ornek-musteri.xlsx");
 
 const flowCtx = {};                                     // flow context taklidi
 const flow = { get: (k) => flowCtx[k], set: (k, v) => { flowCtx[k] = v; } };
+const globalCtx = {};
+const global_ = { get: (k) => globalCtx[k], set: (k, v) => { globalCtx[k] = v; } };
 
 function calistir(dosya, msg) {
-  const kod = fs.readFileSync(path.join(KOK, dosya), "utf8");
+  const kod = fs.readFileSync(path.join(KOK, dosya), "utf8");   // dosya "../ortak/..." da olabilir
   const node = {
     status: () => {}, warn: (m) => console.log("  [warn]", m),
     error: (m) => { throw new Error("node.error: " + m); }
   };
-  const ctx = vm.createContext({ msg, node, flow, Buffer, console, env: { get: () => "" } });
+  const ctx = vm.createContext({ msg, node, flow, global: global_, Buffer, console, env: { get: () => "" } });
   return vm.runInContext("(function(){\n" + kod + "\n})()", ctx);
 }
 const kontrol = (kosul, ne) => { if (!kosul) { console.log("HATA:", ne); process.exitCode = 1; } };
@@ -51,7 +53,12 @@ console.log("sayfalar:", Object.entries(msg.payload.data).map(([k, v]) => k + "=
 // json-to-excel taklidi: aXet dugumu Buffer uretir
 msg.payload = Buffer.from("sahte-xlsx");
 const [formaYanit, kayit] = calistir("07-rapora-kaydet.js", msg);
-kontrol(formaYanit && formaYanit.downloadFileSubmission && Buffer.isBuffer(formaYanit.downloadFileSubmission.data), "forma indirme yaniti yok");
+kontrol(formaYanit && formaYanit.indirilecek && Buffer.isBuffer(formaYanit.indirilecek.data), "indirilecek rapor hazir");
+const bagli = calistir("../ortak/indirme-bagi-olustur.js", formaYanit);
+kontrol(/^[a-z0-9]{32}$/.test(bagli.messages.token) && !bagli.downloadFileSubmission && bagli.messages.hatali, "indirme baglantisi: 32 karakter token, aXet indirmesi kapali, mesaj alanlari korunur");
+const sunum = calistir("../ortak/indirme-sun.js", { req: { params: { token: bagli.messages.token } } });
+kontrol(sunum.statusCode === 200 && /spreadsheetml/.test(sunum.headers["Content-Type"]) && /attachment; filename=".*-RAPOR\.xlsx"/.test(sunum.headers["Content-Disposition"]), "GET /indir: 200, xlsx Content-Type, dosya adi");
+kontrol(calistir("../ortak/indirme-sun.js", { req: { params: { token: "uydurma" } } }).statusCode === 404, "gecersiz token: 404");
 kontrol(formaYanit.messages && formaYanit.messages.hatali === String(msg.istatistik.hataliSatir), "mesaj sayilari yanlis");
 kontrol(formaYanit.__deptAppsFormioButtonClicked === "submit", "form alanlari kayboldu");
 console.log("rapor kaydi:", kayit.payload);
@@ -65,10 +72,10 @@ const secenekler = liste.onInitPopulateFormStructure.rapor;
 console.log("Raporlar sayfasi:", secenekler.map(s => s.label));
 kontrol(secenekler.length === 2, "listede 2 rapor olmali");
 
-const indir = calistir("09-rapor-indir.js", Object.assign({ payload: { data: { rapor: secenekler[0].value } } }, FORM));
-kontrol(indir.downloadFileSubmission && indir.downloadFileSubmission.fileName.endsWith("-RAPOR.xlsx"), "indirme hazirlanmadi");
-const yok = calistir("09-rapor-indir.js", Object.assign({ payload: { data: { rapor: "yok" } } }, FORM));
-kontrol(!yok.downloadFileSubmission && /bulunamadi/.test(yok.messages.mesaj), "olmayan rapor mesaji yok");
+const [indir, indirYok] = calistir("09-rapor-indir.js", Object.assign({ payload: { data: { rapor: secenekler[0].value } } }, FORM));
+kontrol(indirYok === null && indir.indirilecek && indir.indirilecek.ad.endsWith("-RAPOR.xlsx"), "Raporlar: secilen rapor indirme baglantisina gider");
+const [yokVar, yok] = calistir("09-rapor-indir.js", Object.assign({ payload: { data: { rapor: "yok" } } }, FORM));
+kontrol(yokVar === null && /bulunamadi/.test(yok.messages.mesaj), "olmayan rapor: uyari mesaji");
 
 const beklenenYol = path.join(__dirname, "beklenen.json");
 if (!process.argv[2] && fs.existsSync(beklenenYol)) {

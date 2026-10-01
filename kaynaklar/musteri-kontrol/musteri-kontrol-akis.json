@@ -45,6 +45,55 @@
         "children": []
        }
       ]
+     },
+     {
+      "id": "hv_bolum",
+      "text": "Hava Nobetcisi",
+      "icon": "fa fa-cloud",
+      "data": {},
+      "type": "section",
+      "children": [
+       {
+        "id": "hv_hv_form_ozet",
+        "text": "Ozet",
+        "icon": "fa fa-dashboard",
+        "type": "form",
+        "data": {
+         "form_id": "hv_form_ozet"
+        },
+        "children": []
+       },
+       {
+        "id": "hv_hv_form_okuma",
+        "text": "Okumalar",
+        "icon": "fa fa-thermometer-half",
+        "type": "form",
+        "data": {
+         "form_id": "hv_form_okuma"
+        },
+        "children": []
+       },
+       {
+        "id": "hv_hv_form_uyari",
+        "text": "Uyarilar",
+        "icon": "fa fa-exclamation-triangle",
+        "type": "form",
+        "data": {
+         "form_id": "hv_form_uyari"
+        },
+        "children": []
+       },
+       {
+        "id": "hv_hv_form_hata",
+        "text": "Hatalar",
+        "icon": "fa fa-bug",
+        "type": "form",
+        "data": {
+         "form_id": "hv_form_hata"
+        },
+        "children": []
+       }
+      ]
      }
     ],
     "type": "root"
@@ -54,7 +103,7 @@
   "sidebarMenuOrientation": "left",
   "logoImage": "default",
   "schemeColor": "",
-  "customCSS": "",
+  "customCSS": "/* ============================================================\n   application dugumu > Style > Custom CSS  (Ders 9.9)\n   akis-uret.py bu dosyayi application dugumune gomer.\n\n   Salt okunur tablolar (formio datagrid, anahtari \"tablo\"):\n   devre disi input'lar varsayilan olarak gri kutu gorunur ve dar\n   kolonlarda metni keser (orn. \"01.10.2026 17:38\" -> \"01.10.2026\").\n   Asagidaki kurallar hucreyi duz metin gibi gosterir ve kolonu\n   icerige gore genisletir (field-sizing: content, Chromium 123+).\n   Canli sayfada denenip dogrulandi.\n   ============================================================ */\n\n.formio-component-tablo table { table-layout: auto; width: auto; min-width: 100%; }\n.formio-component-tablo thead th { white-space: nowrap; background: #f4f7f9; }\n.formio-component-tablo td { padding: 6px 10px !important; vertical-align: middle; }\n\n.formio-component-tablo input.form-control,\n.formio-component-tablo input.form-control:disabled,\n.formio-component-tablo input.form-control[readonly] {\n  field-sizing: content;\n  min-width: 3ch;\n  width: auto;\n  background: transparent !important;\n  border: 0 !important;\n  box-shadow: none !important;\n  color: #212529 !important;\n  opacity: 1 !important;\n  padding: 0 !important;\n  height: auto;\n  cursor: default;\n}\n\n/* Indirme baglantisi uyari kutusunda belirgin olsun */\n.alert a[href^=\"/indir/\"] { text-decoration: underline; }\n",
   "customCSSErrors": 0,
   "authConfig": "Okta",
   "sessionExpireTimeInMinutes": "",
@@ -562,7 +611,7 @@
   "type": "function",
   "z": "mk_tab0000000001",
   "name": "rapora kaydet",
-  "func": "// json-to-excel'den gelen raporu (Buffer) diske DEGIL uygulamanin hafizasina\n// koyar; \"Raporlar\" sayfasi listeyi buradan okur. Sonra forma yanit hazirlar.\n//\n// Neden flow context: kullanici raporu kendi bilgisayarinda istedigi yere\n// tarayicidan indirir; sunucuda dosya birikmez.\n// Bedeli: context bellekte tutulur, Production yeniden baslatilinca liste\n// sifirlanir. Bu yuzden rapor gonderim aninda da indirilir (asagida).\n//\n// Cikis 1 -> view action (forma \"tamamlandi\" mesaji + indirme)\n// Cikis 2 -> debug (her durumda)\n\nconst ENFAZLA = 20;                                    // bellekte tutulan son rapor sayisi\nconst ist = msg.istatistik || {};\n\nconst rapor = {\n  id: Date.now() + \"-\" + Math.random().toString(36).slice(2, 8),   // ayni milisaniyede iki kosu olabilir\n  ad: msg.raporAdi || (\"rapor-\" + Date.now() + \".xlsx\"),\n  zaman: new Date().toISOString(),\n  dosya: ist.dosya || \"\",\n  ozet: (ist.hataliSatir || 0) + \"/\" + (ist.toplamSatir || 0) + \" satir hatali, \" + (ist.toplamHata || 0) + \" hata\",\n  icerik: msg.payload                                  // Buffer\n};\n\nconst liste = flow.get(\"raporlar\") || [];\nliste.unshift(rapor);\nflow.set(\"raporlar\", liste.slice(0, ENFAZLA));\n\nconst kayit = { payload: { rapor: rapor.ad, ozet: rapor.ozet, bellekteki: Math.min(liste.length, ENFAZLA) } };\n\n// Form dugumunun koydugu alanin GERCEK adi __deptAppsFormioButtonClicked.\n// view action'in yardim metni __axetFlowsFormioButtonClicked yaziyor -- yanlis;\n// ikisine de bakiyoruz ki surum degisirse kirilmasin.\nfunction formdanMi(m) { return !!(m.__deptAppsFormioButtonClicked || m.__axetFlowsFormioButtonClicked); }\n\n// Tasarimcidaki \"ornek dosyayla test\" kosusunda form yok -> view action'a gitme.\n// Form dugumu bu ozellikleri koyar; view action onlarsiz calismaz, DOKUNMAYIN.\nif (!formdanMi(msg)) {\n  node.status({ fill: \"grey\", shape: \"dot\", text: \"kaydedildi (formsuz test)\" });\n  return [null, kayit];\n}\n\nmsg.downloadFileSubmission = { data: rapor.icerik, fileName: rapor.ad, inputType: \"buffer\" };\nmsg.messages = {\n  dosya: String(rapor.dosya),\n  toplam: String(ist.toplamSatir || 0),\n  hatali: String(ist.hataliSatir || 0),\n  hata: String(ist.toplamHata || 0)\n};\n\nnode.status({ fill: \"green\", shape: \"dot\", text: rapor.ozet });\nreturn [msg, kayit];\n",
+  "func": "// json-to-excel'den gelen raporu (Buffer) diske DEGIL uygulamanin hafizasina\n// koyar; \"Raporlar\" sayfasi listeyi buradan okur. Sonra forma yanit hazirlar.\n//\n// Neden flow context: kullanici raporu kendi bilgisayarinda istedigi yere\n// tarayicidan indirir; sunucuda dosya birikmez.\n// Bedeli: context bellekte tutulur, Production yeniden baslatilinca liste\n// sifirlanir. Bu yuzden rapor gonderim aninda da indirilir (asagida).\n//\n// Cikis 1 -> indirme baglantisi -> view action (forma \"tamamlandi\" mesaji + baglanti)\n// Cikis 2 -> debug (her durumda)\n\nconst ENFAZLA = 20;                                    // bellekte tutulan son rapor sayisi\nconst ist = msg.istatistik || {};\n\nconst rapor = {\n  id: Date.now() + \"-\" + Math.random().toString(36).slice(2, 8),   // ayni milisaniyede iki kosu olabilir\n  ad: msg.raporAdi || (\"rapor-\" + Date.now() + \".xlsx\"),\n  zaman: new Date().toISOString(),\n  dosya: ist.dosya || \"\",\n  ozet: (ist.hataliSatir || 0) + \"/\" + (ist.toplamSatir || 0) + \" satir hatali, \" + (ist.toplamHata || 0) + \" hata\",\n  icerik: msg.payload                                  // Buffer\n};\n\nconst liste = flow.get(\"raporlar\") || [];\nliste.unshift(rapor);\nflow.set(\"raporlar\", liste.slice(0, ENFAZLA));\n\nconst kayit = { payload: { rapor: rapor.ad, ozet: rapor.ozet, bellekteki: Math.min(liste.length, ENFAZLA) } };\n\n// Form dugumunun koydugu alanin GERCEK adi __deptAppsFormioButtonClicked.\n// view action'in yardim metni __axetFlowsFormioButtonClicked yaziyor -- yanlis;\n// ikisine de bakiyoruz ki surum degisirse kirilmasin.\nfunction formdanMi(m) { return !!(m.__deptAppsFormioButtonClicked || m.__axetFlowsFormioButtonClicked); }\n\n// Tasarimcidaki \"ornek dosyayla test\" kosusunda form yok -> view action'a gitme.\n// Form dugumu bu ozellikleri koyar; view action onlarsiz calismaz, DOKUNMAYIN.\nif (!formdanMi(msg)) {\n  node.status({ fill: \"grey\", shape: \"dot\", text: \"kaydedildi (formsuz test)\" });\n  return [null, kayit];\n}\n\nmsg.indirilecek = { data: rapor.icerik, ad: rapor.ad };      // -> ortak/indirme-bagi-olustur.js\nmsg.messages = {\n  dosya: String(rapor.dosya),\n  toplam: String(ist.toplamSatir || 0),\n  hatali: String(ist.hataliSatir || 0),\n  hata: String(ist.toplamHata || 0)\n};\n\nnode.status({ fill: \"green\", shape: \"dot\", text: rapor.ozet });\nreturn [msg, kayit];\n",
   "outputs": 2,
   "timeout": 0,
   "setupErrors": 0,
@@ -575,7 +624,7 @@
   "y": 320,
   "wires": [
    [
-    "mk_view"
+    "mk_bag"
    ],
    [
     "mk_bitti"
@@ -583,18 +632,40 @@
   ]
  },
  {
+  "id": "mk_bag",
+  "type": "function",
+  "z": "mk_tab0000000001",
+  "name": "indirme baglantisi",
+  "func": "// Indirilecek dosya icin 10 dakika gecerli, tahmin edilemez bir baglanti uretir.\n//\n// Neden: aXet'in view action indirmesi tarayicida tipsiz bir Blob'u, sayfaya\n// eklenmemis bir <a> ile tikliyor; Edge dosyayi \".tmp\" olarak kaydedebiliyor.\n// Bu yuzden dosyayi kendi HTTP ucumuzdan (indirme-sun.js) dogru basliklarla\n// veriyoruz. Baglanti, Okta korumali bir form islemi sonunda uretildigi icin\n// sadece giris yapmis kullanici gorur.\n//\n// Girdi : msg.indirilecek = { data: Buffer, ad: \"dosya.xlsx\" }\n// Cikti : msg.messages.token / msg.messages.dosya  (view action mesajinda <%= %>)\n\nconst SURE_DK = 10;\nconst k = msg.indirilecek;\nif (!k || !k.data) { node.error(\"indirilecek dosya yok\", msg); return null; }\n\nconst depo = global.get(\"indirmeler\") || {};\nconst simdi = Date.now();\nfor (const t of Object.keys(depo)) if (depo[t].bitis < simdi) delete depo[t];   // suresi dolanlari temizle\n\nlet token = \"\";\nwhile (token.length < 32) token += Math.random().toString(36).slice(2);\ntoken = token.slice(0, 32);\n\ndepo[token] = { data: k.data, ad: k.ad, bitis: simdi + SURE_DK * 60000 };\nglobal.set(\"indirmeler\", depo);\n\nmsg.messages = Object.assign({}, msg.messages, { token: token, dosya: k.ad, sure: String(SURE_DK) });\ndelete msg.indirilecek;\ndelete msg.downloadFileSubmission;     // aXet'in kendi (hatali) indirmesi devre disi\n\nnode.status({ fill: \"green\", shape: \"dot\", text: k.ad + \" (\" + Object.keys(depo).length + \" bagli)\" });\nreturn msg;\n",
+  "outputs": 1,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 1160,
+  "y": 300,
+  "wires": [
+   [
+    "mk_view"
+   ]
+  ]
+ },
+ {
   "id": "mk_view",
   "type": "axetflows-view-action",
   "z": "mk_tab0000000001",
-  "name": "sonucu goster + indir",
+  "name": "sonucu goster + baglanti",
   "action": "update",
   "redirectPage": null,
-  "downloadFile": true,
+  "downloadFile": false,
   "fileName": "rapor.xlsx",
   "inputType": "buffer",
-  "message": "Kontrol tamamlandi: <%= dosya %> -- <%= toplam %> satirin <%= hatali %> tanesi hatali (<%= hata %> hata). Rapor indiriliyor; sonra da Raporlar sayfasindan indirebilirsiniz.",
+  "message": "Kontrol tamamlandi: <%= toplam %> satirin <%= hatali %> tanesi hatali (<%= hata %> hata). <a href=\"/indir/<%= token %>\" download=\"<%= dosya %>\"><b><%= dosya %></b></a> -- indirmek icin tiklayin (<%= sure %> dk gecerli).",
   "messageType": "success",
-  "x": 1180,
+  "x": 1360,
   "y": 300,
   "wires": []
  },
@@ -859,8 +930,8 @@
   "type": "function",
   "z": "mk_tab0000000001",
   "name": "rapor indir",
-  "func": "// \"Raporlar\" sayfasinda Indir dugmesi: secilen raporu tarayiciya gonderir.\n\nconst veri = (msg.payload && msg.payload.data) || (msg.submission && msg.submission.data) || {};\nconst secilen = veri.rapor;\nconst liste = flow.get(\"raporlar\") || [];\nconst r = liste.find(x => x.id === String(secilen));\n\nif (!r) {\n  msg.messages = { mesaj: \"Rapor bulunamadi. Uygulama yeniden baslatildiysa eski raporlar silinmis olabilir; dosyayi tekrar yukleyin.\" };\n  delete msg.downloadFileSubmission;\n  node.status({ fill: \"yellow\", shape: \"ring\", text: \"rapor yok: \" + secilen });\n  return msg;\n}\n\nmsg.downloadFileSubmission = { data: r.icerik, fileName: r.ad, inputType: \"buffer\" };\nmsg.messages = { mesaj: r.ad + \" indiriliyor (\" + r.ozet + \").\" };\nnode.status({ fill: \"green\", shape: \"dot\", text: r.ad });\nreturn msg;\n",
-  "outputs": 1,
+  "func": "// \"Raporlar\" sayfasinda Indir dugmesi: secilen raporu indirme baglantisina cevirir.\n// Cikis 1 -> indirme-bagi-olustur -> view action, Cikis 2 -> (rapor yok) view action\n\nconst veri = (msg.payload && msg.payload.data) || (msg.submission && msg.submission.data) || {};\nconst secilen = veri.rapor;\nconst liste = flow.get(\"raporlar\") || [];\nconst r = liste.find(x => x.id === String(secilen));\n\nif (!r) {\n  msg.messages = { mesaj: \"Rapor bulunamadi. Uygulama yeniden baslatildiysa eski raporlar silinmis olabilir; dosyayi tekrar yukleyin.\" };\n  delete msg.indirilecek;\n  node.status({ fill: \"yellow\", shape: \"ring\", text: \"rapor yok: \" + secilen });\n  return [null, msg];                                   // dogrudan view action (mesaj)\n}\n\nmsg.indirilecek = { data: r.icerik, ad: r.ad };                // -> ortak/indirme-bagi-olustur.js\nmsg.messages = { mesaj: r.ozet + \".\" };\nnode.status({ fill: \"green\", shape: \"dot\", text: r.ad });\nreturn [msg, null];                                     // -> indirme baglantisi -> view action\n",
+  "outputs": 2,
   "timeout": 0,
   "setupErrors": 0,
   "functionErrors": 0,
@@ -872,6 +943,31 @@
   "y": 580,
   "wires": [
    [
+    "mk_bag2"
+   ],
+   [
+    "mk_view_yok"
+   ]
+  ]
+ },
+ {
+  "id": "mk_bag2",
+  "type": "function",
+  "z": "mk_tab0000000001",
+  "name": "indirme baglantisi",
+  "func": "// Indirilecek dosya icin 10 dakika gecerli, tahmin edilemez bir baglanti uretir.\n//\n// Neden: aXet'in view action indirmesi tarayicida tipsiz bir Blob'u, sayfaya\n// eklenmemis bir <a> ile tikliyor; Edge dosyayi \".tmp\" olarak kaydedebiliyor.\n// Bu yuzden dosyayi kendi HTTP ucumuzdan (indirme-sun.js) dogru basliklarla\n// veriyoruz. Baglanti, Okta korumali bir form islemi sonunda uretildigi icin\n// sadece giris yapmis kullanici gorur.\n//\n// Girdi : msg.indirilecek = { data: Buffer, ad: \"dosya.xlsx\" }\n// Cikti : msg.messages.token / msg.messages.dosya  (view action mesajinda <%= %>)\n\nconst SURE_DK = 10;\nconst k = msg.indirilecek;\nif (!k || !k.data) { node.error(\"indirilecek dosya yok\", msg); return null; }\n\nconst depo = global.get(\"indirmeler\") || {};\nconst simdi = Date.now();\nfor (const t of Object.keys(depo)) if (depo[t].bitis < simdi) delete depo[t];   // suresi dolanlari temizle\n\nlet token = \"\";\nwhile (token.length < 32) token += Math.random().toString(36).slice(2);\ntoken = token.slice(0, 32);\n\ndepo[token] = { data: k.data, ad: k.ad, bitis: simdi + SURE_DK * 60000 };\nglobal.set(\"indirmeler\", depo);\n\nmsg.messages = Object.assign({}, msg.messages, { token: token, dosya: k.ad, sure: String(SURE_DK) });\ndelete msg.indirilecek;\ndelete msg.downloadFileSubmission;     // aXet'in kendi (hatali) indirmesi devre disi\n\nnode.status({ fill: \"green\", shape: \"dot\", text: k.ad + \" (\" + Object.keys(depo).length + \" bagli)\" });\nreturn msg;\n",
+  "outputs": 1,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 600,
+  "y": 560,
+  "wires": [
+   [
     "mk_view_indir"
    ]
   ]
@@ -880,16 +976,82 @@
   "id": "mk_view_indir",
   "type": "axetflows-view-action",
   "z": "mk_tab0000000001",
-  "name": "raporu indir",
+  "name": "baglantiyi goster",
   "action": "update",
   "redirectPage": null,
-  "downloadFile": true,
+  "downloadFile": false,
+  "fileName": "rapor.xlsx",
+  "inputType": "buffer",
+  "message": "<%= mesaj %> <a href=\"/indir/<%= token %>\" download=\"<%= dosya %>\"><b><%= dosya %></b></a> -- indirmek icin tiklayin (<%= sure %> dk gecerli).",
+  "messageType": "success",
+  "x": 820,
+  "y": 560,
+  "wires": []
+ },
+ {
+  "id": "mk_view_yok",
+  "type": "axetflows-view-action",
+  "z": "mk_tab0000000001",
+  "name": "rapor yok",
+  "action": "update",
+  "redirectPage": null,
+  "downloadFile": false,
   "fileName": "rapor.xlsx",
   "inputType": "buffer",
   "message": "<%= mesaj %>",
-  "messageType": "info",
+  "messageType": "warning",
   "x": 600,
-  "y": 580,
+  "y": 620,
+  "wires": []
+ },
+ {
+  "id": "mk_http_in",
+  "type": "http in",
+  "z": "mk_tab0000000001",
+  "name": "GET /indir/:token",
+  "url": "/indir/:token",
+  "method": "get",
+  "upload": false,
+  "swaggerDoc": "",
+  "x": 170,
+  "y": 700,
+  "wires": [
+   [
+    "mk_sun"
+   ]
+  ]
+ },
+ {
+  "id": "mk_sun",
+  "type": "function",
+  "z": "mk_tab0000000001",
+  "name": "dosyayi sun",
+  "func": "// GET /indir/:token  ->  dosyayi dogru basliklarla gonderir (http response'a).\n// Baglantiyi indirme-bagi-olustur.js uretir; 10 dakika gecerlidir.\n\nconst depo = global.get(\"indirmeler\") || {};\nconst token = msg.req && msg.req.params && msg.req.params.token;\nconst k = token && depo[token];\n\nif (!k || k.bitis < Date.now()) {\n  msg.statusCode = 404;\n  msg.headers = { \"Content-Type\": \"text/plain; charset=utf-8\" };\n  msg.payload = \"Indirme baglantisinin suresi doldu ya da gecersiz. Sayfaya donup tekrar indirin.\";\n  node.status({ fill: \"yellow\", shape: \"ring\", text: \"gecersiz/suresi dolmus\" });\n  return msg;\n}\n\nconst tur = /\\.xlsx$/i.test(k.ad)\n  ? \"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\"\n  : \"application/octet-stream\";\n\nmsg.statusCode = 200;\nmsg.headers = {\n  \"Content-Type\": tur,\n  \"Content-Disposition\": \"attachment; filename=\\\"\" + String(k.ad).replace(/[^A-Za-z0-9._-]/g, \"_\") + \"\\\"\",\n  \"Cache-Control\": \"no-store\"\n};\nmsg.payload = Buffer.isBuffer(k.data) ? k.data : Buffer.from(k.data);\nnode.status({ fill: \"green\", shape: \"dot\", text: k.ad });\nreturn msg;\n",
+  "outputs": 1,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 380,
+  "y": 700,
+  "wires": [
+   [
+    "mk_http_out"
+   ]
+  ]
+ },
+ {
+  "id": "mk_http_out",
+  "type": "http response",
+  "z": "mk_tab0000000001",
+  "name": "",
+  "statusCode": "",
+  "headers": {},
+  "x": 560,
+  "y": 700,
   "wires": []
  },
  {
@@ -905,7 +1067,8 @@
    "mk_ai_cvp",
    "mk_rapor",
    "mk_xls",
-   "mk_kaydet"
+   "mk_kaydet",
+   "mk_bag"
   ],
   "uncaught": false,
   "x": 160,

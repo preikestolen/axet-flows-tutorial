@@ -38,6 +38,7 @@ Son güncelleme: 2026-10-01 · Platform: aXet.flows v6.5.4 (Node-RED v4.1.1)
 | `Flow configuration not exists or is bad!` | `aXet.flows.exe` doğrudan açıldı | Tasarımcıyı portaldan aç |
 | Tasarımcıda ansızın `401` (SQL + AI) | Konteyner token'ı açılışta alır, yenilemez | Save in Cloud → kill instance → New Version |
 | Catalog boş | Liste geç yükleniyor / filtre | Bekle, **My Flows** filtresini kontrol et |
+| New Version'dan hemen sonra tasarımcı Admin API'si (`:52333`) yanıt vermiyor | Tasarımcı yeni sürümü yüklüyor | 1-2 dk bekle; süreç CPU harcamıyorsa da birazdan açılıyor |
 
 ### Akış ve düğümler
 
@@ -75,6 +76,10 @@ Son güncelleme: 2026-10-01 · Platform: aXet.flows v6.5.4 (Node-RED v4.1.1)
 | `view action` var, yine dönüyor | Yanlış alan adı kontrol edildi | Gerçek ad `msg.__deptAppsFormioButtonClicked` (yardım metnindeki `__axetFlows...` yanlış) |
 | Form verisi `msg.payload.<alan>`'da yok | Yapı farklı | `msg.payload.data.<alan>` |
 | Dosya eki içerik yerine adres | Storage modu | File bileşeni Storage = **base64** |
+| İndirilen dosya `.tmp` | aXet tarayıcı kodu tipsiz Blob + DOM'a eklenmemiş `<a>` | `ortak/indirme-bagi-olustur.js` + `http in /indir/:token` → `indirme-sun.js` (Ders 12.6) |
+| Salt okunur textarea'da satırlar tek satır | Görüntüleme satır sonunu yutuyor | Datagrid kullan |
+| Datagrid hücreleri gri, metin kesik | Disabled input stili | Custom CSS: `ortak/uygulama.css` |
+| Sayfada eski veri | Form verisi açılışta yüklenir | Menüden tekrar aç / F5 |
 | `Other instance ... running yet in production mode!` | Production açıkken tasarımcı | Production'ı kafatasıyla durdur |
 | Üretilen dosyalar kayboldu | `/data/` altına yazıldı | `/internal-storage-files/` kullan ya da kullanıcıya indir |
 
@@ -85,9 +90,12 @@ Son güncelleme: 2026-10-01 · Platform: aXet.flows v6.5.4 (Node-RED v4.1.1)
 | Forma "bitti" mesajı | `view action` + `msg.messages = {k: "v"}`; mesajda `<%= k %>` (EJS) |
 | Kullanıcıya dosya indirme | `msg.downloadFileSubmission = { data: buffer, fileName, inputType: "buffer" }` + view action'da **Download file** |
 | Sayfa açılırken veri yükleme | Form düğümünün **son çıkışı** = `onInitForm` → function → view action |
+| Sayfa açılışında tablo | Form son çıkışı (onInit) → function `msg.submission = { tablo: [ {...} ] }` → view action (update); bileşen datagrid, anahtarı `tablo` |
+| HTML'li mesaj / bağlantı | view action mesajı HTML olarak gösterilir: `<a href="/indir/<%= token %>">` |
 | Seçim kutusunu doldurma | `msg.onInitPopulateFormStructure = { <key>: [{label, value}] }` |
 | xlsx okuma (kütüphanesiz) | `kaynaklar/musteri-kontrol/02-xlsx-oku.js` (zip + inflate + XML) |
 | Production'a Windows'tan erişim | `powershell -ExecutionPolicy Bypass -File kaynaklar\production-portu-ac.ps1` |
+| Yeni sekme eklemek | `POST /flow` — sekme ID'si **yeniden üretilir**, düğüm ID'leri korunur; sonra sekmeyi etikete göre bul |
 | Tarayıcısız çalıştırma | Admin API: `GET/POST /flows`, `PUT /flow/<tabId>`, `POST /inject/<id>` (import'ta ID'ler değişebilir) |
 | Okta + roller | Apply Auth App asistanı; boş tabloda ilk giren `ROLE_ADMIN` |
 | Akışı kodla üretmek | `.js` dosyaları + üretici betik (`akis-uret.py`) + yerel sandbox testi (`test/calistir.js`) |
