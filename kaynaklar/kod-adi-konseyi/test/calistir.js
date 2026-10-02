@@ -39,9 +39,9 @@ function konsey(proje, cevaplar, baskan) {
     if (c === 3) break;
   }
   const k = calistir("04-karar-isle.js", msg);
-  const [satir, sahne] = k.sonuc;
+  const [satir, sahne, oturum] = k.sonuc;
   pano += satir.payload + "\n";                          // file append
-  return { promptlar, satir, sahne, log: k.log, konsey: msg.konsey };
+  return { promptlar, satir, sahne, oturum, log: k.log, konsey: msg.konsey };
 }
 
 const UC = [
@@ -70,6 +70,9 @@ const h = s.sahne.submission.sahne;
 kontrol((h.match(/konsey-kart /g) || []).length === 3 && h.includes("konsey-kazanan") && h.includes("87/100"), "sahne: 3 kart, kazanan isaretli, puan");
 kontrol(h.includes("404&#39;un kadar") && h.includes("Godzilla") && h.includes("kalbime"), "baskan notlari her kartta");
 kontrol(h.includes("1. sira"), "panodaki sira yaziliyor");
+const ot = JSON.parse(s.oturum.payload);
+kontrol(/^\/internal-storage-files\/konsey\/oturumlar\/\d{4}-\d{2}-\d{2}\.jsonl$/.test(s.oturum.filename), "oturum kaydi: konsey/oturumlar/<gun>.jsonl");
+kontrol(ot.oneriler.length === 3 && ot.oneriler.every(o => o.kodAdi && o.gerekce) && ot.oneriler[2].baskanNotu.includes("kalbime") && ot.kazanan.kodAdi === "Son Koli" && ot.ilham.sair, "oturum kaydi: 3 oneri + gerekce + baskan notu + kazanan + ilham");
 kontrol(s.sahne.submission.proje === PROJE && /Son Koli.*87\/100.*1\. sira/.test(s.sahne.messages.ozet), "sahne sayfadaki kutuya (submission.sahne), uyariya kisa ozet");
 
 console.log("3) her oturum farkli ilham, panodaki isim yasakli");

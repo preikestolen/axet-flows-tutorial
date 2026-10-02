@@ -138,16 +138,18 @@ Bu kodu değiştiremeyiz. İlk denediğimiz yol da işe yaramadı:
 |---|---|
 | `view action` → *Download file* | Edge'de `.tmp` |
 | Kendi `http in GET /indir/:token` ucumuz | aXet `http in`'leri uygulama oturumuyla doğruluyor; oturumsuz istek `400 Credentials are mandatory`, oturumlu istekte aXet'in kendi kodu çöküyor (`auth-manager-rest.js … ReferenceError: logger is not defined`) ve istek askıda kalıyor |
-| **`data:` bağlantısı** | ✅ Edge'de doğru adla `.xlsx` |
+| `data:` bağlantısı uyarı kutusunda | ✅ indiriyor, ama aXet uyarıları **10 sn'de siliniyor** (Ders 13.4) |
+| `data:` bağlantısı sayfadaki HTML kutusunda | ❌ Formio içeriği DOMPurify'dan geçiriyor, `data:` adresli `href` siliniyor — düğme görünür ama tıklanmaz |
+| **Salt okunur File bileşeni** | ✅ Formio'nun kendi base64 indirmesi (downloadjs): doğru tür + adla `.xlsx`, sayfada kalıcı |
 
-Çalışan yol: dosyayı Okta korumalı form yanıtının **içinde**, türü belli bir
-`data:` bağlantısı olarak göndermek
+Çalışan yol: dosyayı Okta korumalı form yanıtının **içinde**, formdaki salt okunur
+bir **File bileşenine** "yüklenmiş dosya" olarak koymak (`ortak/form_bilesenleri.py: indirme_alani()`)
 ([`kaynaklar/ortak/indirme-bagi-olustur.js`](kaynaklar/ortak/indirme-bagi-olustur.js)):
 
 ```javascript
 msg.indirilecek = { data: buffer, ad: "hava-nobetcisi.xlsx" };   // sonra indirme-bagi-olustur.js
-// view action mesaji (HTML olarak gosterilir):
-// <%= mesaj %> <a href="data:<%= tur %>;base64,<%= veri %>" download="<%= dosya %>"><b><%= dosya %></b></a>
+// -> msg.submission.indirmeDosyasi = [{ storage: "base64", originalName, type, url: "data:<tur>;base64,..." }]
+//    view action (update) forma basar; kullanici dosya adina tiklar, Formio indirir
 ```
 
 Bağlantı sayfanın içinde duruyor (uyarı kutusunda değil, formdaki kalıcı kutuda — aXet uyarıları 10 sn'de siliniyor, Ders 13.4), MIME türü ve adı belli; kullanıcı tıklayınca

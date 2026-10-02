@@ -33,14 +33,20 @@ def portlar():
     return [int(p) for p in cikti.split() if p.strip().isdigit()]
 
 
-def tasarimci():
-    for p in portlar():
-        try:
-            if urllib.request.urlopen(f"http://127.0.0.1:{p}/settings", timeout=10).status == 200:
-                return f"http://127.0.0.1:{p}"
-        except Exception:
-            pass
-    sys.exit("Tasarimci bulunamadi ya da henuz yanit vermiyor (New Version'dan sonra 1-2 dk bekleyin).")
+def tasarimci(bekle_sn=300):
+    # New Version'dan sonra tasarimci port'u dinler ama 2-3 dk yanit vermeyebilir; bekle.
+    import time
+    son = time.time() + bekle_sn
+    while time.time() < son:
+        for p in portlar():
+            try:
+                if urllib.request.urlopen(f"http://127.0.0.1:{p}/settings", timeout=8).status == 200:
+                    return f"http://127.0.0.1:{p}"
+            except Exception:
+                pass
+        print("  tasarimci henuz hazir degil, bekleniyor...")
+        time.sleep(10)
+    sys.exit("Tasarimci bulunamadi ya da " + str(bekle_sn) + " sn icinde yanit vermedi.")
 
 
 BASE = tasarimci()

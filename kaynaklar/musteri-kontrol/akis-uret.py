@@ -13,7 +13,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "ortak"))
-from form_bilesenleri import kalici_kutu  # noqa: E402
+from form_bilesenleri import indirme_alani  # noqa: E402
 
 BURASI = Path(__file__).parent
 KAYNAK = BURASI.parent
@@ -49,6 +49,30 @@ def debug(id_, ad, x, y, alan="payload", status=False):
             "statusVal": "", "statusType": "auto", "x": x, "y": y, "wires": []}
 
 
+def dosya_oku(id_, ad, yol, x, y, wires, bicim):
+    # yol "" ise msg.filename kullanilir; bicim "utf8" (tek metin) ya da "" (Buffer)
+    return {"id": id_, "type": "file in", "z": TAB, "name": ad, "filename": yol or "filename",
+            "filenameType": "str" if yol else "msg", "format": bicim, "chunk": False, "sendError": False,
+            "encoding": "none" if bicim == "" else "utf8", "allProps": True, "x": x, "y": y, "wires": wires}
+
+
+def dosya_yaz(id_, ad, x, y, encoding, kip):
+    # kip: "true" uzerine yaz, "delete" dosyayi sil; dosya adi msg.filename, klasor yoksa olusturulur
+    return {"id": id_, "type": "file", "z": TAB, "name": ad, "filename": "filename", "filenameType": "msg",
+            "appendNewline": False, "createDir": True, "overwriteFile": kip, "encoding": encoding,
+            "x": x, "y": y, "wires": [[]]}
+
+
+def catch_bos(id_, ad, kaynak, hedef, x, y):
+    # file in hata verdiyse (ilk kullanimda dosya yok) bos icerikle devam
+    return [{"id": id_, "type": "catch", "z": TAB, "name": ad, "scope": [kaynak], "uncaught": False,
+             "x": x, "y": y, "wires": [[id_ + "_f"]]},
+            fn(id_ + "_f", "bos liste", BOS_KOD, x + 180, y, [[hedef]])]
+
+
+BOS_KOD = 'delete msg.error;\nmsg.payload = "";\nreturn msg;\n'
+
+
 def view_action(id_, ad, x, y, tur, indir, mesaj):
     # Formdan baslayan her kosu bir view action'da bitmeli; yoksa Submit dugmesi
     # sonsuza kadar doner. Mesaj EJS'dir, degerler msg.messages'tan gelir.
@@ -72,7 +96,7 @@ dosya_bileseni.update({
     "fileMaxSize": "5MB",
     "id": "mkexcel1",
 })
-form["formStructure"]["components"] += kalici_kutu("indirme", "indirme-alani")
+form["formStructure"]["components"] += indirme_alani()
 form.update({"id": "mk_form", "z": TAB, "name": FORM_ADI, "x": 150, "y": 160, "wires": [["mk_buffer"], []]})
 
 # --- ikinci sayfa: Raporlar (secim kutusu + Indir dugmesi)
@@ -87,9 +111,9 @@ secim = {
     "validate": {"required": True}, "conditional": {"show": None, "when": None, "eq": ""},
 }
 form2 = copy.deepcopy(form)
-form2["formStructure"]["components"] = [secim, buton] + kalici_kutu("indirme", "indirme-alani")
+form2["formStructure"]["components"] = [secim, buton] + indirme_alani()
 form2.update({"id": "mk_form2", "name": RAPOR_SAYFASI, "buttons": [buton],
-              "x": 150, "y": 600, "wires": [["mk_indir"], ["mk_liste"]]})   # son cikis: onInitForm
+              "x": 150, "y": 600, "wires": [["mk_secim"], ["mk_liste_oku"]]})   # son cikis: onInitForm
 
 app.update({
     "id": "mk_app", "z": TAB, "name": "Musteri Veri Kontrolu",
@@ -173,8 +197,16 @@ akis = [
 
     fn("mk_rapor", "rapor tablosu", js("06-rapor-tablosu.js"), 560, 320, [["mk_xls"]]),
     {"id": "mk_xls", "type": "json-to-excel", "z": TAB, "name": "excel uret", "kind": "auto",
-     "bufferProp": "payload", "payloadProp": "payload", "x": 760, "y": 320, "wires": [["mk_kaydet"]]},
-    fn("mk_kaydet", "rapora kaydet", js("07-rapora-kaydet.js"), 960, 320, [["mk_bag"], ["mk_bitti"]], outputs=2),
+     "bufferProp": "payload", "payloadProp": "payload", "x": 760, "y": 320, "wires": [["mk_sakla"]]},
+    # rapor Buffer'ini sakla -> kalici rapor listesini oku (yoksa bos) -> kaydet
+    fn("mk_sakla", "raporu sakla", "msg.raporBuffer = msg.payload;\nreturn msg;\n", 760, 380, [["mk_liste_oku1"]]),
+    dosya_oku("mk_liste_oku1", "raporlar.jsonl oku", "/internal-storage-files/musteri-kontrol/raporlar.jsonl", 960, 380, [["mk_kaydet"]], "utf8"),
+    catch_bos("mk_c_liste1", "liste yok", "mk_liste_oku1", "mk_kaydet", 960, 440),
+    fn("mk_kaydet", "rapora kaydet", js("07-rapora-kaydet.js"), 1160, 380,
+       [["mk_bag"], ["mk_bitti"], ["mk_xls_w"], ["mk_liste_w"], ["mk_sil"]], outputs=5),
+    dosya_yaz("mk_xls_w", "raporlar/<ad>.xlsx", 1380, 360, "none", "true"),
+    dosya_yaz("mk_liste_w", "raporlar.jsonl", 1380, 400, "utf8", "true"),
+    dosya_yaz("mk_sil", "eski raporu sil", 1380, 440, "utf8", "delete"),
     fn("mk_bag", "indirme baglantisi", (ORTAK / "indirme-bagi-olustur.js").read_text(encoding="utf-8"), 1160, 300, [["mk_view"]]),
     view_action("mk_view", "sonucu goster + baglanti", 1360, 300, "success", False,
                 "<%= mesaj %> Indirme baglantisi asagida."),
@@ -182,25 +214,44 @@ akis = [
 
     # --- Raporlar sayfasi
     form2,
-    fn("mk_liste", "rapor listesi", js("08-rapor-listesi.js"), 380, 640, [["mk_view_liste"]]),
-    view_action("mk_view_liste", "listeyi goster", 600, 640, "info", False, None),
-    fn("mk_indir", "rapor indir", js("09-rapor-indir.js"), 380, 580, [["mk_bag2"], ["mk_view_yok"]], outputs=2),
-    fn("mk_bag2", "indirme baglantisi", (ORTAK / "indirme-bagi-olustur.js").read_text(encoding="utf-8"), 600, 560, [["mk_view_indir"]]),
-    view_action("mk_view_indir", "baglantiyi goster", 820, 560, "success", False, "<%= mesaj %> Indirme baglantisi asagida."),
-    view_action("mk_view_yok", "rapor yok", 600, 620, "warning", False, "<%= mesaj %>"),
+    dosya_oku("mk_liste_oku", "raporlar.jsonl oku", "/internal-storage-files/musteri-kontrol/raporlar.jsonl", 380, 680, [["mk_liste"]], "utf8"),
+    catch_bos("mk_c_liste2", "liste yok", "mk_liste_oku", "mk_liste", 380, 740),
+    fn("mk_liste", "rapor listesi", js("08-rapor-listesi.js"), 580, 680, [["mk_view_liste"]]),
+    view_action("mk_view_liste", "listeyi goster", 780, 680, "info", False, None),
+    fn("mk_secim", "secimi sakla",
+       "const v = (msg.payload && msg.payload.data) || (msg.submission && (msg.submission.data || msg.submission)) || {};\n"
+       "msg.secilenRapor = v.rapor;\nreturn msg;\n", 380, 560, [["mk_liste_oku3"]]),
+    dosya_oku("mk_liste_oku3", "raporlar.jsonl oku", "/internal-storage-files/musteri-kontrol/raporlar.jsonl", 560, 560, [["mk_indir"]], "utf8"),
+    catch_bos("mk_c_liste3", "liste yok", "mk_liste_oku3", "mk_indir", 560, 500),
+    fn("mk_indir", "rapor indir", js("09-rapor-indir.js"), 760, 560, [["mk_rapor_oku"], ["mk_view_yok"]], outputs=2),
+    dosya_oku("mk_rapor_oku", "rapor xlsx oku", "", 960, 560, [["mk_rapor_dosya"]], ""),
+    {"id": "mk_c_rapor", "type": "catch", "z": TAB, "name": "rapor dosyasi yok", "scope": ["mk_rapor_oku"],
+     "uncaught": False, "x": 960, "y": 620, "wires": [["mk_rapor_yok"]]},
+    fn("mk_rapor_yok", "dosya yok mesaji",
+       'delete msg.error;\nmsg.messages = { mesaj: "Rapor dosyasi bulunamadi (silinmis olabilir)." };\nreturn msg;\n',
+       1160, 620, [["mk_view_yok"]]),
+    fn("mk_rapor_dosya", "rapor dosyasi", js("11-rapor-dosyasi.js"), 1160, 560, [["mk_bag2"]]),
+    fn("mk_bag2", "indirme baglantisi", (ORTAK / "indirme-bagi-olustur.js").read_text(encoding="utf-8"), 1360, 560, [["mk_view_indir"]]),
+    view_action("mk_view_indir", "baglantiyi goster", 1560, 560, "success", False, "<%= mesaj %> Indirme baglantisi asagida."),
+    view_action("mk_view_yok", "rapor yok", 1360, 620, "warning", False, "<%= mesaj %>"),
 
 
     # Kapsam bilerek SINIRLI: ajan dugumu kendi hata cikisiyla yonetiliyor; o da
     # catch'e dusseydi forma iki kez yanit gidebilirdi.
     {"id": "mk_catch", "type": "catch", "z": TAB, "name": "kontrol hatalari",
      "scope": ["mk_buffer", "mk_oku", "mk_kural", "mk_ai_hz", "mk_ai_cvp", "mk_rapor",
-               "mk_xls", "mk_kaydet", "mk_bag"],
+               "mk_xls", "mk_sakla", "mk_kaydet", "mk_bag", "mk_xls_w", "mk_liste_w"],
      "uncaught": False, "x": 160, "y": 460, "wires": [["mk_hata_dbg", "mk_hata_yanit"]]},
     debug("mk_hata_dbg", "KONTROL HATASI", 380, 460, alan="error", status=True),
     fn("mk_hata_yanit", "hata yaniti", js("10-hata-yaniti.js"), 380, 510, [["mk_view_hata"]]),
     view_action("mk_view_hata", "hatayi goster", 600, 510, "danger", False,
                 "Kontrol tamamlanamadi: <%= hata %>"),
 ]
+
+duz = []
+for n in akis:
+    duz.extend(n if isinstance(n, list) else [n])
+akis = duz
 
 hedef = BURASI / "musteri-kontrol-akis.json"
 hedef.write_text(json.dumps(akis, indent=1, ensure_ascii=False), encoding="utf-8")

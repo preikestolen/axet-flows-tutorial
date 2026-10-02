@@ -120,3 +120,13 @@
 .konsey-pano tbody tr:nth-child(2) td { background: #f3f4f6; }
 .konsey-pano tbody tr:nth-child(3) td { background: #fbefe6; }
 .konsey-pano tbody tr:nth-child(-n+3) input { font-weight: 700 !important; }
+
+/* Indirilecek dosya (salt okunur File bileseni): dosya adi belirgin bir dugme gibi */
+.indirme-dosyasi .list-group-header { display: none; }
+.indirme-dosyasi li.list-group-item { border-radius: 10px; border-color: #b9dfc6; background: #f4fbf6; }
+.indirme-dosyasi a[ref="fileLink"] {
+  display: inline-block; padding: 4px 14px; border-radius: 999px; background: #1d7a46;
+  color: #fff !important; font-weight: 700; text-decoration: none !important;
+}
+.indirme-dosyasi a[ref="fileLink"]::before { content: "\2B07\FE0F  "; }
+.indirme-dosyasi a[ref="fileLink"]:hover { background: #155c34; }

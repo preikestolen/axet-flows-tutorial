@@ -132,7 +132,7 @@
   "sidebarMenuOrientation": "left",
   "logoImage": "default",
   "schemeColor": "",
-  "customCSS": "/* ============================================================\n   application dugumu > Style > Custom CSS  (Ders 9.9)\n   akis-uret.py bu dosyayi application dugumune gomer.\n\n   Salt okunur tablolar (formio datagrid, anahtari \"tablo\"):\n   devre disi input'lar varsayilan olarak gri kutu gorunur ve dar\n   kolonlarda metni keser (orn. \"01.10.2026 17:38\" -> \"01.10.2026\").\n   Asagidaki kurallar hucreyi duz metin gibi gosterir ve kolonu\n   icerige gore genisletir (field-sizing: content, Chromium 123+).\n   Canli sayfada denenip dogrulandi.\n   ============================================================ */\n\n.formio-component-tablo table { table-layout: auto; width: auto; min-width: 100%; }\n.formio-component-tablo thead th { white-space: nowrap; background: #f4f7f9; }\n.formio-component-tablo td { padding: 6px 10px !important; vertical-align: middle; }\n\n.formio-component-tablo input.form-control,\n.formio-component-tablo input.form-control:disabled,\n.formio-component-tablo input.form-control[readonly] {\n  field-sizing: content;\n  min-width: 3ch;\n  width: auto;\n  background: transparent !important;\n  border: 0 !important;\n  box-shadow: none !important;\n  color: #212529 !important;\n  opacity: 1 !important;\n  padding: 0 !important;\n  height: auto;\n  cursor: default;\n}\n\n/* Indirme kutusu (sayfadaki kalici kutu: hidden \"indirme\" + htmlelement) */\n.indirme-kutu {\n  margin-top: 14px; padding: 12px 16px; border-radius: 10px;\n  background: #eaf6ee; border: 1px solid #b9dfc6; color: #1d5b33;\n}\n.indirme-bag {\n  display: inline-block; margin-left: 6px; padding: 4px 12px; border-radius: 999px;\n  background: #1d7a46; color: #fff !important; font-weight: 700; text-decoration: none !important;\n}\n.indirme-bag:hover { background: #155c34; }\n\n/* ============================================================\n   Gun 3 -- Kod Adi Konseyi\n   Sahne HTML'i 04-karar-isle.js'de uretilir ve view action\n   mesajinda (yesil uyari kutusu) gosterilir.\n   ============================================================ */\n\n:root {\n  --konsey-lacivert: #1b1f3b;\n  --konsey-altin: #e0a526;\n  --konsey-muhendis: #2f6f8f;\n  --konsey-pazarlamaci: #d94f2b;\n  --konsey-sair: #7a4bb5;\n}\n\n/* Giris karti (Konsey sayfasi ustu) */\n.konsey-giris {\n  background: linear-gradient(135deg, var(--konsey-lacivert), #3a2f6b);\n  color: #fff; border-radius: 14px; padding: 22px 26px; margin-bottom: 18px;\n  box-shadow: 0 6px 18px rgba(27, 31, 59, .25);\n}\n.konsey-giris-baslik { font-size: 1.6rem; font-weight: 700; letter-spacing: .5px; }\n.konsey-giris-baslik::before { content: \"\\2696\\FE0F  \"; }\n.konsey-giris-metin { opacity: .9; margin: 6px 0 12px; }\n.konsey-uyeler span {\n  display: inline-block; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25);\n  border-radius: 999px; padding: 4px 12px; margin: 0 6px 6px 0; font-size: .9rem;\n}\n\n/* Sonuc sahnesi (sayfadaki kalici kutu: hidden \"sahne\" + htmlelement) */\n.konsey-sahne {\n  background: #faf7f0; border: 1px solid #e8dfc8; color: #222;\n  border-radius: 14px; padding: 20px 22px; margin-top: 18px;\n}\n.konsey-uyari, .konsey-hata {\n  margin-top: 16px; padding: 14px 18px; border-radius: 12px; font-weight: 600;\n}\n.konsey-uyari { background: #fff6e0; border: 1px solid #f1d38a; color: #7a5600; }\n.konsey-hata  { background: #fdecea; border: 1px solid #f5b5ad; color: #8a1c10; }\n.konsey-baslik { font-size: 1.3rem; font-weight: 700; color: var(--konsey-lacivert); }\n.konsey-proje { font-style: italic; color: #555; margin: 4px 0 14px; }\n.konsey-kartlar { display: flex; flex-wrap: wrap; gap: 14px; }\n.konsey-kart {\n  flex: 1 1 240px; background: #fff; border-radius: 12px; padding: 14px 16px;\n  border-top: 5px solid #999; box-shadow: 0 3px 10px rgba(0,0,0,.06); position: relative;\n}\n.konsey-muhendis    { border-top-color: var(--konsey-muhendis); }\n.konsey-pazarlamaci { border-top-color: var(--konsey-pazarlamaci); }\n.konsey-sair        { border-top-color: var(--konsey-sair); }\n.konsey-kim { font-size: .85rem; text-transform: uppercase; letter-spacing: .6px; color: #666; font-weight: 600; }\n.konsey-isim { font-size: 1.35rem; font-weight: 700; margin: 6px 0; color: var(--konsey-lacivert); }\n.konsey-muhendis .konsey-gerekce    { font-family: Consolas, \"Courier New\", monospace; font-size: .9rem; }\n.konsey-pazarlamaci .konsey-gerekce { font-weight: 600; }\n.konsey-sair .konsey-gerekce        { font-family: Georgia, \"Times New Roman\", serif; font-style: italic; }\n.konsey-baskan-notu {\n  margin-top: 10px; padding-top: 8px; border-top: 1px dashed #ddd; font-size: .88rem; color: #444;\n}\n.konsey-kazanan { box-shadow: 0 0 0 3px var(--konsey-altin), 0 6px 18px rgba(224,165,38,.35); }\n.konsey-kazanan::after {\n  content: \"\\1F451  KAZANAN\"; position: absolute; top: -12px; right: 12px;\n  background: var(--konsey-altin); color: #fff; font-size: .75rem; font-weight: 700;\n  padding: 3px 10px; border-radius: 999px;\n}\n.konsey-karar {\n  margin-top: 18px; background: var(--konsey-lacivert); color: #fff; border-radius: 12px; padding: 16px 20px;\n}\n.konsey-karar-ust { font-size: .85rem; letter-spacing: .6px; text-transform: uppercase; opacity: .8; }\n.konsey-karar-isim { font-size: 1.7rem; font-weight: 800; color: var(--konsey-altin); margin: 4px 0; }\n.konsey-puan {\n  font-size: 1rem; background: var(--konsey-altin); color: var(--konsey-lacivert);\n  padding: 2px 10px; border-radius: 999px; vertical-align: middle; margin-left: 6px;\n}\n.konsey-karar-metin { margin: 6px 0 10px; }\n.konsey-pano-notu { font-size: .9rem; opacity: .85; }\n\n/* Isim Panosu: ilk uc satir */\n.konsey-pano tbody tr:nth-child(1) td { background: #fff7dd; }\n.konsey-pano tbody tr:nth-child(2) td { background: #f3f4f6; }\n.konsey-pano tbody tr:nth-child(3) td { background: #fbefe6; }\n.konsey-pano tbody tr:nth-child(-n+3) input { font-weight: 700 !important; }\n",
+  "customCSS": "/* ============================================================\n   application dugumu > Style > Custom CSS  (Ders 9.9)\n   akis-uret.py bu dosyayi application dugumune gomer.\n\n   Salt okunur tablolar (formio datagrid, anahtari \"tablo\"):\n   devre disi input'lar varsayilan olarak gri kutu gorunur ve dar\n   kolonlarda metni keser (orn. \"01.10.2026 17:38\" -> \"01.10.2026\").\n   Asagidaki kurallar hucreyi duz metin gibi gosterir ve kolonu\n   icerige gore genisletir (field-sizing: content, Chromium 123+).\n   Canli sayfada denenip dogrulandi.\n   ============================================================ */\n\n.formio-component-tablo table { table-layout: auto; width: auto; min-width: 100%; }\n.formio-component-tablo thead th { white-space: nowrap; background: #f4f7f9; }\n.formio-component-tablo td { padding: 6px 10px !important; vertical-align: middle; }\n\n.formio-component-tablo input.form-control,\n.formio-component-tablo input.form-control:disabled,\n.formio-component-tablo input.form-control[readonly] {\n  field-sizing: content;\n  min-width: 3ch;\n  width: auto;\n  background: transparent !important;\n  border: 0 !important;\n  box-shadow: none !important;\n  color: #212529 !important;\n  opacity: 1 !important;\n  padding: 0 !important;\n  height: auto;\n  cursor: default;\n}\n\n/* Indirme kutusu (sayfadaki kalici kutu: hidden \"indirme\" + htmlelement) */\n.indirme-kutu {\n  margin-top: 14px; padding: 12px 16px; border-radius: 10px;\n  background: #eaf6ee; border: 1px solid #b9dfc6; color: #1d5b33;\n}\n.indirme-bag {\n  display: inline-block; margin-left: 6px; padding: 4px 12px; border-radius: 999px;\n  background: #1d7a46; color: #fff !important; font-weight: 700; text-decoration: none !important;\n}\n.indirme-bag:hover { background: #155c34; }\n\n/* ============================================================\n   Gun 3 -- Kod Adi Konseyi\n   Sahne HTML'i 04-karar-isle.js'de uretilir ve view action\n   mesajinda (yesil uyari kutusu) gosterilir.\n   ============================================================ */\n\n:root {\n  --konsey-lacivert: #1b1f3b;\n  --konsey-altin: #e0a526;\n  --konsey-muhendis: #2f6f8f;\n  --konsey-pazarlamaci: #d94f2b;\n  --konsey-sair: #7a4bb5;\n}\n\n/* Giris karti (Konsey sayfasi ustu) */\n.konsey-giris {\n  background: linear-gradient(135deg, var(--konsey-lacivert), #3a2f6b);\n  color: #fff; border-radius: 14px; padding: 22px 26px; margin-bottom: 18px;\n  box-shadow: 0 6px 18px rgba(27, 31, 59, .25);\n}\n.konsey-giris-baslik { font-size: 1.6rem; font-weight: 700; letter-spacing: .5px; }\n.konsey-giris-baslik::before { content: \"\\2696\\FE0F  \"; }\n.konsey-giris-metin { opacity: .9; margin: 6px 0 12px; }\n.konsey-uyeler span {\n  display: inline-block; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25);\n  border-radius: 999px; padding: 4px 12px; margin: 0 6px 6px 0; font-size: .9rem;\n}\n\n/* Sonuc sahnesi (sayfadaki kalici kutu: hidden \"sahne\" + htmlelement) */\n.konsey-sahne {\n  background: #faf7f0; border: 1px solid #e8dfc8; color: #222;\n  border-radius: 14px; padding: 20px 22px; margin-top: 18px;\n}\n.konsey-uyari, .konsey-hata {\n  margin-top: 16px; padding: 14px 18px; border-radius: 12px; font-weight: 600;\n}\n.konsey-uyari { background: #fff6e0; border: 1px solid #f1d38a; color: #7a5600; }\n.konsey-hata  { background: #fdecea; border: 1px solid #f5b5ad; color: #8a1c10; }\n.konsey-baslik { font-size: 1.3rem; font-weight: 700; color: var(--konsey-lacivert); }\n.konsey-proje { font-style: italic; color: #555; margin: 4px 0 14px; }\n.konsey-kartlar { display: flex; flex-wrap: wrap; gap: 14px; }\n.konsey-kart {\n  flex: 1 1 240px; background: #fff; border-radius: 12px; padding: 14px 16px;\n  border-top: 5px solid #999; box-shadow: 0 3px 10px rgba(0,0,0,.06); position: relative;\n}\n.konsey-muhendis    { border-top-color: var(--konsey-muhendis); }\n.konsey-pazarlamaci { border-top-color: var(--konsey-pazarlamaci); }\n.konsey-sair        { border-top-color: var(--konsey-sair); }\n.konsey-kim { font-size: .85rem; text-transform: uppercase; letter-spacing: .6px; color: #666; font-weight: 600; }\n.konsey-isim { font-size: 1.35rem; font-weight: 700; margin: 6px 0; color: var(--konsey-lacivert); }\n.konsey-muhendis .konsey-gerekce    { font-family: Consolas, \"Courier New\", monospace; font-size: .9rem; }\n.konsey-pazarlamaci .konsey-gerekce { font-weight: 600; }\n.konsey-sair .konsey-gerekce        { font-family: Georgia, \"Times New Roman\", serif; font-style: italic; }\n.konsey-baskan-notu {\n  margin-top: 10px; padding-top: 8px; border-top: 1px dashed #ddd; font-size: .88rem; color: #444;\n}\n.konsey-kazanan { box-shadow: 0 0 0 3px var(--konsey-altin), 0 6px 18px rgba(224,165,38,.35); }\n.konsey-kazanan::after {\n  content: \"\\1F451  KAZANAN\"; position: absolute; top: -12px; right: 12px;\n  background: var(--konsey-altin); color: #fff; font-size: .75rem; font-weight: 700;\n  padding: 3px 10px; border-radius: 999px;\n}\n.konsey-karar {\n  margin-top: 18px; background: var(--konsey-lacivert); color: #fff; border-radius: 12px; padding: 16px 20px;\n}\n.konsey-karar-ust { font-size: .85rem; letter-spacing: .6px; text-transform: uppercase; opacity: .8; }\n.konsey-karar-isim { font-size: 1.7rem; font-weight: 800; color: var(--konsey-altin); margin: 4px 0; }\n.konsey-puan {\n  font-size: 1rem; background: var(--konsey-altin); color: var(--konsey-lacivert);\n  padding: 2px 10px; border-radius: 999px; vertical-align: middle; margin-left: 6px;\n}\n.konsey-karar-metin { margin: 6px 0 10px; }\n.konsey-pano-notu { font-size: .9rem; opacity: .85; }\n\n/* Isim Panosu: ilk uc satir */\n.konsey-pano tbody tr:nth-child(1) td { background: #fff7dd; }\n.konsey-pano tbody tr:nth-child(2) td { background: #f3f4f6; }\n.konsey-pano tbody tr:nth-child(3) td { background: #fbefe6; }\n.konsey-pano tbody tr:nth-child(-n+3) input { font-weight: 700 !important; }\n\n/* Indirilecek dosya (salt okunur File bileseni): dosya adi belirgin bir dugme gibi */\n.indirme-dosyasi .list-group-header { display: none; }\n.indirme-dosyasi li.list-group-item { border-radius: 10px; border-color: #b9dfc6; background: #f4fbf6; }\n.indirme-dosyasi a[ref=\"fileLink\"] {\n  display: inline-block; padding: 4px 14px; border-radius: 999px; background: #1d7a46;\n  color: #fff !important; font-weight: 700; text-decoration: none !important;\n}\n.indirme-dosyasi a[ref=\"fileLink\"]::before { content: \"\\2B07\\FE0F  \"; }\n.indirme-dosyasi a[ref=\"fileLink\"]:hover { background: #155c34; }\n",
   "customCSSErrors": 0,
   "authConfig": "Okta",
   "sessionExpireTimeInMinutes": "",
@@ -326,6 +326,37 @@
        "value": ""
       }
      ]
+    },
+    {
+     "type": "file",
+     "key": "indirmeDosyasi",
+     "id": "fdindirme",
+     "label": "Rapor (indirmek icin dosya adina tiklayin)",
+     "input": true,
+     "storage": "base64",
+     "multiple": false,
+     "disabled": true,
+     "image": false,
+     "webcam": false,
+     "tableView": false,
+     "persistent": false,
+     "clearOnHide": false,
+     "customClass": "indirme-dosyasi",
+     "fileTypes": [
+      {
+       "label": "",
+       "value": ""
+      }
+     ],
+     "validate": {
+      "required": false
+     },
+     "customConditional": "show = !!(data.indirmeDosyasi && data.indirmeDosyasi.length);",
+     "conditional": {
+      "show": null,
+      "when": null,
+      "eq": ""
+     }
     }
    ]
   },
@@ -656,6 +687,87 @@
   "y": 320,
   "wires": [
    [
+    "mk_sakla"
+   ]
+  ]
+ },
+ {
+  "id": "mk_sakla",
+  "type": "function",
+  "z": "mk_tab0000000001",
+  "name": "raporu sakla",
+  "func": "msg.raporBuffer = msg.payload;\nreturn msg;\n",
+  "outputs": 1,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 760,
+  "y": 380,
+  "wires": [
+   [
+    "mk_liste_oku1"
+   ]
+  ]
+ },
+ {
+  "id": "mk_liste_oku1",
+  "type": "file in",
+  "z": "mk_tab0000000001",
+  "name": "raporlar.jsonl oku",
+  "filename": "/internal-storage-files/musteri-kontrol/raporlar.jsonl",
+  "filenameType": "str",
+  "format": "utf8",
+  "chunk": false,
+  "sendError": false,
+  "encoding": "utf8",
+  "allProps": true,
+  "x": 960,
+  "y": 380,
+  "wires": [
+   [
+    "mk_kaydet"
+   ]
+  ]
+ },
+ {
+  "id": "mk_c_liste1",
+  "type": "catch",
+  "z": "mk_tab0000000001",
+  "name": "liste yok",
+  "scope": [
+   "mk_liste_oku1"
+  ],
+  "uncaught": false,
+  "x": 960,
+  "y": 440,
+  "wires": [
+   [
+    "mk_c_liste1_f"
+   ]
+  ]
+ },
+ {
+  "id": "mk_c_liste1_f",
+  "type": "function",
+  "z": "mk_tab0000000001",
+  "name": "bos liste",
+  "func": "delete msg.error;\nmsg.payload = \"\";\nreturn msg;\n",
+  "outputs": 1,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 1140,
+  "y": 440,
+  "wires": [
+   [
     "mk_kaydet"
    ]
   ]
@@ -665,8 +777,8 @@
   "type": "function",
   "z": "mk_tab0000000001",
   "name": "rapora kaydet",
-  "func": "// json-to-excel'den gelen raporu (Buffer) diske DEGIL uygulamanin hafizasina\n// koyar; \"Raporlar\" sayfasi listeyi buradan okur. Sonra forma yanit hazirlar.\n//\n// Neden flow context: kullanici raporu kendi bilgisayarinda istedigi yere\n// tarayicidan indirir; sunucuda dosya birikmez.\n// Bedeli: context bellekte tutulur, Production yeniden baslatilinca liste\n// sifirlanir. Bu yuzden rapor gonderim aninda da indirilir (asagida).\n//\n// Cikis 1 -> indirme baglantisi -> view action (forma \"tamamlandi\" mesaji + baglanti)\n// Cikis 2 -> debug (her durumda)\n\nconst ENFAZLA = 20;                                    // bellekte tutulan son rapor sayisi\nconst ist = msg.istatistik || {};\n\nconst rapor = {\n  id: Date.now() + \"-\" + Math.random().toString(36).slice(2, 8),   // ayni milisaniyede iki kosu olabilir\n  ad: msg.raporAdi || (\"rapor-\" + Date.now() + \".xlsx\"),\n  zaman: new Date().toISOString(),\n  dosya: ist.dosya || \"\",\n  ozet: (ist.hataliSatir || 0) + \"/\" + (ist.toplamSatir || 0) + \" satir hatali, \" + (ist.toplamHata || 0) + \" hata\",\n  icerik: msg.payload                                  // Buffer\n};\n\nconst liste = flow.get(\"raporlar\") || [];\nliste.unshift(rapor);\nflow.set(\"raporlar\", liste.slice(0, ENFAZLA));\n\nconst kayit = { payload: { rapor: rapor.ad, ozet: rapor.ozet, bellekteki: Math.min(liste.length, ENFAZLA) } };\n\n// Form dugumunun koydugu alanin GERCEK adi __deptAppsFormioButtonClicked.\n// view action'in yardim metni __axetFlowsFormioButtonClicked yaziyor -- yanlis;\n// ikisine de bakiyoruz ki surum degisirse kirilmasin.\nfunction formdanMi(m) { return !!(m.__deptAppsFormioButtonClicked || m.__axetFlowsFormioButtonClicked); }\n\n// Tasarimcidaki \"ornek dosyayla test\" kosusunda form yok -> view action'a gitme.\n// Form dugumu bu ozellikleri koyar; view action onlarsiz calismaz, DOKUNMAYIN.\nif (!formdanMi(msg)) {\n  node.status({ fill: \"grey\", shape: \"dot\", text: \"kaydedildi (formsuz test)\" });\n  return [null, kayit];\n}\n\nmsg.indirilecek = { data: rapor.icerik, ad: rapor.ad };      // -> ortak/indirme-bagi-olustur.js\nmsg.messages = {\n  mesaj: \"Kontrol tamamlandi: \" + (ist.toplamSatir || 0) + \" satirin \" + (ist.hataliSatir || 0) + \" tanesi hatali (\" + (ist.toplamHata || 0) + \" hata). Rapor:\",\n  dosya: String(rapor.dosya),\n  toplam: String(ist.toplamSatir || 0),\n  hatali: String(ist.hataliSatir || 0),\n  hata: String(ist.toplamHata || 0)\n};\n\nnode.status({ fill: \"green\", shape: \"dot\", text: rapor.ozet });\nreturn [msg, kayit];\n",
-  "outputs": 2,
+  "func": "// json-to-excel'den gelen raporu KALICI klasore yazar ve rapor listesini\n// (raporlar.jsonl) gunceller; sonra forma yanit + indirme baglantisi hazirlar.\n//\n//   /internal-storage-files/musteri-kontrol/raporlar.jsonl            liste (son 20)\n//   /internal-storage-files/musteri-kontrol/raporlar/<ad>.xlsx        raporlarin kendisi\n//\n// Neden diske: flow context bellektedir, her Run Flow / yeni surumde silinir.\n// /internal-storage-files ise konteyner disinda, makinedeki instance klasorune\n// bagli -- deploy'lardan sag cikar (Gun 1 hava okumalari gibi).\n// Dosya birikmesin: listede son 20 rapor kalir, daha eskilerin xlsx'i silinir.\n//\n// Girdi : msg.raporBuffer = rapor (json-to-excel, akista saklandi), msg.payload = raporlar.jsonl icerigi (file in)\n// Cikis 1 -> indirme baglantisi -> view action (form)\n// Cikis 2 -> debug\n// Cikis 3 -> rapor xlsx'i yaz (file, encoding none)\n// Cikis 4 -> raporlar.jsonl'i yeniden yaz (file, overwrite)\n// Cikis 5 -> eski xlsx'leri sil (file, delete) -- birden fazla mesaj olabilir\n\nconst ENFAZLA = 20;\nconst KLASOR = \"/internal-storage-files/musteri-kontrol/\";\nconst ist = msg.istatistik || {};\n\nconst liste = [];\nfor (const satir of String(msg.payload || \"\").split(/\\r?\\n/)) {\n  if (!satir.trim()) continue;\n  try { liste.push(JSON.parse(satir)); } catch (e) {}\n}\n\nconst ad = msg.raporAdi || (\"rapor-\" + Date.now() + \".xlsx\");\nconst id = Date.now() + \"-\" + Math.random().toString(36).slice(2, 8);   // ayni saniyede iki kosu olabilir\nconst rapor = {\n  id: id,\n  ad: ad,                                                // kullanicinin gordugu / indirdigi ad\n  yol: KLASOR + \"raporlar/\" + id + \"-\" + ad,            // diskteki ad BENZERSIZ: ayni saniyedeki iki rapor cakismasin\n  zaman: new Date().toISOString(),\n  dosya: ist.dosya || \"\",\n  ozet: (ist.hataliSatir || 0) + \"/\" + (ist.toplamSatir || 0) + \" satir hatali, \" + (ist.toplamHata || 0) + \" hata\"\n};\n\nliste.unshift(rapor);\nconst kalan = liste.slice(0, ENFAZLA);\nconst silinecek = liste.slice(ENFAZLA).filter(r => r.yol);\n\nconst buf = msg.raporBuffer;\nconst xlsxMsg = { filename: rapor.yol, payload: buf };\nconst listeMsg = { filename: KLASOR + \"raporlar.jsonl\", payload: kalan.map(r => JSON.stringify(r)).join(\"\\n\") + \"\\n\" };\nconst silMsgs = silinecek.map(r => ({ filename: r.yol, payload: \"\" }));\nconst kayit = { payload: { rapor: rapor.ad, ozet: rapor.ozet, yol: rapor.yol, listede: kalan.length, silinen: silinecek.length } };\n\n// Form dugumunun koydugu alanin GERCEK adi __deptAppsFormioButtonClicked.\n// view action'in yardim metni __axetFlowsFormioButtonClicked yaziyor -- yanlis;\n// ikisine de bakiyoruz ki surum degisirse kirilmasin.\nfunction formdanMi(m) { return !!(m.__deptAppsFormioButtonClicked || m.__axetFlowsFormioButtonClicked); }\n\n// Tasarimcidaki \"ornek dosyayla test\" kosusunda form yok -> view action'a gitme\n// (ama rapor yine diske yazilir).\nlet formaYanit = null;\nif (formdanMi(msg)) {\n  msg.indirilecek = { data: buf, ad: rapor.ad };              // -> ortak/indirme-bagi-olustur.js\n  msg.messages = {\n    mesaj: \"Kontrol tamamlandi: \" + (ist.toplamSatir || 0) + \" satirin \" + (ist.hataliSatir || 0) + \" tanesi hatali (\" + (ist.toplamHata || 0) + \" hata). Rapor:\",\n    dosya: String(rapor.dosya),\n    toplam: String(ist.toplamSatir || 0),\n    hatali: String(ist.hataliSatir || 0),\n    hata: String(ist.toplamHata || 0)\n  };\n  delete msg.raporBuffer;\n  msg.payload = null;\n  formaYanit = msg;\n}\n\nnode.status({ fill: \"green\", shape: \"dot\", text: rapor.ozet + \" (\" + kalan.length + \" rapor)\" });\nreturn [formaYanit, kayit, xlsxMsg, listeMsg, silMsgs.length ? silMsgs : null];\n",
+  "outputs": 5,
   "timeout": 0,
   "setupErrors": 0,
   "functionErrors": 0,
@@ -674,15 +786,75 @@
   "initialize": "",
   "finalize": "",
   "libs": [],
-  "x": 960,
-  "y": 320,
+  "x": 1160,
+  "y": 380,
   "wires": [
    [
     "mk_bag"
    ],
    [
     "mk_bitti"
+   ],
+   [
+    "mk_xls_w"
+   ],
+   [
+    "mk_liste_w"
+   ],
+   [
+    "mk_sil"
    ]
+  ]
+ },
+ {
+  "id": "mk_xls_w",
+  "type": "file",
+  "z": "mk_tab0000000001",
+  "name": "raporlar/<ad>.xlsx",
+  "filename": "filename",
+  "filenameType": "msg",
+  "appendNewline": false,
+  "createDir": true,
+  "overwriteFile": "true",
+  "encoding": "none",
+  "x": 1380,
+  "y": 360,
+  "wires": [
+   []
+  ]
+ },
+ {
+  "id": "mk_liste_w",
+  "type": "file",
+  "z": "mk_tab0000000001",
+  "name": "raporlar.jsonl",
+  "filename": "filename",
+  "filenameType": "msg",
+  "appendNewline": false,
+  "createDir": true,
+  "overwriteFile": "true",
+  "encoding": "utf8",
+  "x": 1380,
+  "y": 400,
+  "wires": [
+   []
+  ]
+ },
+ {
+  "id": "mk_sil",
+  "type": "file",
+  "z": "mk_tab0000000001",
+  "name": "eski raporu sil",
+  "filename": "filename",
+  "filenameType": "msg",
+  "appendNewline": false,
+  "createDir": true,
+  "overwriteFile": "delete",
+  "encoding": "utf8",
+  "x": 1380,
+  "y": 440,
+  "wires": [
+   []
   ]
  },
  {
@@ -690,7 +862,7 @@
   "type": "function",
   "z": "mk_tab0000000001",
   "name": "indirme baglantisi",
-  "func": "// Indirilecek dosyayi sayfada KALICI duran bir indirme kutusuna cevirir:\n//   <a href=\"data:<tur>;base64,<veri>\" download=\"<dosya>\">\n//\n// Neden data: baglantisi:\n//  1. aXet'in view action indirmesi (downloadFileSubmission) tarayicida tipsiz\n//     bir Blob'u, sayfaya eklenmemis bir <a> ile tikliyor; Edge \".tmp\" kaydediyor.\n//  2. Kendi \"http in\" ucumuz da olmuyor: aXet http in'leri uygulama oturumuyla\n//     dogruluyor ve Okta yolunda kendi kodu cokuyor (logger is not defined).\n// Neden uyari kutusunda degil de sayfada:\n//  3. aXet uyarilari 10 sn sonra kendiliginden siliniyor (DeptAppsAlerts.addAlert:\n//     `if (alert !== 'danger')` nesneyi metinle karsilastiriyor). Baglanti formdaki\n//     gizli bir alana (varsayilan \"indirme\") yazilir; ayni formdaki htmlelement\n//     onu `{{ data.indirme }}` ile gosterir.\n//\n// Girdi : msg.indirilecek = { data: Buffer, ad: \"dosya.xlsx\" }\n//         msg.messages.mesaj  (kutudaki aciklama, duz metin)\n//         msg.indirmeAlani    (istege bagli, formdaki gizli alanin anahtari)\n// Cikti : msg.submission[alan] = HTML kutu  (view action \"update\" forma basar)\n\nconst k = msg.indirilecek;\nif (!k || !k.data) { node.error(\"indirilecek dosya yok\", msg); return null; }\n\nconst esc = (s) => String(s === undefined || s === null ? \"\" : s)\n  .replace(/&/g, \"&amp;\").replace(/</g, \"&lt;\").replace(/>/g, \"&gt;\").replace(/\"/g, \"&quot;\").replace(/'/g, \"&#39;\");\n\nconst buf = Buffer.isBuffer(k.data) ? k.data : Buffer.from(k.data);\nconst tur = /\\.xlsx$/i.test(k.ad)\n  ? \"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\"\n  : \"application/octet-stream\";\nconst dosya = String(k.ad).replace(/[^A-Za-z0-9._-]/g, \"_\");\nconst aciklama = (msg.messages && msg.messages.mesaj) || \"Dosya hazir.\";\n\nconst html =\n  '<div class=\"indirme-kutu\">' +\n    '<span class=\"indirme-metin\">' + esc(aciklama) + '</span> ' +\n    '<a class=\"indirme-bag\" href=\"data:' + tur + ';base64,' + buf.toString(\"base64\") + '\" download=\"' + esc(dosya) + '\">' +\n      '⬇️ ' + esc(dosya) + '</a>' +\n  '</div>';\n\nconst alan = msg.indirmeAlani || \"indirme\";\nconst mevcut = (msg.submission && typeof msg.submission === \"object\")\n  ? (msg.submission.data && typeof msg.submission.data === \"object\" ? msg.submission.data : msg.submission)\n  : {};\nmsg.submission = Object.assign({}, mevcut);\nmsg.submission[alan] = html;\n\ndelete msg.indirilecek;\ndelete msg.downloadFileSubmission;     // aXet'in kendi (hatali) indirmesi devre disi\n\nnode.status({ fill: \"green\", shape: \"dot\", text: k.ad + \" (\" + Math.round(buf.length / 1024) + \" KB)\" });\nreturn msg;\n",
+  "func": "// Indirilecek dosyayi sayfada KALICI duran bir indirme kutusuna cevirir:\n//   <a href=\"data:<tur>;base64,<veri>\" download=\"<dosya>\">\n//\n// Neden data: baglantisi:\n//  1. aXet'in view action indirmesi (downloadFileSubmission) tarayicida tipsiz\n//     bir Blob'u, sayfaya eklenmemis bir <a> ile tikliyor; Edge \".tmp\" kaydediyor.\n//  2. Kendi \"http in\" ucumuz da olmuyor: aXet http in'leri uygulama oturumuyla\n//     dogruluyor ve Okta yolunda kendi kodu cokuyor (logger is not defined).\n// Neden uyari kutusunda degil de sayfada:\n//  3. aXet uyarilari 10 sn sonra kendiliginden siliniyor (DeptAppsAlerts.addAlert:\n//     `if (alert !== 'danger')` nesneyi metinle karsilastiriyor). Baglanti formdaki\n//     gizli bir alana (varsayilan \"indirme\") yazilir; ayni formdaki htmlelement\n//     onu `{{ data.indirme }}` ile gosterir.\n//\n// Girdi : msg.indirilecek = { data: Buffer, ad: \"dosya.xlsx\" }\n//         msg.messages.mesaj  (kutudaki aciklama, duz metin)\n//         msg.indirmeAlani    (istege bagli, formdaki gizli alanin anahtari)\n// Cikti : msg.submission[alan] = HTML aciklama, msg.submission[alan + \"Dosyasi\"] = [dosya]\n//         (salt okunur File bileseni; dosya adina tiklayinca Formio indirir)\n//\n// <a href=\"data:...\"> DEGIL: formdaki htmlelement icerigi DOMPurify'dan geciyor ve\n// data: adresli href siliniyor (gercek kosuda dugme tiklanamaz oldu). File bileseni\n// base64 dosyayi downloadjs ile dogru MIME tipi ve adiyla indiriyor.\n\nconst k = msg.indirilecek;\nif (!k || !k.data) { node.error(\"indirilecek dosya yok\", msg); return null; }\n\nconst esc = (s) => String(s === undefined || s === null ? \"\" : s)\n  .replace(/&/g, \"&amp;\").replace(/</g, \"&lt;\").replace(/>/g, \"&gt;\").replace(/\"/g, \"&quot;\").replace(/'/g, \"&#39;\");\n\nconst buf = Buffer.isBuffer(k.data) ? k.data : Buffer.from(k.data);\nconst tur = /\\.xlsx$/i.test(k.ad)\n  ? \"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\"\n  : \"application/octet-stream\";\nconst dosya = String(k.ad).replace(/[^A-Za-z0-9._-]/g, \"_\");\nconst aciklama = (msg.messages && msg.messages.mesaj) || \"Dosya hazir.\";\n\nconst html =\n  '<div class=\"indirme-kutu\">' +\n    '<span class=\"indirme-metin\">' + esc(aciklama) + '</span> ' +\n    '<b>' + esc(dosya) + '</b> -- asagidaki dosya adina tiklayarak indirin.' +\n  '</div>';\nconst dosyaBileseni = [{\n  storage: \"base64\", name: dosya, originalName: dosya, size: buf.length, type: tur,\n  url: \"data:\" + tur + \";base64,\" + buf.toString(\"base64\")\n}];\n\nconst alan = msg.indirmeAlani || \"indirme\";\nconst mevcut = (msg.submission && typeof msg.submission === \"object\")\n  ? (msg.submission.data && typeof msg.submission.data === \"object\" ? msg.submission.data : msg.submission)\n  : {};\nmsg.submission = Object.assign({}, mevcut);\nmsg.submission[alan] = html;\nmsg.submission[alan + \"Dosyasi\"] = dosyaBileseni;\n\ndelete msg.indirilecek;\ndelete msg.downloadFileSubmission;     // aXet'in kendi (hatali) indirmesi devre disi\n\nnode.status({ fill: \"green\", shape: \"dot\", text: k.ad + \" (\" + Math.round(buf.length / 1024) + \" KB)\" });\nreturn msg;\n",
   "outputs": 1,
   "timeout": 0,
   "setupErrors": 0,
@@ -872,6 +1044,37 @@
        "value": ""
       }
      ]
+    },
+    {
+     "type": "file",
+     "key": "indirmeDosyasi",
+     "id": "fdindirme",
+     "label": "Rapor (indirmek icin dosya adina tiklayin)",
+     "input": true,
+     "storage": "base64",
+     "multiple": false,
+     "disabled": true,
+     "image": false,
+     "webcam": false,
+     "tableView": false,
+     "persistent": false,
+     "clearOnHide": false,
+     "customClass": "indirme-dosyasi",
+     "fileTypes": [
+      {
+       "label": "",
+       "value": ""
+      }
+     ],
+     "validate": {
+      "required": false
+     },
+     "customConditional": "show = !!(data.indirmeDosyasi && data.indirmeDosyasi.length);",
+     "conditional": {
+      "show": null,
+      "when": null,
+      "eq": ""
+     }
     }
    ]
   },
@@ -959,8 +1162,67 @@
   "y": 600,
   "wires": [
    [
-    "mk_indir"
+    "mk_secim"
    ],
+   [
+    "mk_liste_oku"
+   ]
+  ]
+ },
+ {
+  "id": "mk_liste_oku",
+  "type": "file in",
+  "z": "mk_tab0000000001",
+  "name": "raporlar.jsonl oku",
+  "filename": "/internal-storage-files/musteri-kontrol/raporlar.jsonl",
+  "filenameType": "str",
+  "format": "utf8",
+  "chunk": false,
+  "sendError": false,
+  "encoding": "utf8",
+  "allProps": true,
+  "x": 380,
+  "y": 680,
+  "wires": [
+   [
+    "mk_liste"
+   ]
+  ]
+ },
+ {
+  "id": "mk_c_liste2",
+  "type": "catch",
+  "z": "mk_tab0000000001",
+  "name": "liste yok",
+  "scope": [
+   "mk_liste_oku"
+  ],
+  "uncaught": false,
+  "x": 380,
+  "y": 740,
+  "wires": [
+   [
+    "mk_c_liste2_f"
+   ]
+  ]
+ },
+ {
+  "id": "mk_c_liste2_f",
+  "type": "function",
+  "z": "mk_tab0000000001",
+  "name": "bos liste",
+  "func": "delete msg.error;\nmsg.payload = \"\";\nreturn msg;\n",
+  "outputs": 1,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 560,
+  "y": 740,
+  "wires": [
    [
     "mk_liste"
    ]
@@ -971,7 +1233,7 @@
   "type": "function",
   "z": "mk_tab0000000001",
   "name": "rapor listesi",
-  "func": "// \"Raporlar\" sayfasi acilirken (form dugumunun son cikisi: onInitForm) calisir.\n// Bellekteki raporlari secim kutusuna doldurur.\n//\n// msg.onInitPopulateFormStructure = { <bilesen anahtari>: [{label, value}] }\n// aXet'in kendi sablonlarinda (Apply Auth App) kullanilan mekanizma.\n\nconst liste = flow.get(\"raporlar\") || [];\n\nconst secenekler = liste.map(r => ({\n  label: r.ad + \"  --  \" + r.ozet,\n  value: r.id\n}));\n\nmsg.onInitPopulateFormStructure = { rapor: secenekler };\nmsg.onInitSubmission = {};\n\nnode.status({ fill: \"blue\", shape: \"dot\", text: secenekler.length + \" rapor listelendi\" });\nreturn msg;\n",
+  "func": "// \"Raporlar\" sayfasi acilirken (form onInitForm cikisi): kalici rapor listesini\n// (raporlar.jsonl, file in ile okundu) secim kutusuna doldurur.\n//\n// msg.onInitPopulateFormStructure = { <bilesen anahtari>: [{label, value}] }\n// aXet'in kendi sablonlarinda (Apply Auth App) kullanilan mekanizma.\n\nconst liste = [];\nfor (const satir of String(msg.payload || \"\").split(/\\r?\\n/)) {\n  if (!satir.trim()) continue;\n  try { liste.push(JSON.parse(satir)); } catch (e) {}\n}\n\nconst secenekler = liste.map(r => ({\n  label: r.ad + \"  --  \" + r.ozet,\n  value: r.id\n}));\n\nmsg.onInitPopulateFormStructure = { rapor: secenekler };\nmsg.onInitSubmission = {};\n\nnode.status({ fill: \"blue\", shape: \"dot\", text: secenekler.length + \" rapor listelendi\" });\nreturn msg;\n",
   "outputs": 1,
   "timeout": 0,
   "setupErrors": 0,
@@ -980,8 +1242,8 @@
   "initialize": "",
   "finalize": "",
   "libs": [],
-  "x": 380,
-  "y": 640,
+  "x": 580,
+  "y": 680,
   "wires": [
    [
     "mk_view_liste"
@@ -1000,41 +1262,16 @@
   "inputType": "buffer",
   "message": null,
   "messageType": "info",
-  "x": 600,
-  "y": 640,
+  "x": 780,
+  "y": 680,
   "wires": []
  },
  {
-  "id": "mk_indir",
+  "id": "mk_secim",
   "type": "function",
   "z": "mk_tab0000000001",
-  "name": "rapor indir",
-  "func": "// \"Raporlar\" sayfasinda Indir dugmesi: secilen raporu indirme baglantisina cevirir.\n// Cikis 1 -> indirme-bagi-olustur -> view action, Cikis 2 -> (rapor yok) view action\n\nconst veri = (msg.payload && msg.payload.data) || (msg.submission && msg.submission.data) || {};\nconst secilen = veri.rapor;\nconst liste = flow.get(\"raporlar\") || [];\nconst r = liste.find(x => x.id === String(secilen));\n\nif (!r) {\n  msg.messages = { mesaj: \"Rapor bulunamadi. Uygulama yeniden baslatildiysa eski raporlar silinmis olabilir; dosyayi tekrar yukleyin.\" };\n  delete msg.indirilecek;\n  node.status({ fill: \"yellow\", shape: \"ring\", text: \"rapor yok: \" + secilen });\n  return [null, msg];                                   // dogrudan view action (mesaj)\n}\n\nmsg.indirilecek = { data: r.icerik, ad: r.ad };                // -> ortak/indirme-bagi-olustur.js\nmsg.messages = { mesaj: r.ozet + \". Rapor:\" };\nnode.status({ fill: \"green\", shape: \"dot\", text: r.ad });\nreturn [msg, null];                                     // -> indirme baglantisi -> view action\n",
-  "outputs": 2,
-  "timeout": 0,
-  "setupErrors": 0,
-  "functionErrors": 0,
-  "closeErrors": 0,
-  "initialize": "",
-  "finalize": "",
-  "libs": [],
-  "x": 380,
-  "y": 580,
-  "wires": [
-   [
-    "mk_bag2"
-   ],
-   [
-    "mk_view_yok"
-   ]
-  ]
- },
- {
-  "id": "mk_bag2",
-  "type": "function",
-  "z": "mk_tab0000000001",
-  "name": "indirme baglantisi",
-  "func": "// Indirilecek dosyayi sayfada KALICI duran bir indirme kutusuna cevirir:\n//   <a href=\"data:<tur>;base64,<veri>\" download=\"<dosya>\">\n//\n// Neden data: baglantisi:\n//  1. aXet'in view action indirmesi (downloadFileSubmission) tarayicida tipsiz\n//     bir Blob'u, sayfaya eklenmemis bir <a> ile tikliyor; Edge \".tmp\" kaydediyor.\n//  2. Kendi \"http in\" ucumuz da olmuyor: aXet http in'leri uygulama oturumuyla\n//     dogruluyor ve Okta yolunda kendi kodu cokuyor (logger is not defined).\n// Neden uyari kutusunda degil de sayfada:\n//  3. aXet uyarilari 10 sn sonra kendiliginden siliniyor (DeptAppsAlerts.addAlert:\n//     `if (alert !== 'danger')` nesneyi metinle karsilastiriyor). Baglanti formdaki\n//     gizli bir alana (varsayilan \"indirme\") yazilir; ayni formdaki htmlelement\n//     onu `{{ data.indirme }}` ile gosterir.\n//\n// Girdi : msg.indirilecek = { data: Buffer, ad: \"dosya.xlsx\" }\n//         msg.messages.mesaj  (kutudaki aciklama, duz metin)\n//         msg.indirmeAlani    (istege bagli, formdaki gizli alanin anahtari)\n// Cikti : msg.submission[alan] = HTML kutu  (view action \"update\" forma basar)\n\nconst k = msg.indirilecek;\nif (!k || !k.data) { node.error(\"indirilecek dosya yok\", msg); return null; }\n\nconst esc = (s) => String(s === undefined || s === null ? \"\" : s)\n  .replace(/&/g, \"&amp;\").replace(/</g, \"&lt;\").replace(/>/g, \"&gt;\").replace(/\"/g, \"&quot;\").replace(/'/g, \"&#39;\");\n\nconst buf = Buffer.isBuffer(k.data) ? k.data : Buffer.from(k.data);\nconst tur = /\\.xlsx$/i.test(k.ad)\n  ? \"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\"\n  : \"application/octet-stream\";\nconst dosya = String(k.ad).replace(/[^A-Za-z0-9._-]/g, \"_\");\nconst aciklama = (msg.messages && msg.messages.mesaj) || \"Dosya hazir.\";\n\nconst html =\n  '<div class=\"indirme-kutu\">' +\n    '<span class=\"indirme-metin\">' + esc(aciklama) + '</span> ' +\n    '<a class=\"indirme-bag\" href=\"data:' + tur + ';base64,' + buf.toString(\"base64\") + '\" download=\"' + esc(dosya) + '\">' +\n      '⬇️ ' + esc(dosya) + '</a>' +\n  '</div>';\n\nconst alan = msg.indirmeAlani || \"indirme\";\nconst mevcut = (msg.submission && typeof msg.submission === \"object\")\n  ? (msg.submission.data && typeof msg.submission.data === \"object\" ? msg.submission.data : msg.submission)\n  : {};\nmsg.submission = Object.assign({}, mevcut);\nmsg.submission[alan] = html;\n\ndelete msg.indirilecek;\ndelete msg.downloadFileSubmission;     // aXet'in kendi (hatali) indirmesi devre disi\n\nnode.status({ fill: \"green\", shape: \"dot\", text: k.ad + \" (\" + Math.round(buf.length / 1024) + \" KB)\" });\nreturn msg;\n",
+  "name": "secimi sakla",
+  "func": "const v = (msg.payload && msg.payload.data) || (msg.submission && (msg.submission.data || msg.submission)) || {};\nmsg.secilenRapor = v.rapor;\nreturn msg;\n",
   "outputs": 1,
   "timeout": 0,
   "setupErrors": 0,
@@ -1043,7 +1280,194 @@
   "initialize": "",
   "finalize": "",
   "libs": [],
-  "x": 600,
+  "x": 380,
+  "y": 560,
+  "wires": [
+   [
+    "mk_liste_oku3"
+   ]
+  ]
+ },
+ {
+  "id": "mk_liste_oku3",
+  "type": "file in",
+  "z": "mk_tab0000000001",
+  "name": "raporlar.jsonl oku",
+  "filename": "/internal-storage-files/musteri-kontrol/raporlar.jsonl",
+  "filenameType": "str",
+  "format": "utf8",
+  "chunk": false,
+  "sendError": false,
+  "encoding": "utf8",
+  "allProps": true,
+  "x": 560,
+  "y": 560,
+  "wires": [
+   [
+    "mk_indir"
+   ]
+  ]
+ },
+ {
+  "id": "mk_c_liste3",
+  "type": "catch",
+  "z": "mk_tab0000000001",
+  "name": "liste yok",
+  "scope": [
+   "mk_liste_oku3"
+  ],
+  "uncaught": false,
+  "x": 560,
+  "y": 500,
+  "wires": [
+   [
+    "mk_c_liste3_f"
+   ]
+  ]
+ },
+ {
+  "id": "mk_c_liste3_f",
+  "type": "function",
+  "z": "mk_tab0000000001",
+  "name": "bos liste",
+  "func": "delete msg.error;\nmsg.payload = \"\";\nreturn msg;\n",
+  "outputs": 1,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 740,
+  "y": 500,
+  "wires": [
+   [
+    "mk_indir"
+   ]
+  ]
+ },
+ {
+  "id": "mk_indir",
+  "type": "function",
+  "z": "mk_tab0000000001",
+  "name": "rapor indir",
+  "func": "// \"Raporlar\" sayfasinda Indir dugmesi: secilen raporu kalici listeden\n// (raporlar.jsonl, file in ile okundu -> msg.payload) bulur, dosyasini okumaya yollar.\n// Cikis 1 -> rapor xlsx'ini oku (file in, msg.filename) -> indirme baglantisi -> view action\n// Cikis 2 -> (rapor yok) view action\n\nconst secilen = msg.secilenRapor;          // file in payload'i ezmeden once saklandi (akis-uret.py: \"secimi sakla\")\n\nconst liste = [];\nfor (const satir of String(msg.payload || \"\").split(/\\r?\\n/)) {\n  if (!satir.trim()) continue;\n  try { liste.push(JSON.parse(satir)); } catch (e) {}\n}\nconst r = liste.find(x => x.id === String(secilen));\n\nif (!r) {\n  msg.messages = { mesaj: \"Rapor bulunamadi. Listeden bir rapor secin; liste son 20 raporu tutar.\" };\n  delete msg.indirilecek;\n  node.status({ fill: \"yellow\", shape: \"ring\", text: \"rapor yok: \" + secilen });\n  return [null, msg];\n}\n\nmsg.filename = r.yol;\nmsg.indirmeRaporu = { ad: r.ad, ozet: r.ozet };\nnode.status({ fill: \"green\", shape: \"dot\", text: r.ad });\nreturn [msg, null];\n",
+  "outputs": 2,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 760,
+  "y": 560,
+  "wires": [
+   [
+    "mk_rapor_oku"
+   ],
+   [
+    "mk_view_yok"
+   ]
+  ]
+ },
+ {
+  "id": "mk_rapor_oku",
+  "type": "file in",
+  "z": "mk_tab0000000001",
+  "name": "rapor xlsx oku",
+  "filename": "filename",
+  "filenameType": "msg",
+  "format": "",
+  "chunk": false,
+  "sendError": false,
+  "encoding": "none",
+  "allProps": true,
+  "x": 960,
+  "y": 560,
+  "wires": [
+   [
+    "mk_rapor_dosya"
+   ]
+  ]
+ },
+ {
+  "id": "mk_c_rapor",
+  "type": "catch",
+  "z": "mk_tab0000000001",
+  "name": "rapor dosyasi yok",
+  "scope": [
+   "mk_rapor_oku"
+  ],
+  "uncaught": false,
+  "x": 960,
+  "y": 620,
+  "wires": [
+   [
+    "mk_rapor_yok"
+   ]
+  ]
+ },
+ {
+  "id": "mk_rapor_yok",
+  "type": "function",
+  "z": "mk_tab0000000001",
+  "name": "dosya yok mesaji",
+  "func": "delete msg.error;\nmsg.messages = { mesaj: \"Rapor dosyasi bulunamadi (silinmis olabilir).\" };\nreturn msg;\n",
+  "outputs": 1,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 1160,
+  "y": 620,
+  "wires": [
+   [
+    "mk_view_yok"
+   ]
+  ]
+ },
+ {
+  "id": "mk_rapor_dosya",
+  "type": "function",
+  "z": "mk_tab0000000001",
+  "name": "rapor dosyasi",
+  "func": "// Raporlar > Indir: diskten okunan rapor (file in, Buffer) -> indirme kutusu.\n// Dosya yoksa (elle silinmis) file in hata verir -> catch -> \"rapor yok\" mesaji.\n\nmsg.indirilecek = { data: msg.payload, ad: msg.indirmeRaporu.ad };   // -> ortak/indirme-bagi-olustur.js\nmsg.messages = { mesaj: msg.indirmeRaporu.ozet + \". Rapor:\" };\ndelete msg.indirmeRaporu;\nreturn msg;\n",
+  "outputs": 1,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 1160,
+  "y": 560,
+  "wires": [
+   [
+    "mk_bag2"
+   ]
+  ]
+ },
+ {
+  "id": "mk_bag2",
+  "type": "function",
+  "z": "mk_tab0000000001",
+  "name": "indirme baglantisi",
+  "func": "// Indirilecek dosyayi sayfada KALICI duran bir indirme kutusuna cevirir:\n//   <a href=\"data:<tur>;base64,<veri>\" download=\"<dosya>\">\n//\n// Neden data: baglantisi:\n//  1. aXet'in view action indirmesi (downloadFileSubmission) tarayicida tipsiz\n//     bir Blob'u, sayfaya eklenmemis bir <a> ile tikliyor; Edge \".tmp\" kaydediyor.\n//  2. Kendi \"http in\" ucumuz da olmuyor: aXet http in'leri uygulama oturumuyla\n//     dogruluyor ve Okta yolunda kendi kodu cokuyor (logger is not defined).\n// Neden uyari kutusunda degil de sayfada:\n//  3. aXet uyarilari 10 sn sonra kendiliginden siliniyor (DeptAppsAlerts.addAlert:\n//     `if (alert !== 'danger')` nesneyi metinle karsilastiriyor). Baglanti formdaki\n//     gizli bir alana (varsayilan \"indirme\") yazilir; ayni formdaki htmlelement\n//     onu `{{ data.indirme }}` ile gosterir.\n//\n// Girdi : msg.indirilecek = { data: Buffer, ad: \"dosya.xlsx\" }\n//         msg.messages.mesaj  (kutudaki aciklama, duz metin)\n//         msg.indirmeAlani    (istege bagli, formdaki gizli alanin anahtari)\n// Cikti : msg.submission[alan] = HTML aciklama, msg.submission[alan + \"Dosyasi\"] = [dosya]\n//         (salt okunur File bileseni; dosya adina tiklayinca Formio indirir)\n//\n// <a href=\"data:...\"> DEGIL: formdaki htmlelement icerigi DOMPurify'dan geciyor ve\n// data: adresli href siliniyor (gercek kosuda dugme tiklanamaz oldu). File bileseni\n// base64 dosyayi downloadjs ile dogru MIME tipi ve adiyla indiriyor.\n\nconst k = msg.indirilecek;\nif (!k || !k.data) { node.error(\"indirilecek dosya yok\", msg); return null; }\n\nconst esc = (s) => String(s === undefined || s === null ? \"\" : s)\n  .replace(/&/g, \"&amp;\").replace(/</g, \"&lt;\").replace(/>/g, \"&gt;\").replace(/\"/g, \"&quot;\").replace(/'/g, \"&#39;\");\n\nconst buf = Buffer.isBuffer(k.data) ? k.data : Buffer.from(k.data);\nconst tur = /\\.xlsx$/i.test(k.ad)\n  ? \"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\"\n  : \"application/octet-stream\";\nconst dosya = String(k.ad).replace(/[^A-Za-z0-9._-]/g, \"_\");\nconst aciklama = (msg.messages && msg.messages.mesaj) || \"Dosya hazir.\";\n\nconst html =\n  '<div class=\"indirme-kutu\">' +\n    '<span class=\"indirme-metin\">' + esc(aciklama) + '</span> ' +\n    '<b>' + esc(dosya) + '</b> -- asagidaki dosya adina tiklayarak indirin.' +\n  '</div>';\nconst dosyaBileseni = [{\n  storage: \"base64\", name: dosya, originalName: dosya, size: buf.length, type: tur,\n  url: \"data:\" + tur + \";base64,\" + buf.toString(\"base64\")\n}];\n\nconst alan = msg.indirmeAlani || \"indirme\";\nconst mevcut = (msg.submission && typeof msg.submission === \"object\")\n  ? (msg.submission.data && typeof msg.submission.data === \"object\" ? msg.submission.data : msg.submission)\n  : {};\nmsg.submission = Object.assign({}, mevcut);\nmsg.submission[alan] = html;\nmsg.submission[alan + \"Dosyasi\"] = dosyaBileseni;\n\ndelete msg.indirilecek;\ndelete msg.downloadFileSubmission;     // aXet'in kendi (hatali) indirmesi devre disi\n\nnode.status({ fill: \"green\", shape: \"dot\", text: k.ad + \" (\" + Math.round(buf.length / 1024) + \" KB)\" });\nreturn msg;\n",
+  "outputs": 1,
+  "timeout": 0,
+  "setupErrors": 0,
+  "functionErrors": 0,
+  "closeErrors": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 1360,
   "y": 560,
   "wires": [
    [
@@ -1063,7 +1487,7 @@
   "inputType": "buffer",
   "message": "<%= mesaj %> Indirme baglantisi asagida.",
   "messageType": "success",
-  "x": 820,
+  "x": 1560,
   "y": 560,
   "wires": []
  },
@@ -1079,7 +1503,7 @@
   "inputType": "buffer",
   "message": "<%= mesaj %>",
   "messageType": "warning",
-  "x": 600,
+  "x": 1360,
   "y": 620,
   "wires": []
  },
@@ -1096,8 +1520,11 @@
    "mk_ai_cvp",
    "mk_rapor",
    "mk_xls",
+   "mk_sakla",
    "mk_kaydet",
-   "mk_bag"
+   "mk_bag",
+   "mk_xls_w",
+   "mk_liste_w"
   ],
   "uncaught": false,
   "x": 160,

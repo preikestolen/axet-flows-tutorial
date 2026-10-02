@@ -1,10 +1,14 @@
-// "Raporlar" sayfasi acilirken (form dugumunun son cikisi: onInitForm) calisir.
-// Bellekteki raporlari secim kutusuna doldurur.
+// "Raporlar" sayfasi acilirken (form onInitForm cikisi): kalici rapor listesini
+// (raporlar.jsonl, file in ile okundu) secim kutusuna doldurur.
 //
 // msg.onInitPopulateFormStructure = { <bilesen anahtari>: [{label, value}] }
 // aXet'in kendi sablonlarinda (Apply Auth App) kullanilan mekanizma.
 
-const liste = flow.get("raporlar") || [];
+const liste = [];
+for (const satir of String(msg.payload || "").split(/\r?\n/)) {
+  if (!satir.trim()) continue;
+  try { liste.push(JSON.parse(satir)); } catch (e) {}
+}
 
 const secenekler = liste.map(r => ({
   label: r.ad + "  --  " + r.ozet,

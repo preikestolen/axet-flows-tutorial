@@ -165,7 +165,10 @@ akis = [
     ajan("kk_ai_sair", "Dramatik Sair", SAIR, ONERI_SEMASI, 1.0, 1200, 160, "kk_sira"),
     ajan("kk_ai_baskan", "Baskan", BASKAN, BASKAN_SEMASI, 0.4, 1200, 240, "kk_karar"),
 
-    fn("kk_karar", "karari isle", js("04-karar-isle.js"), 1400, 240, [["kk_pano_yaz"], ["kk_view_sonuc"]], outputs=2),
+    fn("kk_karar", "karari isle", js("04-karar-isle.js"), 1400, 240, [["kk_pano_yaz"], ["kk_view_sonuc"], ["kk_oturum_yaz"]], outputs=3),
+    {"id": "kk_oturum_yaz", "type": "file", "z": TAB, "name": "oturumlar/<gun>.jsonl (ekle)", "filename": "filename",
+     "filenameType": "msg", "appendNewline": True, "createDir": True, "overwriteFile": "false",
+     "encoding": "utf8", "x": 1640, "y": 320, "wires": [[]]},
     {"id": "kk_pano_yaz", "type": "file", "z": TAB, "name": "pano.jsonl (ekle)", "filename": "filename",
      "filenameType": "msg", "appendNewline": True, "createDir": True, "overwriteFile": "false",
      "encoding": "utf8", "x": 1620, "y": 200, "wires": [[]]},
@@ -182,7 +185,7 @@ akis = [
        [["kk_ai_muh"], ["kk_ai_paz"], ["kk_ai_sair"], ["kk_ai_baskan"], ["kk_hata"]], outputs=5),
 
     {"id": "kk_catch", "type": "catch", "z": TAB, "name": "konsey hatalari",
-     "scope": ["kk_al", "kk_hazirla", "kk_sira", "kk_karar", "kk_pano_yaz", "kk_pano_bos", "kk_yeniden"], "uncaught": False,
+     "scope": ["kk_al", "kk_hazirla", "kk_sira", "kk_karar", "kk_pano_yaz", "kk_oturum_yaz", "kk_pano_bos", "kk_yeniden"], "uncaught": False,
      "x": 150, "y": 340, "wires": [["kk_hata"]]},
     fn("kk_hata", "konsey dagildi", js("06-hata-yaniti.js"), 950, 340, [["kk_view_hata"]]),
     view_action("kk_view_hata", "hatayi goster", 1160, 340, "danger", "<%= mesaj %>"),

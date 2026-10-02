@@ -5,7 +5,9 @@
 // puan araliga sikistirilir, eksik degerlendirme "(sessiz kaldi)" olur.
 // Gorunum bozulmasin diye butun metinler HTML-escape edilir.
 //
-// Cikis 1 -> pano.jsonl'e eklenecek satir (file, append)
+// Cikis 1 -> pano.jsonl'e eklenecek satir (file, append)  -- sadece kazananlar
+// Cikis 3 -> oturumlar/<YYYY-MM-DD>.jsonl (file, append)    -- oturumun TAM kaydi:
+//            proje, ilhamlar, uc oneri + gerekceleri, Baskanin notlari, kazanan, puan
 // Cikis 2 -> view action: sahne msg.submission.sahne'ye (sayfada kalici kutu),
 //            uyari kutusuna kisa ozet (aXet uyarilari 10 sn'de siliniyor)
 
@@ -70,5 +72,19 @@ msg.submission = { proje: k.proje, sahne: sahne };
 msg.messages = { ozet: "Konsey karar verdi: \u00AB" + kazanan.kodAdi + "\u00BB " + puan + "/100 -- panoda " + sira + ". sira." };
 
 const satir = { filename: "/internal-storage-files/konsey/pano.jsonl", payload: JSON.stringify(kayit) };
+
+const gun = new Date().toLocaleDateString("sv-SE", { timeZone: "Europe/Istanbul" });   // YYYY-MM-DD
+const oturum = {
+  filename: "/internal-storage-files/konsey/oturumlar/" + gun + ".jsonl",
+  payload: JSON.stringify({
+    zaman: kayit.zaman,
+    proje: k.proje,
+    ilham: k.ilham,
+    oneriler: k.konusmalar.map(x => ({ karakter: x.karakter, kodAdi: x.kodAdi, gerekce: x.gerekce, baskanNotu: deg[x.karakter] || "" })),
+    kazanan: { kodAdi: kazanan.kodAdi, karakter: kazanan.karakter, puan: puan },
+    karar: karar,
+    panodakiSira: sira
+  })
+};
 node.status({ fill: "green", shape: "dot", text: kazanan.kodAdi + " " + puan + "/100 -> #" + sira });
-return [satir, msg];
+return [satir, msg, oturum];

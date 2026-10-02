@@ -7,7 +7,7 @@ Gerçek kurulumda yaşanan hataların kısa listesi. Ayrıntılı açıklama ve
 komutlar için [SORUN-GIDERME.md](SORUN-GIDERME.md); bu dosya hızlı
 hatırlatma içindir. Yeni bir hata çözdüğünüzde buraya bir satır ekleyin.
 
-Son güncelleme: 2026-10-01 · Platform: aXet.flows v6.5.4 (Node-RED v4.1.1)
+Son güncelleme: 2026-10-02 · Platform: aXet.flows v6.5.4 (Node-RED v4.1.1)
 
 ## Ortam gerçekleri (önce bunları bilin)
 
@@ -32,6 +32,7 @@ Son güncelleme: 2026-10-01 · Platform: aXet.flows v6.5.4 (Node-RED v4.1.1)
 | Hata / belirti | Sebep | Çözüm |
 |---|---|---|
 | "Starting SSH proxy for mirrored networking mode..." takılı | WSL/SSH proxy | SORUN-GIDERME → Kurulum |
+| `Save in cloud failed: Not authorized` (versiyon kaydı), tasarımcı günlüğünde 401 | Desktop oturumu ~11-12 saat geçerli; ertesi gün dolmuş olur (PC açık kalsa bile) | Her yeni günde: tepsi → Exit → Desktop'ı bir kez aç → Okta → New Version |
 | `JWT expired at ...` (Desktop günlüğü), proje listesi boş, "not activated" | Desktop oturumu doldu; ağ kopukken yenilenmiyor (`ENOTFOUND`) | Tepsi → **Exit**, Desktop'ı **bir kez** aç, Okta ile gir, tasarımcıyı portaldan yeniden aç |
 | `error trying to recover aXet.Core user data` | Aynı (süresi dolmuş oturum) | Aynı |
 | `Unexpected starting error` / `file is locked: ...mv.db` | Desktop iki kez başlatıldı | Görev Yöneticisi'nden tüm `aXet.flows-Desktop` kapat, bir kez aç |
@@ -76,6 +77,7 @@ Son güncelleme: 2026-10-01 · Platform: aXet.flows v6.5.4 (Node-RED v4.1.1)
 | `view action` var, yine dönüyor | Yanlış alan adı kontrol edildi | Gerçek ad `msg.__deptAppsFormioButtonClicked` (yardım metnindeki `__axetFlows...` yanlış) |
 | Form verisi `msg.payload.<alan>`'da yok | Yapı farklı | `msg.payload.data.<alan>` |
 | Dosya eki içerik yerine adres | Storage modu | File bileşeni Storage = **base64** |
+| İndirme bağlantısı görünüyor ama tıklanmıyor | Formio htmlelement içeriği DOMPurify'dan geçiyor; `<a href="data:...">` href'i siliniyor (`content` da `attrs` da) | Salt okunur **File bileşeni** (storage base64): Formio downloadjs ile doğru tür + adla indirir — `ortak/form_bilesenleri.py: indirme_alani()` |
 | İndirilen dosya `.tmp` | aXet tarayıcı kodu tipsiz Blob + DOM'a eklenmemiş `<a>` | View action mesajında `data:` bağlantısı: `ortak/indirme-bagi-olustur.js` (Ders 12.6) — Edge'de doğrulandı |
 | Kendi `http in` ucu: `400 Credentials are mandatory` / oturumla askıda | aXet http in'leri uygulama auth'undan geçirir; Okta yolunda `auth-manager-rest.js: logger is not defined` çöker | Okta'lı uygulamada tarayıcı → http in kullanma; veriyi view action yanıtıyla gönder |
 | Salt okunur textarea'da satırlar tek satır | Görüntüleme satır sonunu yutuyor | Datagrid kullan |

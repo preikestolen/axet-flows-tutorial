@@ -17,3 +17,22 @@ def kalici_kutu(alan, sinif):
          "className": sinif, "content": "{{ data." + alan + " || '' }}", "refreshOnChange": True,
          "attrs": [{"attr": "", "value": ""}]},
     ]
+
+
+def indirme_alani(alan="indirme", etiket="Rapor (indirmek icin dosya adina tiklayin)"):
+    """Kalici indirme kutusu: aciklama metni + salt okunur File bileseni.
+
+    Neden File bileseni: htmlelement icerigi DOMPurify ile temizleniyor ve
+    <a href="data:..."> baglantisinin href'i siliniyor (tiklanamaz). File bileseni
+    base64 dosyayi kendi koduyla (downloadjs: dogru MIME + dosya adi) indirir.
+    Akis msg.submission[alan] = HTML metin, msg.submission[alan + "Dosyasi"] = [dosya]
+    yazar (ortak/indirme-bagi-olustur.js).
+    """
+    return kalici_kutu(alan, "indirme-alani") + [{
+        "type": "file", "key": alan + "Dosyasi", "id": "fd" + alan, "label": etiket, "input": True,
+        "storage": "base64", "multiple": False, "disabled": True, "image": False, "webcam": False,
+        "tableView": False, "persistent": False, "clearOnHide": False, "customClass": "indirme-dosyasi",
+        "fileTypes": [{"label": "", "value": ""}], "validate": {"required": False},
+        "customConditional": "show = !!(data." + alan + "Dosyasi && data." + alan + "Dosyasi.length);",
+        "conditional": {"show": None, "when": None, "eq": ""},
+    }]

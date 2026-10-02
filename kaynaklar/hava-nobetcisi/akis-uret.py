@@ -12,7 +12,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "ortak"))
-from form_bilesenleri import kalici_kutu  # noqa: E402
+from form_bilesenleri import indirme_alani  # noqa: E402
 
 BURASI = Path(__file__).parent
 KAYNAK = BURASI.parent
@@ -114,7 +114,7 @@ for i, (anahtar, fid, ad, kolonlar) in enumerate(SAYFALAR):
         b = copy.deepcopy(sablon["formStructure"]["components"][1])
         b.update({"label": "Excel'i indir", "key": "indir", "id": "hvindir1", "leftIcon": "fa fa-download"})
         bilesenler.append(b)
-        bilesenler += kalici_kutu("indirme", "indirme-alani")
+        bilesenler += indirme_alani()
         butonlar = [b]
     f["formStructure"]["components"] = bilesenler
     y = 500 + i * 60

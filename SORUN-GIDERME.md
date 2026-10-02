@@ -1078,12 +1078,10 @@ Desktop tasarım modunda `/internal-storage-files/` yolu doğrudan
 **Belirti:** `view action`'da *Download file* açık; dosya iniyor ama
 `xxxx.tmp` adıyla. **Sebep:** aXet'in tarayıcı kodu tipsiz bir `Blob`'u,
 sayfaya eklenmemiş bir `<a>` ile tıklıyor; sunucu yanıtı (dosya adı,
-içerik) doğru. **Çözüm:** Dosyayı view action **mesajında** `data:`
-bağlantısı olarak verin — `kaynaklar/ortak/indirme-bagi-olustur.js`:
-
-```html
-<a href="data:<%= tur %>;base64,<%= veri %>" download="<%= dosya %>"><%= dosya %></a>
-```
+içerik) doğru. **Çözüm:** Dosyayı formdaki salt okunur bir **File bileşenine**
+(storage `base64`) yazın; Formio dosya adına tıklanınca kendi koduyla doğru tür
+ve adla indirir — `kaynaklar/ortak/form_bilesenleri.py: indirme_alani()` +
+`ortak/indirme-bagi-olustur.js`.
 
 Ayrıntı: Ders 12.6.
 
@@ -1100,6 +1098,12 @@ aXet'in kendi kodu çöker ve yanıt hiç gelmez — Production günlüğü:
 
 Okta'lı uygulamada tarayıcıdan çağrılacak bir `http in` ucuna güvenmeyin;
 veriyi form yanıtıyla (view action) gönderin.
+
+### İndirme bağlantısı görünüyor ama tıklanmıyor
+
+Bağlantı formdaki htmlelement'e (`{{ data.x }}`) basılmış. Formio 4.8.1 içeriği
+DOMPurify'dan geçirir; izinli adres kalıbında `data:` yok, `href` silinir —
+`content` de `attrs` de. Dosya indirme için File bileşeni kullanın (yukarıdaki madde).
 
 ### Salt okunur metin alanında satırlar tek satıra diziliyor
 

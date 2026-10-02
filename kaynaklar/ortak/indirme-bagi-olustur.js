@@ -15,7 +15,12 @@
 // Girdi : msg.indirilecek = { data: Buffer, ad: "dosya.xlsx" }
 //         msg.messages.mesaj  (kutudaki aciklama, duz metin)
 //         msg.indirmeAlani    (istege bagli, formdaki gizli alanin anahtari)
-// Cikti : msg.submission[alan] = HTML kutu  (view action "update" forma basar)
+// Cikti : msg.submission[alan] = HTML aciklama, msg.submission[alan + "Dosyasi"] = [dosya]
+//         (salt okunur File bileseni; dosya adina tiklayinca Formio indirir)
+//
+// <a href="data:..."> DEGIL: formdaki htmlelement icerigi DOMPurify'dan geciyor ve
+// data: adresli href siliniyor (gercek kosuda dugme tiklanamaz oldu). File bileseni
+// base64 dosyayi downloadjs ile dogru MIME tipi ve adiyla indiriyor.
 
 const k = msg.indirilecek;
 if (!k || !k.data) { node.error("indirilecek dosya yok", msg); return null; }
@@ -33,9 +38,12 @@ const aciklama = (msg.messages && msg.messages.mesaj) || "Dosya hazir.";
 const html =
   '<div class="indirme-kutu">' +
     '<span class="indirme-metin">' + esc(aciklama) + '</span> ' +
-    '<a class="indirme-bag" href="data:' + tur + ';base64,' + buf.toString("base64") + '" download="' + esc(dosya) + '">' +
-      '⬇️ ' + esc(dosya) + '</a>' +
+    '<b>' + esc(dosya) + '</b> -- asagidaki dosya adina tiklayarak indirin.' +
   '</div>';
+const dosyaBileseni = [{
+  storage: "base64", name: dosya, originalName: dosya, size: buf.length, type: tur,
+  url: "data:" + tur + ";base64," + buf.toString("base64")
+}];
 
 const alan = msg.indirmeAlani || "indirme";
 const mevcut = (msg.submission && typeof msg.submission === "object")
@@ -43,6 +51,7 @@ const mevcut = (msg.submission && typeof msg.submission === "object")
   : {};
 msg.submission = Object.assign({}, mevcut);
 msg.submission[alan] = html;
+msg.submission[alan + "Dosyasi"] = dosyaBileseni;
 
 delete msg.indirilecek;
 delete msg.downloadFileSubmission;     // aXet'in kendi (hatali) indirmesi devre disi

@@ -551,6 +551,37 @@
        "value": ""
       }
      ]
+    },
+    {
+     "type": "file",
+     "key": "indirmeDosyasi",
+     "id": "fdindirme",
+     "label": "Rapor (indirmek icin dosya adina tiklayin)",
+     "input": true,
+     "storage": "base64",
+     "multiple": false,
+     "disabled": true,
+     "image": false,
+     "webcam": false,
+     "tableView": false,
+     "persistent": false,
+     "clearOnHide": false,
+     "customClass": "indirme-dosyasi",
+     "fileTypes": [
+      {
+       "label": "",
+       "value": ""
+      }
+     ],
+     "validate": {
+      "required": false
+     },
+     "customConditional": "show = !!(data.indirmeDosyasi && data.indirmeDosyasi.length);",
+     "conditional": {
+      "show": null,
+      "when": null,
+      "eq": ""
+     }
     }
    ]
   },
@@ -1132,7 +1163,7 @@
   "type": "function",
   "z": "hv_tab0000000001",
   "name": "indirme baglantisi",
-  "func": "// Indirilecek dosyayi sayfada KALICI duran bir indirme kutusuna cevirir:\n//   <a href=\"data:<tur>;base64,<veri>\" download=\"<dosya>\">\n//\n// Neden data: baglantisi:\n//  1. aXet'in view action indirmesi (downloadFileSubmission) tarayicida tipsiz\n//     bir Blob'u, sayfaya eklenmemis bir <a> ile tikliyor; Edge \".tmp\" kaydediyor.\n//  2. Kendi \"http in\" ucumuz da olmuyor: aXet http in'leri uygulama oturumuyla\n//     dogruluyor ve Okta yolunda kendi kodu cokuyor (logger is not defined).\n// Neden uyari kutusunda degil de sayfada:\n//  3. aXet uyarilari 10 sn sonra kendiliginden siliniyor (DeptAppsAlerts.addAlert:\n//     `if (alert !== 'danger')` nesneyi metinle karsilastiriyor). Baglanti formdaki\n//     gizli bir alana (varsayilan \"indirme\") yazilir; ayni formdaki htmlelement\n//     onu `{{ data.indirme }}` ile gosterir.\n//\n// Girdi : msg.indirilecek = { data: Buffer, ad: \"dosya.xlsx\" }\n//         msg.messages.mesaj  (kutudaki aciklama, duz metin)\n//         msg.indirmeAlani    (istege bagli, formdaki gizli alanin anahtari)\n// Cikti : msg.submission[alan] = HTML kutu  (view action \"update\" forma basar)\n\nconst k = msg.indirilecek;\nif (!k || !k.data) { node.error(\"indirilecek dosya yok\", msg); return null; }\n\nconst esc = (s) => String(s === undefined || s === null ? \"\" : s)\n  .replace(/&/g, \"&amp;\").replace(/</g, \"&lt;\").replace(/>/g, \"&gt;\").replace(/\"/g, \"&quot;\").replace(/'/g, \"&#39;\");\n\nconst buf = Buffer.isBuffer(k.data) ? k.data : Buffer.from(k.data);\nconst tur = /\\.xlsx$/i.test(k.ad)\n  ? \"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\"\n  : \"application/octet-stream\";\nconst dosya = String(k.ad).replace(/[^A-Za-z0-9._-]/g, \"_\");\nconst aciklama = (msg.messages && msg.messages.mesaj) || \"Dosya hazir.\";\n\nconst html =\n  '<div class=\"indirme-kutu\">' +\n    '<span class=\"indirme-metin\">' + esc(aciklama) + '</span> ' +\n    '<a class=\"indirme-bag\" href=\"data:' + tur + ';base64,' + buf.toString(\"base64\") + '\" download=\"' + esc(dosya) + '\">' +\n      '⬇️ ' + esc(dosya) + '</a>' +\n  '</div>';\n\nconst alan = msg.indirmeAlani || \"indirme\";\nconst mevcut = (msg.submission && typeof msg.submission === \"object\")\n  ? (msg.submission.data && typeof msg.submission.data === \"object\" ? msg.submission.data : msg.submission)\n  : {};\nmsg.submission = Object.assign({}, mevcut);\nmsg.submission[alan] = html;\n\ndelete msg.indirilecek;\ndelete msg.downloadFileSubmission;     // aXet'in kendi (hatali) indirmesi devre disi\n\nnode.status({ fill: \"green\", shape: \"dot\", text: k.ad + \" (\" + Math.round(buf.length / 1024) + \" KB)\" });\nreturn msg;\n",
+  "func": "// Indirilecek dosyayi sayfada KALICI duran bir indirme kutusuna cevirir:\n//   <a href=\"data:<tur>;base64,<veri>\" download=\"<dosya>\">\n//\n// Neden data: baglantisi:\n//  1. aXet'in view action indirmesi (downloadFileSubmission) tarayicida tipsiz\n//     bir Blob'u, sayfaya eklenmemis bir <a> ile tikliyor; Edge \".tmp\" kaydediyor.\n//  2. Kendi \"http in\" ucumuz da olmuyor: aXet http in'leri uygulama oturumuyla\n//     dogruluyor ve Okta yolunda kendi kodu cokuyor (logger is not defined).\n// Neden uyari kutusunda degil de sayfada:\n//  3. aXet uyarilari 10 sn sonra kendiliginden siliniyor (DeptAppsAlerts.addAlert:\n//     `if (alert !== 'danger')` nesneyi metinle karsilastiriyor). Baglanti formdaki\n//     gizli bir alana (varsayilan \"indirme\") yazilir; ayni formdaki htmlelement\n//     onu `{{ data.indirme }}` ile gosterir.\n//\n// Girdi : msg.indirilecek = { data: Buffer, ad: \"dosya.xlsx\" }\n//         msg.messages.mesaj  (kutudaki aciklama, duz metin)\n//         msg.indirmeAlani    (istege bagli, formdaki gizli alanin anahtari)\n// Cikti : msg.submission[alan] = HTML aciklama, msg.submission[alan + \"Dosyasi\"] = [dosya]\n//         (salt okunur File bileseni; dosya adina tiklayinca Formio indirir)\n//\n// <a href=\"data:...\"> DEGIL: formdaki htmlelement icerigi DOMPurify'dan geciyor ve\n// data: adresli href siliniyor (gercek kosuda dugme tiklanamaz oldu). File bileseni\n// base64 dosyayi downloadjs ile dogru MIME tipi ve adiyla indiriyor.\n\nconst k = msg.indirilecek;\nif (!k || !k.data) { node.error(\"indirilecek dosya yok\", msg); return null; }\n\nconst esc = (s) => String(s === undefined || s === null ? \"\" : s)\n  .replace(/&/g, \"&amp;\").replace(/</g, \"&lt;\").replace(/>/g, \"&gt;\").replace(/\"/g, \"&quot;\").replace(/'/g, \"&#39;\");\n\nconst buf = Buffer.isBuffer(k.data) ? k.data : Buffer.from(k.data);\nconst tur = /\\.xlsx$/i.test(k.ad)\n  ? \"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\"\n  : \"application/octet-stream\";\nconst dosya = String(k.ad).replace(/[^A-Za-z0-9._-]/g, \"_\");\nconst aciklama = (msg.messages && msg.messages.mesaj) || \"Dosya hazir.\";\n\nconst html =\n  '<div class=\"indirme-kutu\">' +\n    '<span class=\"indirme-metin\">' + esc(aciklama) + '</span> ' +\n    '<b>' + esc(dosya) + '</b> -- asagidaki dosya adina tiklayarak indirin.' +\n  '</div>';\nconst dosyaBileseni = [{\n  storage: \"base64\", name: dosya, originalName: dosya, size: buf.length, type: tur,\n  url: \"data:\" + tur + \";base64,\" + buf.toString(\"base64\")\n}];\n\nconst alan = msg.indirmeAlani || \"indirme\";\nconst mevcut = (msg.submission && typeof msg.submission === \"object\")\n  ? (msg.submission.data && typeof msg.submission.data === \"object\" ? msg.submission.data : msg.submission)\n  : {};\nmsg.submission = Object.assign({}, mevcut);\nmsg.submission[alan] = html;\nmsg.submission[alan + \"Dosyasi\"] = dosyaBileseni;\n\ndelete msg.indirilecek;\ndelete msg.downloadFileSubmission;     // aXet'in kendi (hatali) indirmesi devre disi\n\nnode.status({ fill: \"green\", shape: \"dot\", text: k.ad + \" (\" + Math.round(buf.length / 1024) + \" KB)\" });\nreturn msg;\n",
   "outputs": 1,
   "timeout": 0,
   "setupErrors": 0,
