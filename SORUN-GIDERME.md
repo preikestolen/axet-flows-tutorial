@@ -1158,6 +1158,56 @@ Uygulama menü etiketini ilk harf hariç küçültür ("Isim Panosu" →
 "Isim panosu"). Sadece görünüm; eşleştirme form adıyla yapılır.
 
 
+### Düğmeye basınca seçim kutusu boşalıyor, kimlik görünüyor
+
+**Belirti:** "Listele"den sonra proje kutusunda `REEM - Redington…` yerine
+`09ae7dfe-731d-4e2c-9b58-18cc120fc4d6` yazıyor; kutu açılınca seçenek yok.
+
+**Sebep:** view action `update` yanıtından sonra ön yüz formu yeniden kurar ve
+form yapısını sunucudan **yanıttaki** `onInitPopulateFormStructure` ile ister
+(`deptapps.ejs.js: initPopulateFormStructure = response.onInitPopulateFormStructure || {}`).
+Sayfa açılışında verilen seçenekler hatırlanmaz.
+
+**Çözüm:** Seçenek listesini flow context'te tutun ve formdan dönen her yanıta
+(başarı, uyarı, hata) yeniden ekleyin. Örnek: `kaynaklar/orbit-bildirim/00-ortak.js`
+→ `secenekleriEkle(msg)`.
+
+### Seçim kutusu ilk tıklamada boş açılıyor
+
+Sayfa açılışında Choices.js listesi, form yapısı ikinci kez gelene kadar boş
+görünebilir (yenile simgesi). Bir iki saniye sonra seçenekler gelir.
+
+### MS Graph mail: "An error occurred trying to retrieve the token." / AADSTS 53003
+
+**Belirti:** `ms-graph-mail-send` (DELEGATED) hata veriyor; `http://localhost:<port>/credentials/ms-graph`
+sayfasında yapılandırma **"Not authenticated"**.
+
+**Sebep:** DELEGATED mod token'ı bir kez **cihaz koduyla** alır (sayfadaki yapılandırma
+bağlantısı → kod → `https://login.microsoft.com/device`). Giriş yapılmamışsa düğüm
+`checkOnly` ile kontrol edip bu hatayı verir. Bizim kurumda cihaz kodu girişi
+Koşullu Erişimle engelli: Microsoft "You don't have access to this", **Error Code 53003**,
+App "APP.NTT.aXet Platform" — Edge'de de aynı.
+
+**Çözüm:** BT'den bu uygulama için cihaz kodu izni, ya da Outlook yolu: akış maili
+`/internal-storage-files/.../giden/*.json` olarak bırakır, Windows'ta açık klasik Outlook'u
+COM ile kullanan yardımcı gönderir (`kaynaklar/orbit-bildirim/outlook-gonderici.ps1`,
+kurulum `orbit-mail-kurulum.ps1`, Ders 14.6).
+
+### Outlook COM: "Call was rejected by callee" (RPC_E_CALL_REJECTED)
+
+Outlook kapalıyken `New-Object -ComObject Outlook.Application` onu başlatır; açılış
+sürerken ilk çağrılar reddedilir. Birkaç saniye arayla yeniden deneyin. Outlook'un açık
+olup olmadığını `GetActiveObject` ile değil `Get-Process OUTLOOK` ile kontrol edin
+(farklı oturum/yetkide yanıltıcı "yok" dönebiliyor). "Yeni Outlook" COM desteklemez.
+
+### Konteynerden dış siteye ENETUNREACH (anlık)
+
+**Belirti:** `RequestError: connect ENETUNREACH 20.86.49.173:443`; birkaç saniye sonra aynı
+istek konteynerin içinden 200 dönüyor.
+
+**Çözüm:** Geçici ağ hatası. Akışta catch'te hata kodunu ayırıp 5 sn sonra aynı http
+düğümüne en çok 3 kez geri gönderin (`kaynaklar/orbit-bildirim/22-ag-yeniden.js`).
+
 ## Katkı
 
 Yeni bir hatayla karşılaştıysanız bu dosyaya şu şablonla ekleyin:

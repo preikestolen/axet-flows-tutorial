@@ -55,6 +55,7 @@ Her dersin tasarımcıda karşılık gelen bir akış sekmesi vardır:
 | 11 | [Müşteri Ana Verisi Kontrolcüsü](11-musteri-ana-veri-kontrolu.md) | ~60 dk | `Gun 2 - Musteri Ana Veri Kontrolu` | Kural motoru + AI yorumu, Okta, view action, indirme, yerel test |
 | 12 | [Hava Nöbetçisi](12-hava-nobetcisi.md) | ~45 dk | `Gun 1 - Hava Nobetcisi` | Saatlik zamanlayıcı, kalıcı JSONL + Excel, yeniden deneme, tablo sayfaları, .xlsx indirme |
 | 13 | [Kod Adı Konseyi](13-kod-adi-konseyi.md) | ~45 dk | `Gun 3 - Kod Adi Konseyi` | Çok karakterli AI sahnesi, Output Schema doğrulama, kalıcı sayfa kutusu, yeniden deneme, pano |
+| 14 | [Orbit Notification System](14-orbit-bildirim.md) | ~60 dk | `Orbit Notification System` | Anahtarsız salt okunur dış sistem, form girişi taklidi, oturum belleği, artımlı sayfalama, Outlook ile mail (Graph engelliyken), kurulum sayfası |
 | — | [Sorun Giderme](SORUN-GIDERME.md) | başvuru | — | Hata → çözüm tablosu |
 
 Dersler birbirinin üstüne kurulur; sırayla ilerleyin. İlk yedisi bittiğinde şunu
@@ -123,6 +124,7 @@ axet-flows-egitim/
 ├── 11-musteri-ana-veri-kontrolu.md    Gün 2: Excel kontrolcüsü, Okta, view action
 ├── 12-hava-nobetcisi.md               Gün 1: zamanlanmış okuma, kalıcılık, tablo sayfaları
 ├── 13-kod-adi-konseyi.md              Gün 3: üç AI karakter + Başkan, İsim Panosu
+├── 14-orbit-bildirim.md               Orbit: TS onayına gönderilmiş maddeler (salt okunur)
 ├── SORUN-GIDERME.md                   hata → çözüm tablosu
 ├── CLAUDE.md / AGENTS.md              AI asistanları için kurallar (önce MEMORY + SKILL oku)
 ├── MEMORY.md                          karşılaşılan hatalar ve çözümleri (kısa liste)
@@ -161,6 +163,7 @@ axet-flows-egitim/
     ├── musteri-kontrol/                 Ders 11: 10 function, akış üretici, yerel test
     ├── hava-nobetcisi/                  Ders 12: 9 function, akış üretici, yerel test
     ├── kod-adi-konseyi/                 Ders 13: 7 function, 4 ajan, akış üretici, yerel test
+    ├── orbit-bildirim/                  Ders 14: 23 function, Outlook mail yardımcısı (2 .ps1), akış üretici, yerel test (adres yerel.json'da)
     ├── tasarimciya-yukle.py             akışları açık tasarımcıya yükler (portu kendisi bulur)
     └── ortak/                           indirme kutusu (.xlsx), kalıcı HTML kutusu, uygulama Custom CSS'i
 ```

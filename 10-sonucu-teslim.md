@@ -362,6 +362,13 @@ Konteyner günlüğü isteğin başladığını gösteriyor —
 modu, hesabın **platform tarafında MS Graph Mail iznine sahip olmasını**
 gerektiriyor ve bu izin bizim hesapta yoktu.
 
+> **Düzeltme (2026-10-04):** Sebep izin eksikliği değilmiş. DELEGATED mod token'ı
+> bir kez **cihaz koduyla** alır: Production'da `http://localhost:<port>/credentials/ms-graph`
+> → yapılandırma → kod → `https://login.microsoft.com/device`. Giriş yapılmadan
+> kontrol bu hatayı verir (kaynak: `axet-credentials/src/credentials/azure/azure.js`,
+> `checkOnly`). Bizim kurumda cihaz kodu girişi Koşullu Erişimle engelli
+> (AADSTS 53003) — o durumda BT izni ya da SMTP gerekir. Ayrıntı: Ders 14.
+
 **Sizde ne yapmalı:**
 
 1. Önce DELEGATED'i deneyin — çalışıyorsa hiçbir kurulum gerekmez.

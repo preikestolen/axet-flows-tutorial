@@ -36,6 +36,7 @@ foreach ($p in $portlar) {
         $r = Invoke-WebRequest -UseBasicParsing "http://localhost:$p/credentials/activate.html" -TimeoutSec 10 -MaximumRedirection 0 -ErrorAction SilentlyContinue
         Write-Host "HAZIR: http://localhost:$p" -ForegroundColor Green
         Write-Host "  AI aktivasyonu: http://localhost:$p/credentials/activate.html"
+        Write-Host "  Orbit mail yardimcisi durumu: uygulamada Orbit Notification System > Kurulum ve Mail"
     } catch {
         Write-Host "Kopru kuruldu ama http://localhost:$p yanit vermedi: $($_.Exception.Message)" -ForegroundColor Red
     }

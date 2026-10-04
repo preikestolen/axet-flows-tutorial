@@ -23,6 +23,7 @@ SEKMELER = [  # (akis dosyasi, application dugumu bu sekmede mi)
     ("musteri-kontrol/musteri-kontrol-akis.json", True),
     ("hava-nobetcisi/hava-nobetcisi-akis.json", False),
     ("kod-adi-konseyi/kod-adi-konseyi-akis.json", False),
+    ("orbit-bildirim/orbit-bildirim-akis.json", False),     # git'te yok: once orbit-bildirim/akis-uret.py
 ]
 
 
@@ -82,7 +83,14 @@ for dosya, uygulama_burada in SEKMELER:
                 yeni["menu"][0]["children"] += [s for s in eski["menu"][0]["children"] if s.get("text") == "Admin. Area"]
                 if not yeni["oktaDb"]:
                     print("  UYARI: Okta config yok -- editorde sihirli degnek > Apply Auth App > LocalStorage > OKTA")
-    for n in dugumler:
+    # config dugumleri (x/y'si yok, orn. ms-graph-mail-config) "configs"e gider; ayni id'li eskisinin yerine
+    yeni_cfg = [n for n in dugumler if "x" not in n]
+    dugumler = [n for n in dugumler if "x" in n]
+    # bizim urettigimiz (sekme onekli, orn. "ob_") ama artik akista olmayan config'ler silinir
+    onek = tab["id"].split("_")[0] + "_"
+    configs = [c for c in configs
+               if c["id"] not in {n["id"] for n in yeni_cfg} and not c["id"].startswith(onek)] + yeni_cfg
+    for n in dugumler + yeni_cfg:
         n["z"] = tid or tab["id"]
     govde = {"id": tid or tab["id"], "label": tab["label"], "info": tab.get("info", ""),
              "disabled": False, "nodes": dugumler, "configs": configs}

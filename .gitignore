@@ -12,3 +12,7 @@ desktop.ini
 *.tmp
 *.bak
 ~$*
+
+# Orbit: kurum adresi git'e girmez
+kaynaklar/orbit-bildirim/yerel.json
+kaynaklar/orbit-bildirim/orbit-bildirim-akis.json

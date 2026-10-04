@@ -7,7 +7,7 @@ Gerçek kurulumda yaşanan hataların kısa listesi. Ayrıntılı açıklama ve
 komutlar için [SORUN-GIDERME.md](SORUN-GIDERME.md); bu dosya hızlı
 hatırlatma içindir. Yeni bir hata çözdüğünüzde buraya bir satır ekleyin.
 
-Son güncelleme: 2026-10-02 · Platform: aXet.flows v6.5.4 (Node-RED v4.1.1)
+Son güncelleme: 2026-10-04 · Platform: aXet.flows v6.5.4 (Node-RED v4.1.1)
 
 ## Ortam gerçekleri (önce bunları bilin)
 
@@ -24,6 +24,10 @@ Son güncelleme: 2026-10-02 · Platform: aXet.flows v6.5.4 (Node-RED v4.1.1)
 | Production dosyaları | `%LOCALAPPDATA%\axet-flows\.deptapps-instances\<flowId>\` |
 | Günlükler | Desktop: `%LOCALAPPDATA%\axet-flows\.deptapps-desktop\logs\application.log` · Tasarımcı: `...\.deptapps-instances-in-designer-mode\<id>\logs\` · Production: `...\.deptapps-instances\<id>\logs\` |
 | function sandbox | `require`, `process`, `fs`, `zlib` **yok**. `Buffer`, `env.get`, `flow/global/context`, `node.*`, `setTimeout` var |
+| Orbit (NTT iş takip) | Plane tabanlı. Web oturumu ile `/api/workspaces/nttdata/...` (projects, states, `projects/<id>/issues/?per_page=1000&cursor=1000:0:0`, `issues/<id>/history/?activity_type=issue-property`). `/api/v1` API anahtarı ister; normal kullanıcı token açamaz (403). Giriş yalnız e-posta+şifre (`/auth/get-csrf-token/` + `/auth/sign-in/`), SSO/magic yok. 7 projenin hepsinde aynı 36 durum, `F_TS Approval Awaiting` dahil. Jira'dan taşınan geçmişte `jira_status` "Ts Onayı Bekleniyor" ile `TS Gerçekleşen Tarih` aynı anda dolmuş |
+| Dış HTTPS testi | WSL kabuğunda `curl https://<kurum-sitesi>` → "SSL certificate problem: unable to get local issuer certificate" (exit 60). **Yanıltıcı:** Production konteynerinin içinden (`docker exec <runner> node -e "require('https').get(...)"`) aynı adres 200. Erişimi konteynerde test edin |
+| Mail (kurumsal kısıt) | MS Graph DELEGATED bu kurumda 53003 ile engelli → akış maili `orbit/giden/*.json` bırakır, Windows'ta `kaynaklar/orbit-bildirim/outlook-gonderici.ps1` açık **klasik** Outlook (COM) ile gönderir. Outlook açılırken ilk COM çağrısı `RPC_E_CALL_REJECTED` verir → yeniden dene. Outlook açık mı kontrolü için `GetActiveObject` yanıltıcı, `Get-Process OUTLOOK` kullan. PS 5.1 `Set-Content -Encoding UTF8` BOM yazar → JS'de `replace(/^﻿/,'')` |
+| Orbit dikkat | **Work item detay sayfasını tarayıcıda açma**: editör açılışta açıklamayı (resim boyutu) kullanıcının adıyla kaydediyor (2026-10-04, REEM-10830). Okuma yalnız API ile |
 
 ## Hata → çözüm
 
@@ -68,6 +72,9 @@ Son güncelleme: 2026-10-02 · Platform: aXet.flows v6.5.4 (Node-RED v4.1.1)
 | Hata / belirti | Sebep | Çözüm |
 |---|---|---|
 | Tasarımcı portunda uygulama yok (404) | Uygulama sadece Production'da yayınlanır | Run Flow → Local access URL |
+| MS Graph mail: "An error occurred trying to retrieve the token." | DELEGATED modda token **bir kez cihaz koduyla** alınır (`http://localhost:<p>/credentials/ms-graph` → config → login.html → login.microsoft.com/device); giriş yapılmamışsa kontrol bu hatayı verir. Token `/internal-storage-files/.credentials_ms-graph_<configId>`'de (deploy'dan sağ çıkar) | Aktivasyon sayfasından giriş. **Bu kurumda (global.ntt tenant'ı) cihaz kodu girişi Koşullu Erişimle engelli: AADSTS 53003, Edge'de de** → BT'den "APP.NTT.aXet Platform" için izin ya da SMTP relay |
+| Konteynerden dış siteye `RequestError: connect ENETUNREACH <ip>:443`, hemen sonra aynı istek 200 | Anlık ağ kopması (WSL/Docker ağı) | Geçici ağ hatalarını (ENETUNREACH, ETIMEDOUT, ECONNRESET…) catch'te ayırıp 5 sn sonra **aynı http düğümüne** en çok 3 kez geri yolla (`orbit-bildirim/22-ag-yeniden.js`, `23-ag-yonlendir.js`) |
+| Düğmeden sonra seçim kutusunda ad yerine ham kimlik (`09ae7dfe-…`), seçenekler boş | view action `update` formu yeniden kurar; yanıtta `onInitPopulateFormStructure` yoksa select'in `data.values` boş gelir | Her form yanıtına (başarı, uyarı, hata) seçenekleri yeniden ekleyin (`orbit-bildirim/00-ortak.js: secenekleriEkle`) |
 | Production `localhost:<port>` zaman aşımı (her Run Flow'da yeni port) | Port sadece `172.17.0.1`'de dinliyor | Her Run Flow'dan sonra **`kaynaklar\production-portu-ac.ps1`** (köprüyü kurar, eskileri kapatır) |
 | Köprü kuruldu ama hemen kayboldu | `nohup ... &` ile başlatılan süreç `wsl.exe` bitince WSL tarafından öldürülür | `setsid -f socat ...` kullan (betik bunu yapar) |
 | `Not found config node with id '' for auth Okta` | Okta kullanıcı tablosu yok | Sihirli değnek → **Apply Auth App** → LocalStorage → OKTA |

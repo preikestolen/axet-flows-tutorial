@@ -113,7 +113,7 @@ ayrıntılı madde (tam hata metni + sebep + çözüm) ekle.
 | `axetflows-form` | — | `msg.payload.data.<key>` (alan adı = bileşen **Property Name**). Çıkış sayısı = buton + 1; **son çıkış `onInitForm`** |
 | File bileşeni (base64) | — | `data.<key> = [{ name, originalName, size, url: "data:<mime>;base64,..." }]` |
 | `axetflows-app` | — | Auth: `authNone` / `Okta` / `authBasicInternal`. Okta için `oktaDb` config şart. Menü öğesi: `{type:"form", text, data:{form_id}}` |
-| `axetflows-view-action` | Form msg'si (dokunulmamış) | `action:"update"`; `msg.messages` → mesajdaki `<%= k %>`; `msg.downloadFileSubmission = {data, fileName, inputType:"buffer"\|"base64"\|"path"}`; onInit'te `msg.onInitPopulateFormStructure = {key: [{label,value}]}` |
+| `axetflows-view-action` | Form msg'si (dokunulmamış) | `action:"update"`; `msg.messages` → mesajdaki `<%= k %>`; `msg.downloadFileSubmission = {data, fileName, inputType:"buffer"\|"base64"\|"path"}`; onInit'te `msg.onInitPopulateFormStructure = {key: [{label,value}]}` — **düğme yanıtlarında da tekrar gönderin**, yoksa select boşalır |
 | Dosya indirme | Okta korumalı form işlemi | **`downloadFileSubmission` kullanma** (Edge'de `.tmp`); htmlelement içine `<a href="data:">` koyma (DOMPurify siler); Okta'lı uygulamada `http in` çağırma (aXet REST auth çöker). **Salt okunur File bileşeni** (`ortak/form_bilesenleri.py: indirme_alani()`) + `ortak/indirme-bagi-olustur.js` → `msg.submission.indirmeDosyasi = [{storage:"base64", originalName, type, url}]` |
 | Tablo sayfası | form onInit | `msg.submission = { tablo: [ {kolon: "deger"} ] }` → view action (update); bileşen datagrid (`disabled`, `disableAddingRemovingRows`); görünüm için `ortak/uygulama.css` |
 | Kalıcı sayfa kutusu | — | view action mesajı 10 sn'de silinir. Sonuç/bağlantı/hata için formda `hidden <alan>` + `htmlelement` (`content: "{{ data.<alan> || '' }}"`, `refreshOnChange: true`); akış `msg.submission.<alan>` = escape'li HTML (`kaynaklar/ortak/form_bilesenleri.py`) |
@@ -123,6 +123,8 @@ ayrıntılı madde (tam hata metni + sebep + çözüm) ekle.
 | `axet-agents-execute` | `msg.payload` (metin/nesne) | Çıkış 1: `msg.payload.response` (şemasız) veya şema nesnesi; çıkış 2: `msg.error`. Diğer `msg` alanları korunur |
 | `json-to-excel` | `msg.payload.data = { "<Sayfa>": [ {kolon: değer} ] }` | `msg.payload` = Buffer. Stil `{value, style:{fill, fontColor, bold, numberFormat}}`, formül `() => "=A1"` |
 | `file` (yazma) | `msg.filename`, `msg.payload` | Buffer için Encoding = `none` |
+| Dış sistem, anahtarsız (Orbit/Plane) | — | Tarayıcı formunu taklit: `GET /auth/get-csrf-token/` → `POST /auth/sign-in/` (urlencoded, `Origin`/`Referer`, `msg.followRedirects=false`) → `msg.responseCookies` → oturum `flow` context'te (bellek, şifre yok). Sonra yalnız GET; `order_by=-updated_at` + son `updated_at`'te dur (artımlı). Örnek: `kaynaklar/orbit-bildirim/` |
+| Mail (Graph engelliyse) | — | `ms-graph-mail-send` DELEGATED önce `/credentials/ms-graph`'tan cihaz koduyla bir kez giriş ister; Koşullu Erişim engelliyorsa (53003) akış `/internal-storage-files/.../giden/*.json` bırakır, Windows'ta Outlook COM yardımcısı gönderir. Kullanıcıya gereken dosya/adımları uygulamada bir "Kurulum" sayfasında verin (File bileşeniyle indirme + yardımcı nabzı). Örnek: `kaynaklar/orbit-bildirim/` |
 | `catch` | — | `msg.error = {message, source}`; kapsamı `scope: [id...]` ile sınırla |
 
 ## Node-RED temelleri (kısa)
@@ -147,4 +149,5 @@ ayrıntılı madde (tam hata metni + sebep + çözüm) ekle.
 - Salt okunur çok satırlı veriyi `textarea`'da gösterme (satırlar birleşir) — datagrid kullan.
 - Zamanlanmış akışta "önceki değer"i bellekte tutma — kalıcı dosyadan (JSONL) oku.
 - Gerçek müşteri verisini ajana gönderme; sadece özet/istatistik gönder.
+- Dış sistemin (Orbit vb.) kayıt sayfalarını tarayıcıda açarak keşif yapma — editör açılışta kaydı kullanıcının adıyla yeniden kaydedebiliyor; API'den oku.
 - Desktop'ı ikinci kez başlatma; tasarımcı penceresini doğrudan açma.

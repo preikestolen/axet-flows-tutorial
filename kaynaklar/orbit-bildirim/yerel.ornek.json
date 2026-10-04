@@ -1,0 +1,7 @@
+{
+  "adres": "https://<orbit-adresiniz>",
+  "calisma_alani": "<calisma-alani>",
+  "mail_gonderen": "<kurumsal-adresiniz>",
+  "mail_tenant_adi": "global.ntt",
+  "mail_tenant": "<tasarimcida GET /api/ms-graph-tenants: id¬¬tenantId¬¬clientId>"
+}

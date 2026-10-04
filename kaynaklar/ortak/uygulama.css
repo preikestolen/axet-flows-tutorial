@@ -130,3 +130,22 @@
 }
 .indirme-dosyasi a[ref="fileLink"]::before { content: "\2B07\FE0F  "; }
 .indirme-dosyasi a[ref="fileLink"]:hover { background: #155c34; }
+
+/* ============================================================
+   Orbit Notification System (kaynaklar/orbit-bildirim)
+   ============================================================ */
+.orbit-aciklama { margin-bottom: 12px; color: #4a5560; }
+.orbit-kutu { margin: 12px 0; padding: 10px 14px; border-radius: 10px; border: 1px solid; }
+.orbit-bilgi { background: #eef4fb; border-color: #c4d8ee; color: #1f4a73; }
+.orbit-tamam { background: #eaf6ee; border-color: #b9dfc6; color: #1d5b33; }
+.orbit-uyari { background: #fff6e0; border-color: #f0d38a; color: #6b4e00; }
+.orbit-hata  { background: #fdecec; border-color: #f2b8b8; color: #8a1f1f; }
+.orbit-tablo td, .orbit-tablo th { font-size: 0.86rem; padding: 4px 6px !important; }
+.orbit-tablo .formio-component-baslik input.form-control { max-width: 30ch; overflow: hidden; text-overflow: ellipsis; }
+.orbit-tablo .formio-component-yeni input.form-control:not([value=""]) { color: #1d7a46 !important; font-weight: 700; }
+.orbit-baslik { margin: 18px 0 6px; font-size: 1.05rem; font-weight: 600; color: #1b2a4a; }
+.orbit-rehber { margin-top: 18px; padding: 14px 18px; border: 1px solid #e3e8ee; border-radius: 10px; background: #fafbfc; line-height: 1.5; }
+.orbit-rehber h4 { font-size: 1rem; font-weight: 600; color: #1b2a4a; margin: 14px 0 6px; }
+.orbit-rehber h4:first-child { margin-top: 0; }
+.orbit-rehber code { background: #eef1f4; padding: 1px 5px; border-radius: 4px; font-size: 0.85rem; white-space: nowrap; }
+.orbit-rehber .orbit-not { color: #5b6b7b; font-size: 0.9rem; background: #fff6e0; border: 1px solid #f0d38a; padding: 8px 12px; border-radius: 8px; }

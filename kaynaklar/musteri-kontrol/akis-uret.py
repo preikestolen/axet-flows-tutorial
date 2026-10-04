@@ -146,6 +146,15 @@ app["menu"][0]["children"] = [{
                   "data": {"form_id": "kk_form_konsey"}, "children": []},
                  {"id": "kk_sayfa2", "text": "Isim Panosu", "icon": "fa fa-trophy", "type": "form",
                   "data": {"form_id": "kk_form_pano"}, "children": []}],
+}, {
+    # Orbit -- dugumleri ayri sekmede: ../orbit-bildirim/akis-uret.py
+    "id": "ob_bolum", "text": "Orbit Notification System", "icon": "fa fa-bell", "data": {}, "type": "section",
+    "children": [{"id": "ob_sayfa1", "text": "Orbit Giris", "icon": "fa fa-sign-in", "type": "form",
+                  "data": {"form_id": "ob_form_giris"}, "children": []},
+                 {"id": "ob_sayfa2", "text": "TS Onayi Listesi", "icon": "fa fa-list", "type": "form",
+                  "data": {"form_id": "ob_form_ts"}, "children": []},
+                 {"id": "ob_sayfa3", "text": "Kurulum ve Mail", "icon": "fa fa-envelope", "type": "form",
+                  "data": {"form_id": "ob_form_kurulum"}, "children": []}],
 }]
 
 # ------------------------------------------------ test girisi (tasarimcida formsuz deneme)
