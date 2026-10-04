@@ -4,6 +4,10 @@ NTT DATA'nın **aXet.flows** otomasyon platformunda sıfırdan çalışan bir ak
 öğreten, uygulamalı bir eğitim. Kurulumdan ilk çalışan akışa kadar her adım,
 gerçek bir kurulumda karşılaşılan hatalarla birlikte anlatılıyor.
 
+> **Uygulamayı Run Flow ile başlattınız ve link açılmıyor mu?** →
+> [CALISTIRMA.md](CALISTIRMA.md): her Run Flow'dan sonra
+> `kaynaklar\production-portu-ac.ps1`, Orbit girişi ve mail yardımcısı kurulumu.
+
 ## Bu eğitim kimin için?
 
 - aXet.flows'u ilk kez kuracak / kullanacak olanlar
@@ -111,6 +115,7 @@ Aynı şekilde AI ajanı derslerindeki proje ve model seçimleri de kuruma
 ```
 axet-flows-egitim/
 ├── README.md                          bu dosya
+├── CALISTIRMA.md                      her Run Flow'dan sonra: port köprüsü, Orbit girişi, mail yardımcısı
 ├── 01-kurulum.md                      kurulum, adım adım
 ├── 02-ilk-akis.md                     ilk çalışan akış
 ├── 03-http-dallanma.md                dış veri + koşullu dallanma
